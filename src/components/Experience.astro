@@ -1,0 +1,47 @@
+---
+interface Props {
+  company: string;
+  role: string;
+  period?: string;
+  summary?: string;
+}
+const { company, role, period, summary } = Astro.props;
+
+const summaryParagraphs = summary
+  ? summary.split(/(?<=\.)\s+/).filter((p) => p.trim().length > 0)
+  : [];
+---
+
+<article class="pb-7 first:pt-0 last:pb-0">
+  <header class="grid grid-cols-1 sm:grid-cols-[1fr_auto] sm:items-baseline gap-1 sm:gap-6 mb-3">
+    <div class="flex flex-col sm:flex-row sm:items-baseline sm:gap-3">
+      <h3 class="text-[17px] font-semibold tracking-tight text-[var(--color-ink)]">
+        {company}
+      </h3>
+      <span class="text-[14px] text-[var(--color-ink-muted)]">{role}</span>
+    </div>
+    {period && (
+      <time class="text-[13px] font-mono text-[var(--color-ink-subtle)] tabular-nums">
+        {period}
+      </time>
+    )}
+  </header>
+  {
+    summaryParagraphs.length > 0 && (
+      <blockquote class="summary mb-4 pl-4 border-l-[3px] border-[var(--color-accent)] text-[14.5px] leading-[1.7] text-[var(--color-ink-muted)] space-y-1.5">
+        {summaryParagraphs.map((p) => (
+          <p>{p}</p>
+        ))}
+      </blockquote>
+    )
+  }
+  <div class="text-[14.5px] leading-[1.75] text-[var(--color-ink)] [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1.5 [&_a]:font-medium [&_a]:underline [&_a]:underline-offset-4 [&_a]:decoration-2 [&_a]:decoration-[var(--color-ink-subtle)] hover:[&_a]:decoration-[var(--color-accent)] hover:[&_a]:text-[var(--color-accent)]">
+    <slot />
+  </div>
+</article>
+
+<style>
+  .summary {
+    border-left-color: color-mix(in srgb, var(--color-accent) 55%, transparent);
+  }
+</style>

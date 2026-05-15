@@ -1,0 +1,277 @@
+---
+import { getCollection } from "astro:content";
+
+const all = await getCollection("portfolio");
+
+interface CompanyMeta {
+  slug: string;
+  name: string;
+  order: number;
+}
+
+const companyMeta: Record<string, CompanyMeta> = {
+  "sionic-ai": { slug: "sionic-ai", name: "사이오닉AI", order: 1 },
+  wrtn: { slug: "wrtn", name: "뤼튼", order: 2 },
+  kurlypay: { slug: "kurlypay", name: "컬리페이", order: 3 },
+  marketboro: { slug: "marketboro", name: "마켓보로", order: 4 },
+  essays: { slug: "essays", name: "Essays", order: 99 },
+};
+
+const grouped = all.reduce<Record<string, typeof all>>((acc, entry) => {
+  const slug = entry.data.companySlug;
+  (acc[slug] ??= []).push(entry);
+  return acc;
+}, {});
+
+const companies = Object.keys(grouped)
+  .map((slug) => {
+    const meta = companyMeta[slug] ?? { slug, name: slug, order: 100 };
+    const sorted = grouped[slug].sort((a, b) => a.data.order - b.data.order);
+    const main = sorted.filter((e) => (e.data.group ?? "main") === "main");
+    const troubleshooting = sorted.filter((e) => e.data.group === "troubleshooting");
+    return { ...meta, main, troubleshooting };
+  })
+  .sort((a, b) => a.order - b.order);
+
+const pathname = Astro.url.pathname;
+const isHome = pathname === "/" || pathname === "";
+const isPortfolio = pathname.startsWith("/portfolio");
+const currentEntryId = isPortfolio
+  ? pathname.replace(/^\/portfolio\//, "").replace(/\/$/, "")
+  : "";
+const currentCompanySlug = currentEntryId.split("/")[0] ?? "";
+---
+
+<aside
+  class="sidebar md:sticky md:top-0 md:h-screen md:overflow-y-auto md:py-14 md:pl-8 md:pr-4 px-6 py-5 border-b md:border-b-0 md:border-r border-[var(--color-line)] flex md:flex-col md:gap-0 items-center md:items-stretch justify-between md:justify-start gap-4 bg-[var(--color-bg)] z-10"
+>
+  <a href="/" class="brand block">
+    <h2 class="text-[22px] font-bold tracking-tight">최병현</h2>
+    <p class="text-[14.5px] font-mono text-[var(--color-ink-subtle)] mt-0.5">
+      backend developer
+    </p>
+  </a>
+
+  <nav class="hidden md:block mt-10 flex-1 min-h-0">
+    <ul class="space-y-0.5 text-[16px]">
+      <li>
+        <a
+          href="/"
+          class={`nav-link ${isHome ? "is-active" : ""}`}
+        >
+          <span class="nav-marker" aria-hidden="true">›</span>
+          <span>Resume</span>
+        </a>
+      </li>
+      <li>
+        <details open={isPortfolio} class="nav-tree">
+          <summary class={`nav-link nav-summary ${isPortfolio && !currentEntryId.includes("/") ? "is-active" : ""}`}>
+            <span class="nav-marker" aria-hidden="true">›</span>
+            <a href="/portfolio/" class="nav-summary-link">Portfolio</a>
+          </summary>
+
+          <ul class="nav-tree-list">
+            {companies.map((company) => {
+              const isCurrentCompany = currentCompanySlug === company.slug;
+              return (
+                <li>
+                  <details open={isCurrentCompany || isPortfolio}>
+                    <summary class="nav-tree-section">
+                      <span class="nav-tree-caret" aria-hidden="true">▾</span>
+                      <span>{company.name}</span>
+                    </summary>
+                    <ul class="nav-tree-items">
+                      {company.main.map((entry) => (
+                        <li>
+                          <a
+                            href={`/portfolio/${entry.id}/`}
+                            class={`nav-tree-item ${currentEntryId === entry.id ? "is-active" : ""}`}
+                          >
+                            {entry.data.title}
+                          </a>
+                        </li>
+                      ))}
+                      {company.troubleshooting.length > 0 && (
+                        <li class="nav-tree-troubleshooting">
+                          <p class="nav-tree-label">Troubleshooting</p>
+                          <ul>
+                            {company.troubleshooting.map((entry) => (
+                              <li>
+                                <a
+                                  href={`/portfolio/${entry.id}/`}
+                                  class={`nav-tree-item ${currentEntryId === entry.id ? "is-active" : ""}`}
+                                >
+                                  {entry.data.title}
+                                </a>
+                              </li>
+                            ))}
+                          </ul>
+                        </li>
+                      )}
+                    </ul>
+                  </details>
+                </li>
+              );
+            })}
+          </ul>
+        </details>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="md:mt-auto md:pt-6 md:border-t md:border-[var(--color-line)] flex items-center gap-2">
+    <button
+      id="theme-toggle"
+      type="button"
+      aria-label="Toggle theme"
+      title="테마 전환"
+      class="icon-btn inline-flex items-center justify-center w-8 h-8 rounded border border-[var(--color-line)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] transition-colors text-[var(--color-ink-muted)]"
+    >
+      <svg class="hidden dark:block" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      <svg class="block dark:hidden" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+    <button
+      id="print-btn"
+      type="button"
+      aria-label="Print this page"
+      title="이 페이지 인쇄"
+      class="icon-btn inline-flex items-center justify-center w-8 h-8 rounded border border-[var(--color-line)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] transition-colors text-[var(--color-ink-muted)]"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    </button>
+
+    <nav class="md:hidden flex gap-3 text-[13px]">
+      <a href="/" class={isHome ? "text-[var(--color-accent)]" : ""}>Resume</a>
+      <a href="/portfolio/" class={isPortfolio ? "text-[var(--color-accent)]" : ""}>Portfolio</a>
+    </nav>
+  </div>
+</aside>
+
+<style>
+  .nav-link {
+    display: grid;
+    grid-template-columns: 14px 1fr;
+    align-items: baseline;
+    padding: 6px 10px 6px 0;
+    color: var(--color-ink-muted);
+    transition: color 0.15s ease;
+  }
+  .nav-link .nav-marker {
+    color: transparent;
+    font-weight: 700;
+    transform: translateY(-1px);
+    transition: color 0.15s ease;
+  }
+  .nav-link:hover {
+    color: var(--color-ink);
+  }
+  .nav-link:hover .nav-marker {
+    color: var(--color-ink-subtle);
+  }
+  .nav-link.is-active {
+    color: var(--color-accent);
+    font-weight: 600;
+  }
+  .nav-link.is-active .nav-marker {
+    color: var(--color-accent);
+  }
+
+  .nav-tree {
+    margin: 0;
+  }
+  .nav-summary {
+    cursor: pointer;
+    list-style: none;
+  }
+  .nav-summary::-webkit-details-marker {
+    display: none;
+  }
+  .nav-summary-link {
+    color: inherit;
+  }
+  .nav-summary-link:hover {
+    color: inherit;
+  }
+
+  .nav-tree-list {
+    margin-top: 4px;
+    padding-left: 14px;
+    border-left: 1px solid var(--color-line);
+    margin-left: 5px;
+  }
+  .nav-tree-list > li + li {
+    margin-top: 4px;
+  }
+
+  .nav-tree-section {
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 6px 4px 0;
+    font-size: 14.5px;
+    color: var(--color-ink-muted);
+    transition: color 0.15s ease;
+  }
+  .nav-tree-section::-webkit-details-marker {
+    display: none;
+  }
+  .nav-tree-section:hover {
+    color: var(--color-ink);
+  }
+  .nav-tree-caret {
+    display: inline-block;
+    font-size: 9px;
+    color: var(--color-ink-subtle);
+    transition: transform 0.15s ease;
+    width: 10px;
+  }
+  details:not([open]) > .nav-tree-section .nav-tree-caret {
+    transform: rotate(-90deg);
+  }
+
+  .nav-tree-items {
+    margin-top: 2px;
+    padding-left: 16px;
+  }
+  .nav-tree-items > li + li {
+    margin-top: 1px;
+  }
+
+  .nav-tree-item {
+    display: block;
+    padding: 4px 8px 4px 0;
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--color-ink-subtle);
+    transition: color 0.15s ease;
+    border-left: 2px solid transparent;
+    padding-left: 8px;
+    margin-left: -8px;
+  }
+  .nav-tree-item:hover {
+    color: var(--color-ink-muted);
+  }
+  .nav-tree-item.is-active {
+    color: var(--color-accent);
+    font-weight: 600;
+    border-left-color: var(--color-accent);
+  }
+
+  .nav-tree-troubleshooting {
+    margin-top: 8px;
+  }
+  .nav-tree-label {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-ink-subtle);
+    margin-bottom: 2px;
+    padding-left: 0;
+  }
+  .nav-tree-troubleshooting > ul {
+    padding-left: 0;
+  }
+</style>

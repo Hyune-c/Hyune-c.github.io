@@ -1,0 +1,212 @@
+---
+import Base from "../layouts/Base.astro";
+import Section from "../components/Section.astro";
+import Experience from "../components/Experience.astro";
+---
+
+<Base title="최병현 — 도움이 되고 싶은 개발자">
+  <header class="mb-6">
+    <h1 class="text-[26px] md:text-[34px] font-bold leading-[1.25] tracking-tight mb-5">
+      도움이 되고 싶은 개발자, 최병현입니다.
+    </h1>
+    <dl class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-y-1.5 gap-x-4 text-[14px]">
+      <div class="flex items-baseline gap-2.5">
+        <dt class="text-[var(--color-ink-subtle)] text-[12px] font-mono uppercase tracking-wider">Email</dt>
+        <dd>
+          <a href="mailto:choi8608@gmail.com" class="font-medium underline underline-offset-4 decoration-2 decoration-[var(--color-ink-subtle)] hover:decoration-[var(--color-accent)] hover:text-[var(--color-accent)]">
+            choi8608@gmail.com
+          </a>
+        </dd>
+      </div>
+      <div class="flex items-baseline gap-2.5">
+        <dt class="text-[var(--color-ink-subtle)] text-[12px] font-mono uppercase tracking-wider">GitHub</dt>
+        <dd>
+          <a href="https://github.com/Hyune-c" target="_blank" rel="noopener" class="font-medium underline underline-offset-4 decoration-2 decoration-[var(--color-ink-subtle)] hover:decoration-[var(--color-accent)] hover:text-[var(--color-accent)]">
+            github.com/Hyune-c
+          </a>
+        </dd>
+      </div>
+      <div class="flex items-baseline gap-2.5">
+        <dt class="text-[var(--color-ink-subtle)] text-[12px] font-mono uppercase tracking-wider">Studies</dt>
+        <dd>
+          <a href="https://github.com/orgs/Hyune-s-lab/repositories" target="_blank" rel="noopener" class="font-medium underline underline-offset-4 decoration-2 decoration-[var(--color-ink-subtle)] hover:decoration-[var(--color-accent)] hover:text-[var(--color-accent)]">
+            github.com/Hyune-s-lab
+          </a>
+        </dd>
+      </div>
+    </dl>
+  </header>
+
+  <div class="mt-10 space-y-4 text-[15px] leading-[1.8] text-[var(--color-ink)]">
+    <p>
+      저는 풍부한 기술과 구조보다 <strong>지금 문제를 해결하는 데 필요한 최소한의
+      기술과 구조</strong>를 선호합니다.<br />
+      기술을 바꾸는 비용이 낮아진 만큼, <strong>빠르게 만들고
+      개선하는 과정</strong>에서 얻는 시행 착오와 운영 경험이 팀의 가장 큰 자산이 됩니다.
+    </p>
+    <p>
+      좋은 설계는 지식보다 <strong>운영 경험과 점진적인 개선</strong>에서
+      만들어집니다.<br />
+      코드를 작성하는 것만큼 문제를 기록하고, 의사결정을 문서화하며, 경험을 동료와
+      공유하는 일을 중요하게 다룹니다.<br />
+      <strong>사람이 통제해야 할 흐름과 AI에게 위임할 영역을 나누고</strong>, 이를
+      문서와 하네스로 관리하는 능력이 핵심입니다.
+    </p>
+    <p>
+      <strong>서로의 이해 차이를 좁히는 일</strong>이 곧 비즈니스 성과로
+      이어집니다.<br />
+      작은 기록과 정리가 동료의 시간과 에너지를 아껴주고, 같은 기준에서 더
+      빠르게 움직이게 하기 때문입니다.<br />
+      그래서 늘 문제를 명확히 정의하고 실행 가능한 형태로 다듬으며, <strong>같이
+      일하고 싶은 개발자</strong>가 되기 위해 노력합니다.
+    </p>
+    <p class="text-[14px] text-[var(--color-ink-muted)]">
+      <a href="/portfolio/sionic-ai/05_ai-development-workflow/" class="font-medium text-[var(--color-ink)] underline underline-offset-4 decoration-2 decoration-[var(--color-ink-subtle)] hover:decoration-[var(--color-accent)] hover:text-[var(--color-accent)]">AI를 적극적으로 활용하는 개발에 대한 생각</a>
+    </p>
+  </div>
+
+  <Section title="Work Experience" id="experience">
+    <p slot="aside" class="text-[14.5px] text-[var(--color-ink-muted)]">
+      자세한 내용은 <a href="/portfolio/" class="font-medium text-[var(--color-ink)] underline underline-offset-4 decoration-2 decoration-[var(--color-ink-subtle)] hover:decoration-[var(--color-accent)] hover:text-[var(--color-accent)]">포트폴리오</a>를 참고해 주세요.
+    </p>
+
+    <Experience
+      company="사이오닉AI"
+      role="백엔드 개발자"
+      period="2024.09 — now"
+      summary="Storm Parse와 OpenGateway를 백엔드와 프론트를 병행하며 기획부터 운영까지 주도했습니다. API Key, Authn/Authz, Billing, Logs, Model/Provider 관리 등 공개 API 상품 운영의 기반을 구축했습니다."
+    >
+      <ul>
+        <li>
+          Storm Parse 개발, 운영
+          <span class="ml-2 text-[13px] text-[var(--color-ink-subtle)]">Multi-deployment 지원, 첫 외부 SaaS 매출 견인</span>
+        </li>
+        <li>
+          OpenGateway 개발, 운영
+          <span class="ml-2 text-[13px] text-[var(--color-ink-subtle)]">RPM 180 · Daily 250K · 10+ Provider / 100+ Model · Multi-deployment</span>
+        </li>
+        <li>
+          운영 지원 도구 개발 및 업무 표준화
+          <span class="ml-2 text-[13px] text-[var(--color-ink-subtle)]">API Hub · Test · BO 운영도구 등</span>
+        </li>
+      </ul>
+    </Experience>
+
+    <Experience
+      company="뤼튼 테크놀로지스"
+      role="백엔드 개발자"
+      period="2024.01 — 2024.07"
+      summary="Spring AI를 확장해 AI 모델 서빙 서비스를 개발하고, 기존 Node.js 서비스를 JVM 기반으로 무중단 교체했습니다."
+    >
+      <ul>
+        <li>
+          AI 모델 서빙 서비스 개발, 운영
+          <span class="ml-2 text-[13px] text-[var(--color-ink-subtle)]">RPM 750 · API Response Time 20% 감소 · 관측성 / 안정성 증대</span>
+        </li>
+        <li>
+          전사 공통 서비스 (CDS) 개발, 운영
+          <span class="ml-2 text-[13px] text-[var(--color-ink-subtle)]">토크나이저, 이메일 검증, 유해어 검출</span>
+        </li>
+      </ul>
+    </Experience>
+
+    <Experience
+      company="컬리페이"
+      role="백엔드 개발자"
+      period="2022.09 — 2023.12"
+      summary="컬리페이 상품권을 기획부터 운영까지 주도하고, B2C / B2B 대량 구매와 제휴사 연동으로 판매처를 확대했습니다."
+    >
+      <ul>
+        <li>컬리페이 상품권 개발, 운영 및 B2C / B2B 대량발송 프로세스 설계, 개선</li>
+        <li>간편결제 & 일반결제 이관 지원, 선불충전 / 포인트 설계</li>
+      </ul>
+    </Experience>
+
+    <Experience
+      company="마켓보로"
+      role="백엔드 개발자"
+      period="2021.08 — 2022.08"
+    >
+      <ul>
+        <li>B2B 플랫폼 마켓봄 프로 개발, 운영, 전사 Datadog 도입</li>
+      </ul>
+    </Experience>
+
+    <Experience
+      company="오아시스비즈니스"
+      role="백엔드 개발자"
+      period="2021.02 — 2021.08"
+    >
+      <ul>
+        <li>상권분석 & 잇땅 모바일웹 / 어드민 개발 및 050 비즈콜, 스마트콘 연동</li>
+      </ul>
+    </Experience>
+
+    <Experience
+      company="알바체크 (현 HIGHERX)"
+      role="백엔드 개발자"
+      period="2020.08 — 2021.02"
+    >
+      <ul>
+        <li>알바체크 앱 / 어드민 개발, 제 1회 전국 지코더 선발대회 (with GS25) 주도</li>
+      </ul>
+    </Experience>
+
+    <Experience
+      company="SI 개발, 인프라"
+      role="SI 개발, IT 운영, 기술지원"
+    >
+      <ul class="si-list space-y-2 !list-none !pl-0">
+        <li class="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)_auto] sm:items-baseline gap-x-5">
+          <strong class="font-semibold text-[var(--color-ink)]">카카오페이</strong>
+          <span class="text-[var(--color-ink-muted)]">가맹점, 리셀러사 심사 / 매입 / 정산 연동 지원</span>
+          <time class="text-[13px] font-mono text-[var(--color-ink-subtle)] tabular-nums whitespace-nowrap">2019.04 — 2019.07</time>
+        </li>
+        <li class="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)_auto] sm:items-baseline gap-x-5">
+          <strong class="font-semibold text-[var(--color-ink)]">FirstData Korea (현 한국결제네트웍스)</strong>
+          <span class="text-[var(--color-ink-muted)]">전 카드사에 대응하는 VAN 승인계 운영</span>
+          <time class="text-[13px] font-mono text-[var(--color-ink-subtle)] tabular-nums whitespace-nowrap">2016.09 — 2019.04</time>
+        </li>
+        <li class="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)_auto] sm:items-baseline gap-x-5">
+          <strong class="font-semibold text-[var(--color-ink)]">하나INS (현 하나금융TI)</strong>
+          <span class="text-[var(--color-ink-muted)]">하나은행 오픈뱅킹 프로젝트 개발, 하나생명 서버 및 미들웨어 운영</span>
+          <time class="text-[13px] font-mono text-[var(--color-ink-subtle)] tabular-nums whitespace-nowrap">2012.01 — 2016.08</time>
+        </li>
+      </ul>
+    </Experience>
+  </Section>
+
+  <Section title="Education" id="education">
+    <ul class="space-y-1.5 text-[14.5px]">
+      <li class="grid grid-cols-1 sm:grid-cols-[1fr_auto] sm:items-baseline gap-x-6">
+        <span>
+          <strong class="font-semibold">코드스쿼드</strong>
+          <span class="text-[var(--color-ink-muted)] ml-2">개발자 부트캠프</span>
+        </span>
+        <time class="text-[13px] font-mono text-[var(--color-ink-subtle)] tabular-nums">
+          2020.01 — 2020.06
+        </time>
+      </li>
+      <li class="grid grid-cols-1 sm:grid-cols-[1fr_auto] sm:items-baseline gap-x-6">
+        <span>
+          <strong class="font-semibold">광운대학교</strong>
+          <span class="text-[var(--color-ink-muted)] ml-2">컴퓨터소프트웨어 학과 졸업 3.29 / 4.5</span>
+        </span>
+        <time class="text-[13px] font-mono text-[var(--color-ink-subtle)] tabular-nums">
+          2006.03 — 2012.02
+        </time>
+      </li>
+    </ul>
+  </Section>
+
+  <Section title="Certifications" id="certifications">
+    <p class="text-[14.5px]">
+      <span class="font-medium">정보처리기사</span>
+      <span class="text-[var(--color-ink-subtle)] font-mono ml-2">2012.11</span>
+      <span class="mx-3 text-[var(--color-ink-subtle)]">·</span>
+      <span class="font-medium">SQLD</span>
+      <span class="text-[var(--color-ink-subtle)] font-mono ml-2">2017.12</span>
+    </p>
+  </Section>
+
+</Base>

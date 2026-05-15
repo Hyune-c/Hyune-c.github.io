@@ -1,0 +1,281 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+    system-ui, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas,
+    "Liberation Mono", monospace;
+}
+
+:root {
+  --color-ink: #111111;
+  --color-ink-muted: #555555;
+  --color-ink-subtle: #888888;
+  --color-line: #e6e6e6;
+  --color-line-soft: #f4f4f4;
+  --color-bg: #ffffff;
+  --color-bg-elev: #fafafa;
+  --color-code-bg: #e8e8e8;
+  --color-accent: #2c5cff;
+  color-scheme: light;
+}
+
+html.dark {
+  --color-ink: #ededed;
+  --color-ink-muted: #a3a3a3;
+  --color-ink-subtle: #6f6f6f;
+  --color-line: #262626;
+  --color-line-soft: #161616;
+  --color-bg: #0a0a0a;
+  --color-bg-elev: #111111;
+  --color-code-bg: #1f1f1f;
+  --color-accent: #8da6ff;
+  color-scheme: dark;
+}
+
+@layer base {
+  html {
+    color: var(--color-ink);
+    background: var(--color-bg);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss06", "ss03";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  body {
+    line-height: 1.65;
+    letter-spacing: -0.005em;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 24px;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  a:hover {
+    color: var(--color-accent);
+  }
+
+  ::selection {
+    background: var(--color-ink);
+    color: var(--color-bg);
+  }
+}
+
+.print-only {
+  display: none;
+}
+
+/* prose blockquote 자동 따옴표 제거 */
+.prose blockquote {
+  quotes: none;
+}
+.prose blockquote p::before,
+.prose blockquote p::after {
+  content: "" !important;
+}
+
+/* 이미지 가로 2열 그리드 (마크다운 내 사용) */
+.img-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  align-items: start;
+  margin: 1.5rem 0;
+}
+.img-grid-2 img {
+  width: 100%;
+  height: auto;
+  margin: 0 !important;
+}
+@media (max-width: 640px) {
+  .img-grid-2 {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* 이미지 가로 3열 그리드 */
+.img-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+  align-items: start;
+  margin: 1.5rem 0;
+}
+.img-grid-3 img {
+  width: 100%;
+  height: auto;
+  margin: 0 !important;
+}
+@media (max-width: 640px) {
+  .img-grid-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 라벨 + 이미지 가로 2열 그리드 (4개 항목: 라벨1, 라벨2, 이미지1, 이미지2) */
+.img-grid-2-labeled {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem 1rem;
+  align-items: start;
+  margin: 1.5rem 0;
+}
+.img-grid-2-labeled > * {
+  margin: 0 !important;
+}
+.img-grid-2-labeled img {
+  width: 100%;
+  height: auto;
+}
+@media (max-width: 640px) {
+  .img-grid-2-labeled {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 이미지 모달 */
+.image-modal {
+  background: rgba(0, 0, 0, 0.88);
+  border: none;
+  padding: 0;
+  margin: 0;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
+  overflow: auto;
+}
+.image-modal:not([open]) {
+  display: none;
+}
+.image-modal[open] {
+  display: grid;
+  place-items: center;
+}
+.image-modal::backdrop {
+  background: rgba(0, 0, 0, 0.88);
+}
+.image-modal img {
+  display: block;
+  max-width: 95vw;
+  max-height: 95vh;
+  cursor: zoom-in;
+  border-radius: 6px;
+  transition: max-width 0.15s ease, max-height 0.15s ease;
+}
+.image-modal img[data-zoom="1"] {
+  max-width: 150vw;
+  max-height: 150vh;
+}
+.image-modal img[data-zoom="2"] {
+  max-width: 250vw;
+  max-height: 250vh;
+}
+
+/* 코드 스니펫: 자손 element의 inline background 무시 (글자/라인별 음영 제거) */
+.astro-code * {
+  background-color: transparent !important;
+}
+/* prose-code rule이 .astro-code 안 텍스트 색을 덮어쓰지 않게 — monokai inline color 보호 */
+.astro-code code {
+  color: #f8f8f2 !important; /* monokai default fg */
+  background-color: transparent !important;
+  padding: 0 !important;
+}
+.astro-code code span {
+  color: revert-layer;
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 16mm 14mm;
+  }
+
+  /* 인쇄는 항상 라이트 모드 강제 */
+  html,
+  html.dark,
+  body {
+    --color-ink: #111111 !important;
+    --color-ink-muted: #444444 !important;
+    --color-ink-subtle: #777777 !important;
+    --color-line: #cfcfcf !important;
+    --color-line-soft: #f0f0f0 !important;
+    --color-bg: #ffffff !important;
+    --color-bg-elev: #fafafa !important;
+    --color-accent: #2c5cff !important;
+    color-scheme: light !important;
+    background: #ffffff !important;
+    color: #111111 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* 사이드바·아이콘 버튼 숨김 — 본문만 인쇄 */
+  aside,
+  .no-print,
+  #theme-toggle,
+  #print-btn {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  /* grid 레이아웃을 단일 컬럼으로 평탄화 */
+  body > div {
+    display: block !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    min-height: 0 !important;
+  }
+
+  main {
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* 섹션·항목이 페이지 경계에서 잘리지 않게 */
+  article,
+  blockquote,
+  h1,
+  h2,
+  h3 {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  /* 이미지·border가 잉크에 보이게 */
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+}
