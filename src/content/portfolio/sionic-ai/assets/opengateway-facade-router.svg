@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 720" font-family="system-ui, -apple-system, 'Apple SD Gothic Neo', 'Pretendard', sans-serif">
+  <defs>
+    <marker id="r-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+    <marker id="r-ar-rec" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#0ea5e9"/>
+    </marker>
+  </defs>
+
+  <rect width="1500" height="720" fill="#fbfcfd"/>
+
+  <!-- Title -->
+  <text x="60" y="56" font-size="26" font-weight="700" fill="#0f172a">핵심 설계 — Facade 와 SmartRouter</text>
+  <text x="60" y="84" font-size="14" fill="#64748b">통제해야 하는 비즈니스 흐름은 Facade 가 절차적으로 책임 · 복잡한 동적 결정은 SmartRouter 로 위임</text>
+
+  <!-- Top: Request -->
+  <g>
+    <rect x="60" y="124" width="1380" height="50" rx="10" fill="#eef2ff" stroke="#6366f1" stroke-width="1.2"/>
+    <text x="84" y="156" font-size="14" font-weight="600" fill="#1e293b">요청 도착</text>
+    <text x="172" y="156" font-size="13" fill="#475569">model · 사용자 fallback · endpoint(chat / responses / images) — OpenAI 호환 단일 spec</text>
+  </g>
+
+  <!-- Facade (left) -->
+  <g>
+    <rect x="60" y="200" width="620" height="380" rx="14" fill="#ecfeff" stroke="#06b6d4" stroke-width="1.8"/>
+    <text x="84" y="240" font-size="24" font-weight="700" fill="#0e7490">Facade</text>
+    <text x="84" y="266" font-size="13" fill="#155e75">통제 영역 — 비즈니스 흐름의 절차적 표현이 모이는 곳</text>
+
+    <g>
+      <rect x="84" y="290" width="572" height="76" rx="10" fill="#ffffff" stroke="#67e8f9" stroke-width="1.1"/>
+      <text x="104" y="318" font-size="17" font-weight="700" fill="#0e7490">전체 흐름 제어</text>
+      <text x="104" y="346" font-size="13" fill="#1f2937">요청 정규화 → 라우팅 위임 → 실행 → 응답 / 스트림 직렬화 까지를 한자리에서</text>
+    </g>
+
+    <g>
+      <rect x="84" y="378" width="572" height="76" rx="10" fill="#ffffff" stroke="#67e8f9" stroke-width="1.1"/>
+      <text x="104" y="406" font-size="17" font-weight="700" fill="#0e7490">모델 폴백</text>
+      <text x="104" y="434" font-size="13" fill="#1f2937">SmartRouter 가 준 대상을 위에서부터 시도하고, 성공 시 즉시 반환</text>
+    </g>
+
+    <g>
+      <rect x="84" y="466" width="572" height="96" rx="10" fill="#ffffff" stroke="#67e8f9" stroke-width="1.1"/>
+      <text x="104" y="494" font-size="17" font-weight="700" fill="#0e7490">모델 호출 이력 배치 송출</text>
+      <text x="104" y="522" font-size="13" fill="#1f2937">매번 보내지 않고, 요청 1건 분의 시도 이력을 모아</text>
+      <text x="104" y="542" font-size="13" fill="#1f2937">응답 직후 한 번에 비동기로 Control Plane 에 발행</text>
+    </g>
+  </g>
+
+  <!-- SmartRouter (right) -->
+  <g>
+    <rect x="820" y="200" width="620" height="380" rx="14" fill="#f0fdf4" stroke="#10b981" stroke-width="1.8"/>
+    <text x="844" y="240" font-size="24" font-weight="700" fill="#047857">SmartRouter</text>
+    <text x="844" y="266" font-size="13" fill="#065f46">복잡한 동적 결정을 분리해 둔 컴포넌트 — 인터페이스로 확장 가능</text>
+
+    <g>
+      <rect x="844" y="290" width="572" height="76" rx="10" fill="#ffffff" stroke="#6ee7b7" stroke-width="1.1"/>
+      <text x="864" y="318" font-size="17" font-weight="700" fill="#047857">대상 모델 동적 선정</text>
+      <text x="864" y="346" font-size="13" fill="#1f2937">modelId · 사용자 fallback · endpoint 정책을 모두 반영해 실행 가능한 대상을 산출</text>
+    </g>
+
+    <g>
+      <rect x="844" y="378" width="572" height="76" rx="10" fill="#ffffff" stroke="#6ee7b7" stroke-width="1.1"/>
+      <text x="864" y="406" font-size="17" font-weight="700" fill="#047857">Factor 체인으로 후보 증류</text>
+      <text x="864" y="434" font-size="13" fill="#1f2937">넓은 후보 집합을 Factor 들을 차례로 통과시키며 실행 대상으로 좁혀 나가는 흐름</text>
+    </g>
+
+    <g>
+      <rect x="844" y="466" width="572" height="96" rx="10" fill="#ffffff" stroke="#6ee7b7" stroke-width="1.1"/>
+      <text x="864" y="494" font-size="17" font-weight="700" fill="#047857">RoutingFactor 인터페이스</text>
+      <text x="864" y="522" font-size="13" fill="#1f2937">가용성 · 사용자 fallback · cost · latency · 정책 같은 factor 를</text>
+      <text x="864" y="542" font-size="13" fill="#1f2937">같은 파이프라인에 합류시킬 수 있는 확장 인터페이스</text>
+    </g>
+  </g>
+
+  <!-- Collab arrows between Facade ↔ SmartRouter -->
+  <line x1="682" y1="376" x2="818" y2="376" stroke="#475569" stroke-width="1.8" marker-end="url(#r-ar)"/>
+  <text x="702" y="368" font-size="12.5" fill="#475569">"실행 가능한 대상 줘"</text>
+
+  <line x1="818" y1="416" x2="682" y2="416" stroke="#475569" stroke-width="1.8" marker-end="url(#r-ar)"/>
+  <text x="702" y="438" font-size="12.5" fill="#475569">대상 후보 목록</text>
+
+  <!-- Request → Facade arrow -->
+  <line x1="370" y1="174" x2="370" y2="200" stroke="#475569" stroke-width="1.6" marker-end="url(#r-ar)"/>
+
+  <!-- Facade → Providers/LlmService (bottom) -->
+  <g>
+    <rect x="60" y="610" width="1380" height="70" rx="10" fill="#faf5ff" stroke="#a855f7" stroke-width="1.2"/>
+    <text x="84" y="642" font-size="16" font-weight="700" fill="#6b21a8">LlmService 모듈 → LLM Providers</text>
+    <text x="84" y="664" font-size="13" fill="#1f2937">Provider 모듈로 Mapper · Client · StreamMapper 격리 — 신규 Provider 합류 시 Facade / SmartRouter 무변경</text>
+  </g>
+
+  <line x1="370" y1="582" x2="370" y2="610" stroke="#475569" stroke-width="1.6" marker-end="url(#r-ar)"/>
+  <text x="384" y="600" font-size="12" fill="#475569">대상별로 호출</text>
+</svg>

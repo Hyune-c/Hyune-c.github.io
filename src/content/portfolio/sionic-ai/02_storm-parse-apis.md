@@ -26,44 +26,14 @@ Storm Parse 는 파일을 검색·추론에 사용할 수 있는 의미 단위�
 - SaaS 멀티 리전과 On-Prem 환경을 모두 고려한 실행 구조를 설계했습니다
     - `kr`, `jp` 등 SaaS zone 분리와 동시에 N개의 On-Prem 환경을 최소한의 작업으로 지원할 수 있는 기반을 만들었습니다
 
-## 상세
+## 설계 및 구현
 
-```kotlin
-// 1. profile 그룹 분리
-local, dev, live, jp-live   => application-saas.yml
-onprem, onprem_local        => application-onprem.yml
+같은 코드 베이스로 SaaS 멀티 리전(kr · jp) 과 N 개의 On-Prem 환경을 동시에 지원하기 위해, profile 기반 컴포넌트 조립과 Facade 중심 job lifecycle 제어를 적용했습니다.
 
-// 2. profile config 로 실행 전략 주입
-saas {
-    apiKeyStrategy = manager
-    modelProvider = gemini or vllm
-    storage = objectStorage + redis
-}
+- API spec 은 유지하면서 환경별로 Auth · Model Provider · Storage · Prompt 를 다르게 조립할 수 있도록 했습니다
+- Facade 가 parse job lifecycle(prepare → preInfer → infer → afterInfer) 을 책임지고, 결과에 따라 Credit 을 confirm / cancel 까지 한 자리에서 정리해 Billing 정합성과 장애 지점 식별을 단순화했습니다
+- API Key 부터 Account · Credit · Usage 집계까지 이어지는 end-to-end 흐름을 구현했습니다
 
-onprem {
-    apiKeyStrategy = masterKey
-    modelProvider = vllm
-    prompt = sitePrompt + optionalInjection
-    storage = siteObjectStorage + redis
-}
+![Storm Parse — Multi-deployment 컴포넌트 조립](./assets/storm-parse-apis-image-03.svg)
 
-// 3. bootstrap 에서 config 기반 컴포넌트 조립
-inferencer = resolve(app.modelProvider)
-config = importBy(activeProfile)
-
-// 4. Facade 에서 job lifecycle 제어
-prepare -> preInfer -> infer -> afterInfer
-jobResult -> credit.confirm() or credit.cancel()
-```
-
-- SaaS 멀티 리전과 On-Prem 환경에 따라 Auth, Model, Storage, Prompt 전략을 주입할 수 있도록 구성했습니다
-- Facade 에서 job 상태 관리를 통해 parse lifecycle 과 Credit 확정/취소 흐름을 명시적으로 제어하고, 장애 지점 식별과 Billing 정합성 추적을 단순화했습니다
-- API Key 부터 Account / Credit / Usage 집계까지 이어지는 end-to-end 흐름을 구현했습니다
-
-<div class="img-grid-2">
-
-![캡처 1](./assets/storm-parse-apis-image-01.png)
-
-![캡처 2](./assets/storm-parse-apis-image-02.png)
-
-</div>
+![Facade — Job Lifecycle 과 Credit 정합성](./assets/storm-parse-apis-image-04.svg)

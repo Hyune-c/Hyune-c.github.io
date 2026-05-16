@@ -25,10 +25,6 @@ tags: [Qdrant, Parquet, Performance]
 | 데이터 서빙 준비 방식  | Runner 부트타임에 데이터 구성 | Indexer 가 Parquet 사전 생성               | 초기화 시간과 장애 복구 부담 완화   |
 | 운영 파라미터       | 측정되지 않음          | Batch size 5,000 / semaphore count 20 | 대량 데이터 운영 기준 확립        |
 
-<div class="img-grid-2">
+![Indexer / Runner 책임 분리](./assets/a-bank-search-serving-image-03.svg)
 
-![캡처 1](./assets/a-bank-search-serving-image-01.png)
-
-![캡처 2](./assets/a-bank-search-serving-image-02.png)
-
-</div>
+![테스트 종료 보고](./assets/a-bank-search-serving-image-02.png)

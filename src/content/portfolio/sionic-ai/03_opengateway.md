@@ -24,14 +24,15 @@ tags: [API Gateway, Spring, Kotlin, Billing, Multi-deployment]
 
 ## 설계 및 구현
 
-> 개발·운영 협업 방식과 더 자세한 내용은 [AI를 적극적으로 활용하는 개발에 대한 생각](/portfolio/sionic-ai/05_ai-development-workflow/)에 정리했습니다.
+1명의 주니어 개발자와 함께 백엔드 2개 · 프론트 1개를 동시 기획 · 개발하기 위해 AI 를 적극적으로 활용해야 했습니다.
 
-![OpenGateway Architecture](./assets/opengateway-image-01.png)
+- 정책과 작업 기준은 Skill 로 single source of truth 로 두어, 사람과 AI 가 같은 맥락에서 작업할 수 있도록 했습니다
+- 시스템은 통제할 흐름과 동적 의사결정을 분리해, 직접 검토할 영역과 AI 에게 위임할 영역을 명확히 구분했습니다
+- 더 자세한 내용은 [AI를 적극적으로 활용하는 개발에 대한 생각](/portfolio/sionic-ai/05_ai-development-workflow/)에 정리되어 있습니다
 
-- OpenAI API spec 을 유지하면서 Provider 별 요청/응답 Mapper, 토큰, 응답 포맷 차이를 Gateway 레벨에서 정규화했습니다
-- SmartRouter / LlmCatalog 기반으로 model owner 와 serving provider 를 분리하고, zone / On-Prem 환경별로 모델과 Provider 를 선택할 수 있는 라우팅 구조를 설계했습니다
-- API Key, Authn/Authz, Billing, Logs, Redeem Code, Admin 기능을 구현하고 SSE streaming 로그 경로까지 보강해 공개 API 상품 운영 흐름을 구축했습니다
-- Frontend 개발과 Vercel 배포를 포함해 Auth0, Stripe, Logs/Usage 화면까지 하나의 플랫폼을 만들기 위한 기획부터 운영, 홍보까지 주니어 개발자 1명과 함께 수행했습니다
+![OpenGateway 전체 흐름 — 엔진과 백오피스의 분리](./assets/opengateway-architecture.svg)
+
+![핵심 설계 — Facade 와 SmartRouter](./assets/opengateway-facade-router.svg)
 
 <div class="img-grid-2">
 
@@ -43,16 +44,10 @@ tags: [API Gateway, Spring, Kotlin, Billing, Multi-deployment]
 
 ## 운영 안정화
 
-- 솔로 프리너 사용자를 대상으로 제품을 홍보하고 초기 사용자를 유치하며, 실제 사용 흐름을 바탕으로 개선점을 수집했습니다
 - Grafana 기반으로 트래픽, 비용, 응답 시간, Provider 분포를 관측하며 운영 상태를 관리했습니다
-- 모델 추가/제거, Provider SDK 업그레이드, API Key 교체 등 운영성 작업을 수행하며 live 환경 안정성을 유지했습니다
-- 모델 동기화, SDK 업그레이드, 릴리즈, 주간 보고 등 반복 운영 업무를 Claude Skill 로 표준화해 운영 편의성을 높였습니다
-- 100개 이상의 모델에 대해 smoke test 와 CI test 를 구성하고, CI 실행 시점과 daily job 에서 서비스 상태를 지속적으로 확인하도록 했습니다
-
-<div class="img-grid-2">
+- 모델 추가/제거, SDK 업그레이드, 릴리즈, 주간 보고 등 반복 운영 업무를 Claude Skill 로 표준화해 운영 편의성을 높였습니다
+- 100개 이상의 모델에 smoke test · CI test · daily job 을 적용해 live 환경 안정성을 지속 확인했습니다
 
 ![OpenGateway Grafana Dashboard](./assets/opengateway-image-02.png)
 
 ![OpenGateway Model Check](./assets/opengateway-image-03.png)
-
-</div>

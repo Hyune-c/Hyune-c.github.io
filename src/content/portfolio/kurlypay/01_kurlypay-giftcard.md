@@ -27,9 +27,9 @@ B2C 주문과 B2B 구매, 법인카드/개인 대량 구매 등 유스케이스�
 - 외부 제휴사용 gateway / core 서버 분리, B2C 컬리몰 주문과 B2B 구매 흐름 분리 설계
 - 상품권 라이프사이클 Kafka 처리 설계
 
-<div class="img-grid-3">
-
 ![캡처 1](./assets/kurlypay-giftcard-image-01.png)
+
+<div class="img-grid-2">
 
 ![캡처 2](./assets/kurlypay-giftcard-image-02.png)
 

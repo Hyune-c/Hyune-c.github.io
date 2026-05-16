@@ -4,7 +4,7 @@ company: 뤼튼 테크놀로지스
 companySlug: wrtn
 period: 2024.01 — 2024.07
 order: 2
-summary: 여러 서비스에서 공통으로 사용하는 기능을 API 서버로 제공 (토크나이저, 이메일 검증, 유해어 검출 등). 아래는 대표 기능인 토크나이저를 중심으로 설명합니다.
+summary: 여러 서비스에서 공통으로 사용하는 기능을 API 서버로 제공 (토크나이저, 이메일 검증, 유해어 검출 등). 아래는 대표 기능인 토크나이저로 설명합니다.
 tags: [Python, FastAPI, Tiktoken]
 ---
 
@@ -26,9 +26,9 @@ GPT-4o 는 기존 모델과 encoding 방식이 달라 기존 토큰 계산 로�
 
 - OpenAI 공식 Tiktokenizer 라이브러리를 사용해 모델별 token 계산을 제공했습니다
 
-<div class="img-grid-3">
-
 ![부하 테스트 요약](./assets/wrtn-tokenizer-image-02.png)
+
+<div class="img-grid-2">
 
 ![부하 테스트 결과 1](./assets/wrtn-tokenizer-image-03.png)
 

@@ -1,0 +1,183 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 860" font-family="system-ui, -apple-system, 'Apple SD Gothic Neo', 'Pretendard', sans-serif">
+  <defs>
+    <marker id="s-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+
+    <symbol id="ico-yaml" viewBox="0 0 24 24">
+      <path d="M5 3 h10 l4 4 v14 h-14 z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M15 3 v4 h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+      <line x1="8" y1="12" x2="16" y2="12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      <line x1="8" y1="16" x2="14" y2="16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="ico-puzzle" viewBox="0 0 24 24">
+      <path d="M9 3 a2 2 0 0 1 4 0 v2 h5 v5 a2 2 0 0 1 0 4 v5 h-5 v-2 a2 2 0 0 0 -4 0 v2 h-5 v-5 h2 a2 2 0 0 0 0 -4 h-2 v-5 h5 z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="ico-key" viewBox="0 0 24 24">
+      <circle cx="8" cy="15" r="4.5" fill="none" stroke="currentColor" stroke-width="1.8"/>
+      <line x1="11.5" y1="12" x2="20" y2="3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="17" y1="6" x2="19.5" y2="8.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="14" y1="9" x2="16.5" y2="11.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="ico-brain" viewBox="0 0 24 24">
+      <path d="M9 3 a3 3 0 0 0 -3 3 a3 3 0 0 0 -2.5 5 a3 3 0 0 0 1 5 a3 3 0 0 0 4.5 3.5 v-17 z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M15 3 a3 3 0 0 1 3 3 a3 3 0 0 1 2.5 5 a3 3 0 0 1 -1 5 a3 3 0 0 1 -4.5 3.5 v-17 z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="ico-db" viewBox="0 0 24 24">
+      <ellipse cx="12" cy="5" rx="8" ry="2.6" fill="none" stroke="currentColor" stroke-width="1.8"/>
+      <path d="M4 5 v14 c0 1.4 3.6 2.6 8 2.6 s8 -1.2 8 -2.6 v-14" fill="none" stroke="currentColor" stroke-width="1.8"/>
+      <path d="M4 12 c0 1.4 3.6 2.6 8 2.6 s8 -1.2 8 -2.6" fill="none" stroke="currentColor" stroke-width="1.8"/>
+    </symbol>
+    <symbol id="ico-chat" viewBox="0 0 24 24">
+      <path d="M3 5 a2 2 0 0 1 2 -2 h14 a2 2 0 0 1 2 2 v10 a2 2 0 0 1 -2 2 h-9 l-5 4 v-4 h-0 a2 2 0 0 1 -2 -2 z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="ico-globe" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <ellipse cx="12" cy="12" rx="4" ry="9" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="1.6"/>
+    </symbol>
+    <symbol id="ico-building" viewBox="0 0 24 24">
+      <rect x="4" y="4" width="16" height="17" rx="1" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <line x1="9" y1="8" x2="11" y2="8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      <line x1="13" y1="8" x2="15" y2="8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      <line x1="9" y1="12" x2="11" y2="12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      <line x1="13" y1="12" x2="15" y2="12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      <line x1="9" y1="16" x2="11" y2="16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      <line x1="13" y1="16" x2="15" y2="16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+    </symbol>
+  </defs>
+
+  <rect width="1500" height="860" fill="#fbfcfd"/>
+
+  <!-- Title -->
+  <text x="60" y="56" font-size="24" font-weight="700" fill="#0f172a">Storm Parse — Multi-deployment 컴포넌트 조립</text>
+
+  <!-- 통합 요약 박스 (제목 아래) -->
+  <g>
+    <rect x="60" y="78" width="1380" height="84" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2"/>
+    <text x="80" y="106" font-size="13" fill="#334155">API spec 은 유지하고, profile 에 따라 Auth · Model Provider · Storage · Prompt 를 다르게 조립</text>
+    <text x="80" y="140" font-size="13" fill="#334155">한 코드 베이스에서 <tspan font-weight="700" fill="#0e7490">SaaS multi-zone</tspan> 과 <tspan font-weight="700" fill="#9a3412">N 개 On-Prem site</tspan> 를 동시 지원 · 신규 환경 합류 비용은 yaml + 인프라 추가 수준</text>
+  </g>
+
+  <!-- 공통 코드 박스 -->
+  <g>
+    <rect x="280" y="180" width="940" height="120" rx="14" fill="#faf5ff" stroke="#a855f7" stroke-width="1.6"/>
+    <g color="#a855f7"><use href="#ico-puzzle" x="304" y="198" width="26" height="26"/></g>
+    <text x="340" y="218" font-size="18" font-weight="700" fill="#6b21a8">공통 (같은 코드 기반)</text>
+    <text x="304" y="246" font-size="13" fill="#1f2937">API spec · Facade · Parser router · Bootstrap 모듈 조립 로직</text>
+    <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11.5" fill="#475569">
+      <text x="304" y="272">inferencer = resolve(app.modelProvider)</text>
+      <text x="304" y="288">config       = importBy(activeProfile)</text>
+    </g>
+  </g>
+
+  <!-- YAML config (왼쪽 위) -->
+  <g>
+    <rect x="60" y="180" width="200" height="120" rx="12" fill="#eef2ff" stroke="#6366f1" stroke-width="1.3"/>
+    <g color="#6366f1"><use href="#ico-yaml" x="78" y="198" width="22" height="22"/></g>
+    <text x="108" y="216" font-size="15" font-weight="700" fill="#312e81">YAML profile</text>
+    <text x="78" y="242" font-size="12" fill="#1f2937">saas.yaml · onprem.yaml</text>
+    <text x="78" y="260" font-size="11.5" fill="#64748b">activeProfile 로 환경 결정</text>
+    <text x="78" y="278" font-size="11.5" fill="#64748b">local · dev · live · jp-live</text>
+    <text x="78" y="294" font-size="11.5" fill="#64748b">onprem · onprem_local</text>
+  </g>
+
+  <!-- YAML → 공통 -->
+  <line x1="260" y1="240" x2="278" y2="240" stroke="#475569" stroke-width="1.6" marker-end="url(#s-ar)"/>
+
+  <!-- 두 수직 직선 분기 -->
+  <line x1="410" y1="300" x2="410" y2="378" stroke="#475569" stroke-width="1.6" marker-end="url(#s-ar)"/>
+  <line x1="1130" y1="300" x2="1130" y2="378" stroke="#475569" stroke-width="1.6" marker-end="url(#s-ar)"/>
+  <text x="750" y="343" text-anchor="middle" font-size="13" fill="#475569" font-weight="600">activeProfile 로 컴포넌트 주입</text>
+
+  <!-- SaaS Runtime (좌) -->
+  <g>
+    <rect x="60" y="380" width="700" height="430" rx="14" fill="#ecfeff" stroke="#06b6d4" stroke-width="1.8"/>
+    <g color="#06b6d4"><use href="#ico-globe" x="80" y="398" width="28" height="28"/></g>
+    <text x="118" y="421" font-size="20" font-weight="700" fill="#0e7490">SaaS Runtime</text>
+    <text x="80" y="446" font-size="12.5" fill="#155e75">kr · jp zone · 멀티 테넌트 · 공용 인프라</text>
+
+    <g>
+      <rect x="82" y="462" width="324" height="76" rx="9" fill="#ffffff" stroke="#67e8f9"/>
+      <g color="#06b6d4"><use href="#ico-key" x="96" y="476" width="18" height="18"/></g>
+      <text x="120" y="490" font-size="14" font-weight="700" fill="#0e7490">Auth · Manager keys</text>
+      <text x="96" y="514" font-size="12" fill="#1f2937">중앙 관리자 발급 API Key</text>
+      <text x="96" y="532" font-size="11.5" fill="#64748b">Account · Credit 연동</text>
+    </g>
+
+    <g>
+      <rect x="414" y="462" width="324" height="76" rx="9" fill="#ffffff" stroke="#67e8f9"/>
+      <g color="#06b6d4"><use href="#ico-brain" x="428" y="476" width="18" height="18"/></g>
+      <text x="452" y="490" font-size="14" font-weight="700" fill="#0e7490">Model · 상용 + 자체 호스팅</text>
+      <text x="428" y="514" font-size="12" fill="#1f2937">상용 모델 + 자체 호스팅 모델 (vLLM)</text>
+      <text x="428" y="532" font-size="11.5" fill="#64748b">트래픽 · 비용 따라 분배</text>
+    </g>
+
+    <g>
+      <rect x="82" y="554" width="324" height="76" rx="9" fill="#ffffff" stroke="#67e8f9"/>
+      <g color="#06b6d4"><use href="#ico-db" x="96" y="568" width="18" height="18"/></g>
+      <text x="120" y="582" font-size="14" font-weight="700" fill="#0e7490">Storage · MinIO + Redis</text>
+      <text x="96" y="606" font-size="12" fill="#1f2937">MinIO Object Storage (원본 / 결과)</text>
+      <text x="96" y="624" font-size="11.5" fill="#64748b">Redis 캐시 · 작업 상태</text>
+    </g>
+
+    <g>
+      <rect x="414" y="554" width="324" height="76" rx="9" fill="#ffffff" stroke="#67e8f9"/>
+      <g color="#06b6d4"><use href="#ico-chat" x="428" y="568" width="18" height="18"/></g>
+      <text x="452" y="582" font-size="14" font-weight="700" fill="#0e7490">Prompt · 기본</text>
+      <text x="428" y="606" font-size="12" fill="#1f2937">공통 기본 prompt</text>
+      <text x="428" y="624" font-size="11.5" fill="#64748b">필요 시 옵션으로 주입</text>
+    </g>
+
+    <text x="80" y="660" font-size="13" font-weight="700" fill="#0e7490">특징</text>
+    <text x="80" y="682" font-size="12" fill="#1f2937">하나의 코드 기반에서 region 별 zone 만 다르게 배포</text>
+    <text x="80" y="702" font-size="12" fill="#1f2937">신규 zone 합류 시 yaml + infra 만 추가하면 됨</text>
+    <text x="80" y="724" font-size="12" fill="#1f2937">Billing · Usage 는 Storm 통합 시스템과 연동</text>
+  </g>
+
+  <!-- On-Prem Runtime (우) -->
+  <g>
+    <rect x="780" y="380" width="700" height="430" rx="14" fill="#fff7ed" stroke="#f97316" stroke-width="1.8"/>
+    <g color="#f97316"><use href="#ico-building" x="800" y="398" width="28" height="28"/></g>
+    <text x="838" y="421" font-size="20" font-weight="700" fill="#9a3412">On-Prem Runtime</text>
+    <text x="800" y="446" font-size="12.5" fill="#7c2d12">N 개 site · 폐쇄망 · 사이트별 인프라</text>
+
+    <g>
+      <rect x="802" y="462" width="324" height="76" rx="9" fill="#ffffff" stroke="#fdba74"/>
+      <g color="#f97316"><use href="#ico-key" x="816" y="476" width="18" height="18"/></g>
+      <text x="840" y="490" font-size="14" font-weight="700" fill="#9a3412">Auth · Master key</text>
+      <text x="816" y="514" font-size="12" fill="#1f2937">사이트별 master key</text>
+      <text x="816" y="532" font-size="11.5" fill="#64748b">중앙 발급/회수 흐름 없음</text>
+    </g>
+
+    <g>
+      <rect x="1134" y="462" width="324" height="76" rx="9" fill="#ffffff" stroke="#fdba74"/>
+      <g color="#f97316"><use href="#ico-brain" x="1148" y="476" width="18" height="18"/></g>
+      <text x="1172" y="490" font-size="14" font-weight="700" fill="#9a3412">Model · 자체 호스팅</text>
+      <text x="1148" y="514" font-size="12" fill="#1f2937">사이트 내 자체 호스팅 모델 (vLLM)</text>
+      <text x="1148" y="532" font-size="11.5" fill="#64748b">외부 API 호출 없음</text>
+    </g>
+
+    <g>
+      <rect x="802" y="554" width="324" height="76" rx="9" fill="#ffffff" stroke="#fdba74"/>
+      <g color="#f97316"><use href="#ico-db" x="816" y="568" width="18" height="18"/></g>
+      <text x="840" y="582" font-size="14" font-weight="700" fill="#9a3412">Storage · MinIO + Redis</text>
+      <text x="816" y="606" font-size="12" fill="#1f2937">사이트 MinIO Object Storage</text>
+      <text x="816" y="624" font-size="11.5" fill="#64748b">로컬 Redis 캐시</text>
+    </g>
+
+    <g>
+      <rect x="1134" y="554" width="324" height="76" rx="9" fill="#ffffff" stroke="#fdba74"/>
+      <g color="#f97316"><use href="#ico-chat" x="1148" y="568" width="18" height="18"/></g>
+      <text x="1172" y="582" font-size="14" font-weight="700" fill="#9a3412">Prompt · site + opt</text>
+      <text x="1148" y="606" font-size="12" fill="#1f2937">site prompt + optional inject</text>
+      <text x="1148" y="624" font-size="11.5" fill="#64748b">고객사 커스터마이징</text>
+    </g>
+
+    <text x="800" y="660" font-size="13" font-weight="700" fill="#9a3412">특징</text>
+    <text x="800" y="682" font-size="12" fill="#1f2937">고객사 환경 안에서 동작 · 외부 호출 / 의존성 없음</text>
+    <text x="800" y="702" font-size="12" fill="#1f2937">신규 site 합류 시 yaml + master key 발급으로 합류</text>
+    <text x="800" y="724" font-size="12" fill="#1f2937">Prompt 와 모델만 사이트 정책에 맞게 조정</text>
+    <text x="800" y="746" font-size="12" fill="#1f2937">SaaS 와 같은 spec, 같은 코드 베이스</text>
+  </g>
+</svg>
