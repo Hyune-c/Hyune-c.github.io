@@ -3,7 +3,7 @@ title: OpenGateway 개발/운영
 company: 사이오닉AI
 companySlug: sionic-ai
 period: 2024.09 — 현재
-order: 3
+order: 1
 summary: 내부용 LLM Routing 엔진을 OpenAI 호환 공개 API Gateway 상품으로 확장. RPM 180, Daily 250K, 10+ Provider, 100+ Model 서빙. Multi-deployment 지원.
 tags: [API Gateway, Spring, Kotlin, Billing, Multi-deployment]
 ---

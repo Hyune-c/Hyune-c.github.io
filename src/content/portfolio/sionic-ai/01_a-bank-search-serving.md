@@ -3,7 +3,7 @@ title: A 은행 검색 데이터 서빙 구조 개선
 company: 사이오닉AI
 companySlug: sionic-ai
 period: 2024.09 — now
-order: 1
+order: 3
 summary: 710만 벡터 규모의 검색 데이터 서빙·색인 파이프라인 안정성 검증 및 성능 개선. Indexer 처리 시간을 3시간 30분에서 24분으로 단축 (88.6% 감소).
 tags: [Qdrant, Parquet, Performance]
 ---
