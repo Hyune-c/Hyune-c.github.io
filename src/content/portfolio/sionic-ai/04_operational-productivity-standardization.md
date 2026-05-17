@@ -5,7 +5,7 @@ companySlug: sionic-ai
 period: 2024.09 — now
 order: 4
 summary: Apidog 기반 API Hub로 문서·테스트 흐름 표준화. onepage-payment·storm-differ·BO 등 운영 지원 도구 개발.
-tags: [Apidog, BO]
+tags: [Apidog, BO, Python, Node.js]
 ---
 
 ## 배경
