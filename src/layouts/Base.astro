@@ -56,20 +56,14 @@ const { title, description = "도움이 되고 싶은 개발자, 최병현입니
         var printBtn = document.getElementById("print-btn");
         if (printBtn) {
           printBtn.addEventListener("click", function () {
-            window.print();
-          });
-        }
-        var printName = document.body.dataset.printName;
-        if (printName) {
-          var originalTitle = null;
-          window.addEventListener("beforeprint", function () {
-            originalTitle = document.title;
-            document.title = printName;
-          });
-          window.addEventListener("afterprint", function () {
-            if (originalTitle !== null) {
+            var printName = document.body.dataset.printName;
+            if (printName) {
+              var originalTitle = document.title;
+              document.title = printName;
+              window.print();
               document.title = originalTitle;
-              originalTitle = null;
+            } else {
+              window.print();
             }
           });
         }
