@@ -5,9 +5,10 @@ import Sidebar from "../components/Sidebar.astro";
 interface Props {
   title: string;
   description?: string;
+  printName?: string;
 }
 
-const { title, description = "도움이 되고 싶은 개발자, 최병현입니다." } = Astro.props;
+const { title, description = "도움이 되고 싶은 개발자, 최병현입니다.", printName } = Astro.props;
 ---
 
 <!doctype html>
@@ -33,7 +34,7 @@ const { title, description = "도움이 되고 싶은 개발자, 최병현입니
       })();
     </script>
   </head>
-  <body>
+  <body data-print-name={printName}>
     <div class="md:grid md:grid-cols-[260px_1fr] md:max-w-[1280px] md:mx-auto min-h-screen">
       <Sidebar />
       <main class="px-6 py-10 md:py-16 md:pl-14 md:pr-12 max-w-[880px]">
@@ -56,6 +57,20 @@ const { title, description = "도움이 되고 싶은 개발자, 최병현입니
         if (printBtn) {
           printBtn.addEventListener("click", function () {
             window.print();
+          });
+        }
+        var printName = document.body.dataset.printName;
+        if (printName) {
+          var originalTitle = null;
+          window.addEventListener("beforeprint", function () {
+            originalTitle = document.title;
+            document.title = printName;
+          });
+          window.addEventListener("afterprint", function () {
+            if (originalTitle !== null) {
+              document.title = originalTitle;
+              originalTitle = null;
+            }
           });
         }
       })();
