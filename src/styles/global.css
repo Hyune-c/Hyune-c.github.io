@@ -40,7 +40,6 @@ html.dark {
     color: var(--color-ink);
     background: var(--color-bg);
     font-family: var(--font-sans);
-    font-feature-settings: "ss06", "ss03";
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     word-break: keep-all;
@@ -49,8 +48,8 @@ html.dark {
   }
 
   body {
-    line-height: 1.65;
-    letter-spacing: -0.005em;
+    line-height: 1.75;
+    letter-spacing: 0;
   }
 
   html {

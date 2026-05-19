@@ -4,7 +4,7 @@ company: 컬리페이
 companySlug: kurlypay
 period: 2022.09 — 2023.12
 order: 1
-summary: 외부 제휴사·컬리몰 흐름 분리, B2C/B2B/법인카드/개인 대량 구매 4종 유스케이스 지원, 상품권 라이프사이클 Kafka 처리.
+summary: B2C/B2B/법인카드/개인 대량 구매 4종 유스케이스 지원, 외부 제휴사·컬리몰 흐름 분리, 상품권 라이프사이클 Kafka 처리.
 tags: [Spring, Kafka, B2B, B2C, Payment]
 ---
 
