@@ -50,7 +50,7 @@ AI 를 활용하는 데 있어 가장 중요한 결정은 **통제해야 하는 
 
 </div>
 
-- 핵심 호출 경로에 회귀 테스트를 적용해 변경 시점마다 회귀를 차단합니다
+- 핵심 기능에 회귀 테스트를 적용해 변경 시점마다 주요 동작이 깨지지 않는지 검증합니다
 
 ![OpenGateway smoke test 상세 결과](./assets/opengateway-smoke-test-detail.png)
 
