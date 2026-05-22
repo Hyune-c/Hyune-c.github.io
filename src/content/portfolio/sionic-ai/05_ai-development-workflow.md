@@ -52,7 +52,7 @@ AI 를 활용하는 데 있어 가장 중요한 결정은 **통제해야 하는 
 
 - 핵심 호출 경로에 회귀 테스트를 적용해 변경 시점마다 회귀를 차단합니다
 
-![OpenGateway Response format smoke test 결과 (Provider × Format × Mode 매트릭스, 24 PASS / 0 FAIL)](./assets/ai-development-workflow-image-03.png)
+![OpenGateway smoke test 상세 결과](./assets/opengateway-smoke-test-detail.png)
 
 ## 적극적인 실험과 학습
 

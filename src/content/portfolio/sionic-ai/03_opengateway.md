@@ -50,4 +50,4 @@ tags: [API Gateway, Spring, Kotlin, Billing, Multi-deployment]
 
 ![OpenGateway Grafana Dashboard](./assets/opengateway-image-02.png)
 
-![OpenGateway Model Check](./assets/opengateway-image-03.png)
+![OpenGateway live smoke test 결과](./assets/opengateway-smoke-test-live.png)
