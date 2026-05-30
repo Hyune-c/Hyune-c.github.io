@@ -55,7 +55,7 @@
   <!-- 통합 요약 박스 (제목 아래) -->
   <g>
     <rect x="60" y="78" width="1380" height="84" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2"/>
-    <text x="80" y="106" font-size="13" fill="#334155">API spec 은 유지하고, profile 에 따라 Auth · Model Provider · Storage · Prompt 를 다르게 조립</text>
+    <text x="80" y="106" font-size="13" fill="#334155">API spec 은 유지하고, profile 별로 Auth · Model · Storage · Prompt 를 조립</text>
     <text x="80" y="140" font-size="13" fill="#334155">한 코드 베이스에서 <tspan font-weight="700" fill="#0e7490">SaaS multi-zone</tspan> 과 <tspan font-weight="700" fill="#9a3412">N 개 On-Prem site</tspan> 를 동시 지원 · 신규 환경 합류 비용은 yaml + 인프라 추가 수준</text>
   </g>
 

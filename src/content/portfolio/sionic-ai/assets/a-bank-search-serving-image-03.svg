@@ -85,7 +85,7 @@
   <!-- 분리의 효과 (제목 아래 통합 박스) -->
   <g>
     <rect x="60" y="78" width="1380" height="84" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2"/>
-    <text x="80" y="106" font-size="13" fill="#334155">Runner 부트타임에 직접 로드하던 흐름을, Indexer 가 사전 Parquet 을 만들고 Runner 는 그것만 받아 적재하는 방식으로 분리</text>
+    <text x="80" y="106" font-size="13" fill="#334155">Indexer 가 Parquet 을 사전 생성하고, Runner 는 준비된 파일만 받아 적재하도록 분리</text>
     <text x="80" y="140" font-size="13" fill="#334155">기존 <tspan font-weight="700" fill="#b91c1c">3시간 30분</tspan>  →  개선 <tspan font-weight="700" fill="#047857">24분</tspan>  <tspan fill="#64748b">(88.6% 단축 · 8.8배 개선)</tspan></text>
   </g>
 
@@ -166,7 +166,7 @@
     <rect x="430" y="460" width="640" height="100" rx="12" fill="#faf5ff" stroke="#a855f7" stroke-width="1.5"/>
     <g color="#a855f7"><use href="#ico-files" x="466" y="476" width="28" height="28"/></g>
     <text x="510" y="496" font-size="18" font-weight="700" fill="#6b21a8">Parquet Storage</text>
-    <text x="750" y="524" text-anchor="middle" font-size="12.5" fill="#1f2937">agent 별 Parquet 파일 + 버전 metadata — Indexer / Runner 를 잇는 매개</text>
+    <text x="750" y="524" text-anchor="middle" font-size="12.5" fill="#1f2937">agent 별 Parquet 파일 + 버전 metadata — Indexer 와 Runner 의 연결 지점</text>
     <text x="750" y="544" text-anchor="middle" font-size="11.5" fill="#64748b">Runner 부트타임에 데이터를 만들지 않고, 이미 준비된 파일만 받아 메모리에 적재</text>
   </g>
 
