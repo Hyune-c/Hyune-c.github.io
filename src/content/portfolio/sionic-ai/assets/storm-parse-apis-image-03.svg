@@ -56,7 +56,7 @@
   <g>
     <rect x="60" y="78" width="1380" height="84" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2"/>
     <text x="80" y="106" font-size="13" fill="#334155">API spec 은 유지하고, profile 별로 Auth · Model · Storage · Prompt 를 조립</text>
-    <text x="80" y="140" font-size="13" fill="#334155">한 코드 베이스에서 <tspan font-weight="700" fill="#0e7490">SaaS multi-zone</tspan> 과 <tspan font-weight="700" fill="#9a3412">N 개 On-Prem site</tspan> 를 동시 지원 · 신규 환경 합류 비용은 yaml + 인프라 추가 수준</text>
+    <text x="80" y="140" font-size="13" fill="#334155">한 코드 베이스에서 <tspan font-weight="700" fill="#0e7490">SaaS multi-zone</tspan> 과 <tspan font-weight="700" fill="#9a3412">N 개 Airgap site</tspan> 를 동시 지원 · 신규 환경 합류 비용은 yaml + 인프라 추가 수준</text>
   </g>
 
   <!-- 공통 코드 박스 -->
@@ -135,11 +135,11 @@
     <text x="80" y="724" font-size="12" fill="#1f2937">Billing · Usage 는 Storm 통합 시스템과 연동</text>
   </g>
 
-  <!-- On-Prem Runtime (우) -->
+  <!-- Airgap Runtime (우) -->
   <g>
     <rect x="780" y="380" width="700" height="430" rx="14" fill="#fff7ed" stroke="#f97316" stroke-width="1.8"/>
     <g color="#f97316"><use href="#ico-building" x="800" y="398" width="28" height="28"/></g>
-    <text x="838" y="421" font-size="20" font-weight="700" fill="#9a3412">On-Prem Runtime</text>
+    <text x="838" y="421" font-size="20" font-weight="700" fill="#9a3412">Airgap Runtime</text>
     <text x="800" y="446" font-size="12.5" fill="#7c2d12">N 개 site · 폐쇄망 · 사이트별 인프라</text>
 
     <g>

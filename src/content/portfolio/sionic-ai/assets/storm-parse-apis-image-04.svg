@@ -106,7 +106,7 @@
       <text x="554" y="330" font-size="12" fill="#1f2937">전처리 / 페이지 분할</text>
       <text x="554" y="348" font-size="12" fill="#1f2937">프롬프트 구성</text>
       <text x="554" y="376" font-size="12" fill="#1f2937">profile 별 Prompt 적용</text>
-      <text x="554" y="394" font-size="12" fill="#1f2937">SaaS: 기본 · On-Prem: site</text>
+      <text x="554" y="394" font-size="12" fill="#1f2937">SaaS: 기본 · Airgap: site</text>
       <text x="554" y="422" font-size="11.5" fill="#64748b">실패 시 cancel 경로로</text>
       <text x="554" y="442" font-size="11.5" fill="#64748b">진입 (infer 하지 않음)</text>
     </g>
@@ -205,7 +205,7 @@
       <rect x="1180" y="604" width="240" height="136" rx="9" fill="#ffffff" stroke="#94a3b8"/>
       <text x="1196" y="628" font-size="13" font-weight="700" fill="#334155">Prompt</text>
       <text x="1196" y="650" font-size="11.5" fill="#1f2937">SaaS: 공통 기본 prompt</text>
-      <text x="1196" y="668" font-size="11.5" fill="#1f2937">On-Prem: site + opt inject</text>
+      <text x="1196" y="668" font-size="11.5" fill="#1f2937">Airgap: site + opt inject</text>
       <text x="1196" y="690" font-size="11" fill="#64748b">preInfer 단계에서 조립</text>
       <text x="1196" y="708" font-size="11" fill="#64748b">profile 로 전략 주입</text>
     </g>

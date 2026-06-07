@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 636" font-family="system-ui, -apple-system, 'Apple SD Gothic Neo', 'Pretendard', sans-serif">
+  <defs>
+    <marker id="rc-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect width="1500" height="636" fill="#fbfcfd"/>
+
+  <!-- Title -->
+  <text x="60" y="56"><tspan font-size="26" font-weight="700" fill="#0f172a">핵심 설계 — Region Routing 과 Prompt Cache stickiness</tspan><tspan font-size="14" fill="#64748b" dx="16">같은 대화는 같은 serving 위치로 보내 캐시 적중을 지키되, 가용성은 절대 해치지 않는다</tspan></text>
+
+  <!-- ===== Left column: RoutingFactor chain ===== -->
+  <text x="60" y="108" font-size="15" font-weight="700" fill="#334155">SmartRouter — RoutingFactor 체인</text>
+
+  <!-- requestEntries -->
+  <rect x="80" y="128" width="520" height="60" rx="10" fill="#eef2ff" stroke="#6366f1" stroke-width="1.4"/>
+  <text x="104" y="154" font-size="15" font-weight="700" fill="#3730a3">requestEntries — 후보 집합</text>
+  <text x="104" y="175" font-size="12.5" fill="#1f2937">ModelCatalog 에서 modelId · endpoint 로 추린 (provider · region) 후보</text>
+  <line x1="340" y1="188" x2="340" y2="226" stroke="#475569" stroke-width="1.6" marker-end="url(#rc-ar)"/>
+
+  <!-- AvailabilityFactor -->
+  <rect x="80" y="226" width="520" height="68" rx="10" fill="#f0fdf4" stroke="#10b981" stroke-width="1.6"/>
+  <text x="104" y="252" font-size="15" font-weight="700" fill="#047857">1 · AvailabilityFactor</text>
+  <text x="104" y="275" font-size="12.5" fill="#1f2937">살아있는 provider · region 만 남긴다 (장애 위치 제거)</text>
+  <line x1="340" y1="294" x2="340" y2="332" stroke="#475569" stroke-width="1.6" marker-end="url(#rc-ar)"/>
+
+  <!-- CacheStickyFactor -->
+  <rect x="80" y="332" width="520" height="68" rx="10" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.6"/>
+  <text x="104" y="358" font-size="15" font-weight="700" fill="#b45309">2 · CacheStickyFactor</text>
+  <text x="104" y="381" font-size="12.5" fill="#1f2937">살아있는 후보 중 최근 성공한 캐시 보유 위치를 최우선으로 끌어올린다 (단독 고정 아님)</text>
+  <line x1="340" y1="400" x2="340" y2="438" stroke="#475569" stroke-width="1.6" marker-end="url(#rc-ar)"/>
+
+  <!-- ExplicitFallbackFactor -->
+  <rect x="80" y="438" width="520" height="68" rx="10" fill="#ecfeff" stroke="#06b6d4" stroke-width="1.6"/>
+  <text x="104" y="464" font-size="15" font-weight="700" fill="#0e7490">3 · ExplicitFallbackFactor</text>
+  <text x="104" y="487" font-size="12.5" fill="#1f2937">사용자가 지정한 fallback 모델을 후보에 합류</text>
+  <line x1="340" y1="506" x2="340" y2="544" stroke="#475569" stroke-width="1.6" marker-end="url(#rc-ar)"/>
+
+  <!-- routeEntries -->
+  <rect x="80" y="544" width="520" height="60" rx="10" fill="#faf5ff" stroke="#a855f7" stroke-width="1.4"/>
+  <text x="104" y="570" font-size="15" font-weight="700" fill="#6b21a8">routeEntries — 최대 3 시도</text>
+  <text x="104" y="591" font-size="12.5" fill="#1f2937">Facade 가 위에서부터 순차 시도, 첫 성공 시 즉시 반환</text>
+
+  <!-- ===== Right column: rationale ===== -->
+  <text x="680" y="108" font-size="15" font-weight="700" fill="#334155">왜 이 순서인가</text>
+
+  <!-- Availability-first policy -->
+  <rect x="680" y="128" width="760" height="118" rx="12" fill="#ffffff" stroke="#10b981" stroke-width="1.6"/>
+  <text x="704" y="156" font-size="16" font-weight="700" fill="#047857">가용성 우선 — 깨질 수 없는 순서</text>
+  <text x="704" y="184" font-size="15" font-weight="700" fill="#0f172a">가용성  &gt;  entry stickiness  &gt;  region-priority</text>
+  <text x="704" y="210" font-size="12.5" fill="#1f2937">이전 serving 위치가 장애면 캐시 손실을 감수하고 살아있는 위치로 보낸다.</text>
+  <text x="704" y="230" font-size="12.5" fill="#1f2937">그래서 stickiness 는 AvailabilityFactor 가 거른 후보 안에서만 작동한다.</text>
+
+  <!-- Multiturn sticky -->
+  <rect x="680" y="266" width="760" height="158" rx="12" fill="#ffffff" stroke="#f59e0b" stroke-width="1.6"/>
+  <text x="704" y="294" font-size="16" font-weight="700" fill="#b45309">멀티턴 — prefix 누적이라 sticky 가 곧 캐시 적중</text>
+  <!-- flow chips -->
+  <rect x="704" y="312" width="200" height="40" rx="8" fill="#fffbeb" stroke="#fcd34d" stroke-width="1.1"/>
+  <text x="804" y="337" font-size="12.5" fill="#1f2937" text-anchor="middle">대화 식별 prefix</text>
+  <line x1="908" y1="332" x2="940" y2="332" stroke="#475569" stroke-width="1.5" marker-end="url(#rc-ar)"/>
+  <rect x="944" y="312" width="230" height="40" rx="8" fill="#fffbeb" stroke="#fcd34d" stroke-width="1.1"/>
+  <text x="1059" y="337" font-size="12.5" fill="#1f2937" text-anchor="middle">fingerprint (SHA-256)</text>
+  <line x1="1178" y1="332" x2="1210" y2="332" stroke="#475569" stroke-width="1.5" marker-end="url(#rc-ar)"/>
+  <rect x="1214" y="312" width="200" height="40" rx="8" fill="#fffbeb" stroke="#fcd34d" stroke-width="1.1"/>
+  <text x="1314" y="337" font-size="12.5" fill="#1f2937" text-anchor="middle">같은 serving 위치</text>
+  <text x="704" y="378" font-size="12.5" fill="#1f2937">한 대화가 매번 다른 위치로 가면 각 provider 가 자기가 본 prefix 까지만 캐싱 → 매 턴 cold.</text>
+  <text x="704" y="400" font-size="12.5" fill="#1f2937">전체 messages 해시는 매 턴 달라져 쓸 수 없다 — system + 첫 user turn 으로 고정해 prefix 누적 hit 를 지킨다.</text>
+
+  <!-- ModelEntryKey -->
+  <rect x="680" y="444" width="760" height="172" rx="12" fill="#ffffff" stroke="#6366f1" stroke-width="1.6"/>
+  <text x="704" y="472" font-size="16" font-weight="700" fill="#3730a3">ModelEntryKey — 세 곳이 공유하는 serving 위치 식별자</text>
+  <rect x="704" y="488" width="712" height="38" rx="8" fill="#eef2ff" stroke="#c7d2fe" stroke-width="1.1"/>
+  <text x="1060" y="513" font-size="14" font-weight="700" fill="#3730a3" text-anchor="middle">( provider · owner · modelName · region )</text>
+  <text x="704" y="552" font-size="12.5" fill="#1f2937">① 캐시 Redis key 의 location 계층    ② fingerprint → 위치 sticky 매핑    ③ 라우팅 후보 dedup</text>
+  <rect x="704" y="566" width="712" height="36" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="714" y="589" font-size="12" font-family="ui-monospace, monospace" fill="#475569">{app}:prompt-cache:{location}:{inputHash}  — region 다르면 다른 key → stale pointer 제거</text>
+</svg>
