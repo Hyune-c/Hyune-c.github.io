@@ -43,16 +43,16 @@ const currentCompanySlug = currentEntryId.split("/")[0] ?? "";
 ---
 
 <aside
-  class="sidebar md:sticky md:top-0 md:h-screen md:overflow-y-auto md:py-14 md:pl-8 md:pr-4 px-6 py-5 border-b md:border-b-0 md:border-r border-[var(--color-line)] flex md:flex-col md:gap-0 items-center md:items-stretch justify-between md:justify-start gap-4 bg-[var(--color-bg)] z-10"
+  class="sidebar md:sticky md:top-0 md:h-screen md:overflow-hidden md:py-14 md:pl-8 md:pr-8 px-6 py-5 border-b md:border-b-0 md:border-r border-[var(--color-line)] flex md:flex-col md:gap-0 items-center md:items-stretch justify-between md:justify-start gap-4 bg-[var(--color-bg)] z-10"
 >
   <a href="/" class="brand block">
     <h2 class="text-[22px] font-bold tracking-tight">최병현</h2>
-    <p class="text-[14.5px] font-mono text-[var(--color-ink-subtle)] mt-0.5">
+    <p class="text-[14.5px] font-mono text-[var(--color-ink-subtle)] mt-0.5 whitespace-nowrap">
       backend developer
     </p>
   </a>
 
-  <nav class="hidden md:block mt-10 flex-1 min-h-0">
+  <nav class="hidden md:block mt-10 flex-1 min-h-0 overflow-y-auto">
     <ul class="space-y-0.5 text-[16px]">
       <li>
         <a
@@ -145,7 +145,7 @@ const currentCompanySlug = currentEntryId.split("/")[0] ?? "";
     </ul>
   </nav>
 
-  <div class="md:mt-auto md:pt-6 md:border-t md:border-[var(--color-line)] flex items-center gap-2">
+  <div class="md:mt-auto md:pt-8 flex items-center gap-2">
     <button
       id="theme-toggle"
       type="button"

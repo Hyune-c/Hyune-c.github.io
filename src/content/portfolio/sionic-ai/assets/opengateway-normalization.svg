@@ -1,78 +1,51 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 790" font-family="system-ui, -apple-system, 'Apple SD Gothic Neo', 'Pretendard', sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 394" font-family="system-ui, -apple-system, 'Apple SD Gothic Neo', 'Pretendard', sans-serif">
   <defs>
     <marker id="nm-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
-      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+      <path d="M0,0 L10,5 L0,10 z" fill="#1e293b"/>
     </marker>
   </defs>
 
-  <rect width="1500" height="790" fill="#fbfcfd"/>
+  <rect width="1500" height="394" fill="#fbfcfd"/>
 
   <!-- Title -->
-  <text x="60" y="56"><tspan font-size="26" font-weight="700" fill="#0f172a">핵심 설계 — 파라미터·에러 정규화와 투명성</tspan><tspan font-size="14" fill="#64748b" dx="16">OpenAI 호환 단일 spec 으로 받되, provider 제약은 OG 가 흡수하고 — 무엇을 바꿨는지 선택적으로 되돌려준다</tspan></text>
+  <text x="60" y="56"><tspan font-size="26" font-weight="700" fill="#0f172a">핵심 설계 — Parameter Normalization 과 투명성</tspan><tspan font-size="14" fill="#64748b" dx="16">OpenAI 호환 단일 spec 으로 받되, provider 제약은 OG 가 흡수하고 — 무엇을 바꿨는지 선택적으로 되돌려준다</tspan></text>
 
   <!-- ===== Section 1: parameter normalization ===== -->
-  <text x="60" y="96" font-size="15" font-weight="700" fill="#334155">① 파라미터 정규화 — toProvider() 한 곳에서 보정하고, DebugCapture 가 wire diff 로 투명화</text>
+  <text x="60" y="96" font-size="15" font-weight="700" fill="#334155">Parameter Normalization — toProvider() 한 곳에서 provider 제약에 맞춰 보정</text>
 
-  <!-- flow: request -> mapper -> wire -->
-  <rect x="60" y="116" width="400" height="92" rx="11" fill="#eef2ff" stroke="#6366f1" stroke-width="1.5"/>
-  <text x="84" y="146" font-size="15" font-weight="700" fill="#3730a3">사용자 요청 (OpenAI 호환)</text>
-  <text x="84" y="170" font-size="12.5" fill="#1f2937">temperature · top_p · max_tokens …</text>
-  <text x="84" y="190" font-size="12.5" fill="#1f2937">보낸 값 원본</text>
-  <line x1="460" y1="162" x2="538" y2="162" stroke="#475569" stroke-width="1.6" marker-end="url(#nm-ar)"/>
+  <!-- flow: request -> mapper -> provider body -->
+  <rect x="60" y="116" width="400" height="70" rx="11" fill="#eef2ff" stroke="#6366f1" stroke-width="1.5"/>
+  <text x="84" y="144" font-size="15" font-weight="700" fill="#3730a3">사용자 요청 (OpenAI 호환)</text>
+  <text x="84" y="168" font-size="12.5" fill="#1f2937">temperature · top_p · max_tokens … (보낸 값 원본)</text>
+  <line x1="460" y1="151" x2="538" y2="151" stroke="#475569" stroke-width="1.6" marker-end="url(#nm-ar)"/>
 
-  <rect x="542" y="116" width="416" height="92" rx="11" fill="#ecfeff" stroke="#06b6d4" stroke-width="1.6"/>
-  <text x="566" y="146" font-size="15" font-weight="700" fill="#0e7490">Mapper.toProvider()</text>
-  <text x="566" y="170" font-size="12.5" fill="#1f2937">provider 제약에 맞춰 strip · override · add</text>
-  <text x="566" y="190" font-size="12.5" fill="#64748b">검증(validation)은 ModelService 가 분리 담당</text>
-  <line x1="958" y1="162" x2="1036" y2="162" stroke="#475569" stroke-width="1.6" marker-end="url(#nm-ar)"/>
+  <rect x="542" y="116" width="416" height="70" rx="11" fill="#ecfeff" stroke="#06b6d4" stroke-width="1.6"/>
+  <text x="566" y="144" font-size="15" font-weight="700" fill="#0e7490">Mapper.toProvider()</text>
+  <text x="566" y="168" font-size="12.5" fill="#1f2937">provider 제약에 맞춰 strip · override · add</text>
+  <line x1="958" y1="151" x2="1036" y2="151" stroke="#475569" stroke-width="1.6" marker-end="url(#nm-ar)"/>
 
-  <rect x="1040" y="116" width="400" height="92" rx="11" fill="#f0fdf4" stroke="#10b981" stroke-width="1.6"/>
-  <text x="1064" y="146" font-size="15" font-weight="700" fill="#047857">provider wire body</text>
-  <text x="1064" y="170" font-size="12.5" fill="#1f2937">실제 upstream 으로 나가는 요청</text>
+  <rect x="1040" y="116" width="400" height="70" rx="11" fill="#f0fdf4" stroke="#10b981" stroke-width="1.6"/>
+  <text x="1064" y="144" font-size="15" font-weight="700" fill="#047857">provider 요청 body</text>
+  <text x="1064" y="168" font-size="12.5" fill="#1f2937">toProviderBody — upstream 으로 나가는 요청</text>
 
-  <!-- DebugCapture band -->
-  <rect x="60" y="228" width="1380" height="56" rx="10" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5"/>
-  <text x="84" y="254" font-size="15" font-weight="700" fill="#b45309">DebugCapture</text>
-  <text x="220" y="254" font-size="13" fill="#1f2937">요청 원본 ↔ provider wire body 를 diff — override · add · strip 을 값 수준으로 자동 추출</text>
-  <text x="84" y="273" font-size="11.5" fill="#92400e">max_tokens↔max_completion_tokens 같은 표기 차이는 alias 로 흡수해 가짜 diff 제거</text>
+  <!-- ===== Section 2: DebugCapture (2-column) ===== -->
+  <text x="60" y="226" font-size="15" font-weight="700" fill="#334155">DebugCapture — 무엇을 바꿨는지 요청 body diff 로 잡아 응답에 선택적으로 노출</text>
 
-  <!-- Response debug -->
-  <rect x="60" y="304" width="1380" height="158" rx="11" fill="#ffffff" stroke="#a855f7" stroke-width="1.6"/>
-  <text x="84" y="332" font-size="15" font-weight="700" fill="#6b21a8">응답 top-level <tspan font-family="ui-monospace, monospace">debug</tspan> — <tspan font-family="ui-monospace, monospace">extra.debug</tspan> 로 opt-in</text>
-  <text x="700" y="332" font-size="12.5" fill="#64748b">normalize(보정 동작) ⊥ debug(가시성) — 두 플래그는 직교</text>
-  <rect x="84" y="348" width="1332" height="58" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
-  <text x="98" y="372" font-size="12" font-family="ui-monospace, monospace" fill="#475569">debug.normalizations[] : { param, action: strip|override|add, before, after }</text>
-  <text x="98" y="394" font-size="12" font-family="ui-monospace, monospace" fill="#475569">debug.deprecations[]   ·   debug.routing[] (provider · region · status)</text>
-  <text x="84" y="436" font-size="12.5" fill="#1f2937">요청하지 않으면 보정은 동일하게 일어나되 응답엔 싣지 않는다 — zero payload.</text>
-  <text x="84" y="455" font-size="12.5" fill="#1f2937">폴백이 여러 번 일어나면 normalizations 는 최종 채택된 route 기준으로만 제공한다.</text>
+  <!-- left: capture (주황) -->
+  <rect x="60" y="246" width="680" height="132" rx="11" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="84" y="272" font-size="15" font-weight="700" fill="#b45309">Capture — 요청 원본 ↔ provider 요청 body diff</text>
+  <text x="84" y="304" font-size="12.5" fill="#1f2937">파라미터명은 그대로, 값만 바뀜 → 보정 (strip · override · add)</text>
+  <text x="84" y="334" font-size="12.5" fill="#1f2937">파라미터명 자체가 바뀜 → cross-schema 변환</text>
+  <text x="84" y="364" font-size="12.5" fill="#64748b">예) reasoning_effort → budget_tokens</text>
 
-  <!-- ===== Section 2: error normalization ===== -->
-  <text x="60" y="518" font-size="15" font-weight="700" fill="#334155">② Provider 에러 정규화 — 고객이 고칠 수 있는 것만 노출, 나머지는 추상화·은닉</text>
-
-  <!-- classifier -->
-  <rect x="60" y="538" width="320" height="218" rx="11" fill="#f1f5f9" stroke="#64748b" stroke-width="1.5"/>
-  <text x="84" y="568" font-size="15" font-weight="700" fill="#334155">provider 에러</text>
-  <text x="84" y="594" font-size="12.5" fill="#1f2937">type · code 로 분류</text>
-  <text x="84" y="616" font-size="12.5" fill="#1f2937">HTTP status 로는 판단 안 함</text>
-  <rect x="84" y="636" width="272" height="40" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.1"/>
-  <text x="220" y="661" font-size="13" font-weight="700" fill="#334155" text-anchor="middle">→ ErrorCategory</text>
-
-  <line x1="380" y1="570" x2="436" y2="570" stroke="#475569" stroke-width="1.6" marker-end="url(#nm-ar)"/>
-  <line x1="380" y1="647" x2="436" y2="647" stroke="#475569" stroke-width="1.6" marker-end="url(#nm-ar)"/>
-  <line x1="380" y1="724" x2="436" y2="724" stroke="#475569" stroke-width="1.6" marker-end="url(#nm-ar)"/>
-
-  <!-- bypass -->
-  <rect x="440" y="542" width="1000" height="58" rx="10" fill="#f0fdf4" stroke="#10b981" stroke-width="1.5"/>
-  <text x="464" y="568" font-size="14" font-weight="700" fill="#047857">✅ 바이패스 — 고객 책임</text>
-  <text x="464" y="588" font-size="12.5" fill="#1f2937">invalid_request 등 4xx 요청 오류: provider 원본 type · 메시지를 그대로 노출 (고객이 직접 고칠 수 있음)</text>
-
-  <!-- abstract -->
-  <rect x="440" y="618" width="1000" height="58" rx="10" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5"/>
-  <text x="464" y="644" font-size="14" font-weight="700" fill="#b45309">🟡 추상화 — 상황만 전달</text>
-  <text x="464" y="664" font-size="12.5" fill="#1f2937">rate limit · 5xx · timeout: OG 표준 메시지로 상황만 알려 retry 판단 가능, WARN 로그</text>
-
-  <!-- hide -->
-  <rect x="440" y="694" width="1000" height="58" rx="10" fill="#fef2f2" stroke="#f43f5e" stroke-width="1.5"/>
-  <text x="464" y="720" font-size="14" font-weight="700" fill="#be123c">🔒 은닉 — 원인 가림</text>
-  <text x="464" y="740" font-size="12.5" fill="#1f2937">인증 · 권한 · billing: internal error 로 가리고 ERROR 로그 · 운영 알림 (provider 계정 식별자 유출 차단)</text>
+  <!-- right: response debug JSON (회색) -->
+  <rect x="760" y="246" width="680" height="132" rx="11" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.3"/>
+  <text x="784" y="262" font-size="10.5" font-family="ui-monospace, monospace" fill="#8b5cf6">"debug": {</text>
+  <text x="796" y="277" font-size="10.5" font-family="ui-monospace, monospace" fill="#1e293b">"normalizations": [</text>
+  <text x="808" y="292" font-size="10.5" font-family="ui-monospace, monospace" fill="#1e293b">{ "param":"temperature", "action":"override", "before":1.4, "after":1.0 },</text>
+  <text x="808" y="307" font-size="10.5" font-family="ui-monospace, monospace" fill="#1e293b">{ "param":"max_tokens", "action":"add", "before":null, "after":8192 }</text>
+  <text x="796" y="322" font-size="10.5" font-family="ui-monospace, monospace" fill="#1e293b">],</text>
+  <text x="796" y="337" font-size="10.5" font-family="ui-monospace, monospace" fill="#1e293b">"deprecations": [ { "param":"max_tokens", "reason":"use max_completion_tokens" } ],</text>
+  <text x="796" y="352" font-size="10.5" font-family="ui-monospace, monospace" fill="#1e293b">"routing": [ {"provider":"kimi","status":"failed"}, {"provider":"openai","status":"succeeded"} ]</text>
+  <text x="784" y="367" font-size="10.5" font-family="ui-monospace, monospace" fill="#8b5cf6">}</text>
 </svg>

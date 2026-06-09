@@ -12,7 +12,7 @@ const { description = "도움이 되고 싶은 개발자, 최병현입니다.", 
 ---
 
 <!doctype html>
-<html lang="ko" class="dark">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -25,19 +25,19 @@ const { description = "도움이 되고 싶은 개발자, 최병현입니다.", 
         try {
           var stored = localStorage.getItem("theme");
           var root = document.documentElement;
-          if (stored === "light") {
-            root.classList.remove("dark");
-          } else {
+          if (stored === "dark") {
             root.classList.add("dark");
+          } else {
+            root.classList.remove("dark");
           }
         } catch (_) {}
       })();
     </script>
   </head>
   <body data-print-name={printName}>
-    <div class="md:grid md:grid-cols-[260px_1fr] md:max-w-[1280px] md:mx-auto min-h-screen">
+    <div class="md:grid md:grid-cols-[260px_1fr] md:max-w-[1360px] md:mx-auto min-h-screen">
       <Sidebar />
-      <main class="px-6 py-10 md:py-16 md:pl-14 md:pr-12 max-w-[880px]">
+      <main class="px-6 py-10 md:py-16 md:pl-14 md:pr-12 max-w-[980px]">
         <slot />
       </main>
     </div>

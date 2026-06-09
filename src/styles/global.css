@@ -105,6 +105,24 @@ html.dark {
   }
 }
 
+/* 작은 위젯 이미지 가로 배치 (원본 크기 유지 — 확대로 인한 깨짐 방지) */
+.img-row-small {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin: 1.5rem 0 0;
+}
+.img-row-small img {
+  width: auto;
+  max-height: 200px;
+  padding: 10px 22px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  margin: 0 !important;
+}
+
 /* 이미지 가로 3열 그리드 */
 .img-grid-3 {
   display: grid;
@@ -278,3 +296,4 @@ html.dark {
     height: auto !important;
   }
 }
+

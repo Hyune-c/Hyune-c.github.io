@@ -1,94 +1,89 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 680" font-family="system-ui, -apple-system, 'Apple SD Gothic Neo', 'Pretendard', sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 650" font-family="system-ui, -apple-system, 'Apple SD Gothic Neo', 'Pretendard', sans-serif">
   <defs>
-    <marker id="r-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+    <marker id="fr-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
       <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
-    </marker>
-    <marker id="r-ar-rec" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
-      <path d="M0,0 L10,5 L0,10 z" fill="#0ea5e9"/>
     </marker>
   </defs>
 
-  <rect width="1500" height="680" fill="#fbfcfd"/>
+  <rect width="1400" height="650" fill="#fbfcfd"/>
 
   <!-- Title -->
-  <text x="60" y="56"><tspan font-size="26" font-weight="700" fill="#0f172a">핵심 설계 — Facade 와 SmartRouter</tspan><tspan font-size="14" fill="#64748b" dx="16">Facade 는 비즈니스 흐름을 절차적으로 책임지고, SmartRouter 는 동적 결정을 맡는다</tspan></text>
+  <text x="60" y="56"><tspan font-size="26" font-weight="700" fill="#0f172a">핵심 설계 — Facade · 라우팅 · 에러 정규화</tspan><tspan font-size="14" fill="#64748b" dx="16">Facade 가 흐름을 통제하고 SmartRouter 가 Factor 체인으로 대상을 정한다</tspan></text>
 
-  <!-- Top: Request -->
-  <g>
-    <rect x="60" y="94" width="1380" height="50" rx="10" fill="#eef2ff" stroke="#6366f1" stroke-width="1.2"/>
-    <text x="84" y="126" font-size="14" font-weight="600" fill="#1e293b">요청 도착</text>
-    <text x="172" y="126" font-size="13" fill="#475569">model · fallback · endpoint — OpenAI 호환 단일 spec</text>
-  </g>
+  <!-- ===== Column 1: Facade ===== -->
+  <text x="60" y="108" font-size="15" font-weight="700" fill="#334155">Facade — 통제 영역 (절차적)</text>
 
-  <!-- Facade (left) -->
-  <g>
-    <rect x="60" y="170" width="620" height="380" rx="14" fill="#ecfeff" stroke="#06b6d4" stroke-width="1.8"/>
-    <text x="84" y="210" font-size="24" font-weight="700" fill="#0e7490">Facade</text>
-    <text x="84" y="236" font-size="13" fill="#155e75">통제 영역 — 비즈니스 흐름의 절차적 표현이 모이는 곳</text>
+  <rect x="60" y="124" width="360" height="64" rx="10" fill="#ecfeff" stroke="#06b6d4" stroke-width="1.4"/>
+  <text x="80" y="150" font-size="15" font-weight="700" fill="#0e7490">전체 흐름 제어</text>
+  <text x="80" y="172" font-size="12.5" fill="#1f2937">정규화 → 라우팅 위임 → 실행 → 직렬화</text>
 
-    <g>
-      <rect x="84" y="260" width="572" height="76" rx="10" fill="#ffffff" stroke="#67e8f9" stroke-width="1.1"/>
-      <text x="104" y="288" font-size="17" font-weight="700" fill="#0e7490">전체 흐름 제어</text>
-      <text x="104" y="316" font-size="13" fill="#1f2937">요청 정규화 → 라우팅 위임 → 실행 → 응답 / 스트림 직렬화 까지를 한자리에서</text>
-    </g>
+  <rect x="60" y="204" width="360" height="64" rx="10" fill="#ecfeff" stroke="#06b6d4" stroke-width="1.4"/>
+  <text x="80" y="230" font-size="15" font-weight="700" fill="#0e7490">모델 폴백</text>
+  <text x="80" y="252" font-size="12.5" fill="#1f2937">SmartRouter 가 선별한 대상을 순차 시도</text>
 
-    <g>
-      <rect x="84" y="348" width="572" height="76" rx="10" fill="#ffffff" stroke="#67e8f9" stroke-width="1.1"/>
-      <text x="104" y="376" font-size="17" font-weight="700" fill="#0e7490">모델 폴백</text>
-      <text x="104" y="404" font-size="13" fill="#1f2937">SmartRouter 가 준 대상을 위에서부터 시도하고, 성공 시 즉시 반환</text>
-    </g>
+  <rect x="60" y="284" width="360" height="64" rx="10" fill="#ecfeff" stroke="#06b6d4" stroke-width="1.4"/>
+  <text x="80" y="310" font-size="15" font-weight="700" fill="#0e7490">호출 이력 비동기 송출</text>
+  <text x="80" y="332" font-size="12.5" fill="#1f2937">응답 직후 시도 이력을 Control Plane 으로 전송</text>
 
-    <g>
-      <rect x="84" y="436" width="572" height="96" rx="10" fill="#ffffff" stroke="#67e8f9" stroke-width="1.1"/>
-      <text x="104" y="464" font-size="17" font-weight="700" fill="#0e7490">모델 호출 이력 배치 송출</text>
-      <text x="104" y="492" font-size="13" fill="#1f2937">매번 보내지 않고, 요청 1건 분의 시도 이력을 모아</text>
-      <text x="104" y="512" font-size="13" fill="#1f2937">응답 직후 한 번에 비동기로 Control Plane 에 발행</text>
-    </g>
-  </g>
+  <!-- ===== Column 2: SmartRouter — RoutingFactor chain ===== -->
+  <text x="450" y="108" font-size="15" font-weight="700" fill="#334155">SmartRouter — RoutingFactor 체인 (동적 결정)</text>
 
-  <!-- SmartRouter (right) -->
-  <g>
-    <rect x="820" y="170" width="620" height="380" rx="14" fill="#f0fdf4" stroke="#10b981" stroke-width="1.8"/>
-    <text x="844" y="210" font-size="24" font-weight="700" fill="#047857">SmartRouter</text>
-    <text x="844" y="236" font-size="13" fill="#065f46">복잡한 동적 결정을 분리해 둔 컴포넌트 — 인터페이스로 확장 가능</text>
+  <rect x="450" y="124" width="360" height="48" rx="9" fill="#eef2ff" stroke="#6366f1" stroke-width="1.3"/>
+  <text x="470" y="146" font-size="13" font-weight="700" fill="#3730a3">1 · requestEntries</text>
+  <text x="470" y="163" font-size="11.5" fill="#1f2937">ModelCatalog 에서 최초 선별한 대상</text>
 
-    <g>
-      <rect x="844" y="260" width="572" height="76" rx="10" fill="#ffffff" stroke="#6ee7b7" stroke-width="1.1"/>
-      <text x="864" y="288" font-size="17" font-weight="700" fill="#047857">대상 모델 동적 선정</text>
-      <text x="864" y="316" font-size="13" fill="#1f2937">modelId · fallback · endpoint 정책으로 실행 대상을 산출</text>
-    </g>
+  <rect x="450" y="182" width="360" height="48" rx="9" fill="#f0fdf4" stroke="#10b981" stroke-width="1.3"/>
+  <text x="470" y="204" font-size="13" font-weight="700" fill="#047857">2 · AvailabilityFactor</text>
+  <text x="470" y="221" font-size="11.5" fill="#1f2937">살아있는 provider·region 만 남김</text>
 
-    <g>
-      <rect x="844" y="348" width="572" height="76" rx="10" fill="#ffffff" stroke="#6ee7b7" stroke-width="1.1"/>
-      <text x="864" y="376" font-size="17" font-weight="700" fill="#047857">Factor 체인으로 후보 증류</text>
-      <text x="864" y="404" font-size="13" fill="#1f2937">넓은 후보 집합을 Factor 들을 차례로 통과시키며 실행 대상으로 좁혀 나가는 흐름</text>
-    </g>
+  <rect x="450" y="240" width="360" height="48" rx="9" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.3"/>
+  <text x="470" y="262" font-size="13" font-weight="700" fill="#b45309">3 · CacheStickyFactor</text>
+  <text x="470" y="279" font-size="11.5" fill="#1f2937">캐시 보유 위치 최우선 (단독 고정 X)</text>
 
-    <g>
-      <rect x="844" y="436" width="572" height="96" rx="10" fill="#ffffff" stroke="#6ee7b7" stroke-width="1.1"/>
-      <text x="864" y="464" font-size="17" font-weight="700" fill="#047857">RoutingFactor 인터페이스</text>
-      <text x="864" y="492" font-size="13" fill="#1f2937">가용성 · 사용자 fallback · cost · latency · 정책 같은 factor 를</text>
-      <text x="864" y="512" font-size="13" fill="#1f2937">같은 파이프라인에 합류시킬 수 있는 확장 인터페이스</text>
-    </g>
-  </g>
+  <rect x="450" y="298" width="360" height="48" rx="9" fill="#ecfeff" stroke="#06b6d4" stroke-width="1.3"/>
+  <text x="470" y="320" font-size="13" font-weight="700" fill="#0e7490">4 · ExplicitFallbackFactor</text>
+  <text x="470" y="337" font-size="11.5" fill="#1f2937">사용자 지정 fallback 합류</text>
 
-  <!-- Collab arrows between Facade ↔ SmartRouter -->
-  <line x1="682" y1="346" x2="818" y2="346" stroke="#475569" stroke-width="1.8" marker-end="url(#r-ar)"/>
-  <text x="702" y="338" font-size="12.5" fill="#475569">"실행 가능한 대상 줘"</text>
+  <rect x="450" y="356" width="360" height="48" rx="9" fill="#faf5ff" stroke="#a855f7" stroke-width="1.3"/>
+  <text x="470" y="378" font-size="13" font-weight="700" fill="#6b21a8">5 · modelEntries</text>
+  <text x="470" y="395" font-size="11.5" fill="#1f2937">SmartRouter 가 선별한 최종 대상</text>
 
-  <line x1="818" y1="386" x2="682" y2="386" stroke="#475569" stroke-width="1.8" marker-end="url(#r-ar)"/>
-  <text x="702" y="408" font-size="12.5" fill="#475569">대상 후보 목록</text>
 
-  <!-- Request → Facade arrow -->
-  <line x1="370" y1="144" x2="370" y2="170" stroke="#475569" stroke-width="1.6" marker-end="url(#r-ar)"/>
+  <!-- ===== Column 3: why this order ===== -->
 
-  <!-- Facade → Providers/ModelService (bottom) -->
-  <g>
-    <rect x="60" y="580" width="1380" height="70" rx="10" fill="#faf5ff" stroke="#a855f7" stroke-width="1.2"/>
-    <text x="84" y="612" font-size="16" font-weight="700" fill="#6b21a8">ModelService 모듈 → Model Providers</text>
-    <text x="84" y="634" font-size="13" fill="#1f2937">Mapper · Client · StreamMapper 격리 — 신규 Provider 추가 시 상위 모듈 무변경</text>
-  </g>
+  <rect x="840" y="124" width="500" height="64" rx="10" fill="#ffffff" stroke="#10b981" stroke-width="1.5"/>
+  <text x="860" y="150"><tspan font-size="13.5" font-weight="700" fill="#047857">가용성 우선</tspan><tspan font-size="12.5" fill="#1f2937" dx="12">가용성 &gt; entry stickiness &gt; region-priority</tspan></text>
+  <text x="860" y="172" font-size="11.5" fill="#1f2937">이전 위치가 장애면 캐시 손실 감수하고 살아있는 곳으로</text>
 
-  <line x1="370" y1="552" x2="370" y2="580" stroke="#475569" stroke-width="1.6" marker-end="url(#r-ar)"/>
-  <text x="384" y="570" font-size="12" fill="#475569">대상별로 호출</text>
+  <rect x="840" y="200" width="500" height="84" rx="10" fill="#ffffff" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="860" y="224" font-size="13.5" font-weight="700" fill="#b45309">멀티턴 — prefix 누적이 곧 Prompt Cache 적중</text>
+  <text x="860" y="245" font-size="11.5" fill="#1f2937">대화 식별 prefix(system+첫 user) → fingerprint → 같은 위치 고정</text>
+  <text x="860" y="265" font-size="11.5" fill="#1f2937">전체 messages 해시는 매 턴 달라져 못 씀 → prefix 누적 hit 유지</text>
+
+  <rect x="840" y="296" width="500" height="64" rx="10" fill="#ffffff" stroke="#6366f1" stroke-width="1.5"/>
+  <text x="860" y="322"><tspan font-size="13.5" font-weight="700" fill="#3730a3">ModelEntryKey</tspan><tspan font-size="12" font-family="ui-monospace, monospace" fill="#1f2937" dx="10">( provider · modelOwner · modelName · region )</tspan></text>
+  <text x="860" y="344" font-size="11.5" fill="#1f2937">serving 위치 식별자 · fingerprint sticky 매핑 · 후보 중복 제거 공유</text>
+
+  <!-- ===== Provider error normalization ===== -->
+  <rect x="60" y="442" width="360" height="188" rx="11" fill="#f1f5f9" stroke="#64748b" stroke-width="1.5"/>
+  <text x="84" y="474"><tspan font-size="15" font-weight="700" fill="#334155">Provider 에러 정규화</tspan><tspan font-size="12.5" fill="#64748b" dx="14">type · code 로 분류</tspan></text>
+  <text x="84" y="500" font-size="12.5" fill="#1f2937">고객이 고칠 수 있는 오류만 노출, 나머지는 추상화·은닉</text>
+  <rect x="84" y="536" width="312" height="40" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.1"/>
+  <text x="240" y="561" font-size="13" font-weight="700" fill="#334155" text-anchor="middle">→ ErrorCategory</text>
+
+  <line x1="420" y1="470" x2="446" y2="470" stroke="#475569" stroke-width="1.6" marker-end="url(#fr-ar)"/>
+  <line x1="420" y1="536" x2="446" y2="536" stroke="#475569" stroke-width="1.6" marker-end="url(#fr-ar)"/>
+  <line x1="420" y1="602" x2="446" y2="602" stroke="#475569" stroke-width="1.6" marker-end="url(#fr-ar)"/>
+
+  <rect x="450" y="442" width="890" height="56" rx="10" fill="#f0fdf4" stroke="#10b981" stroke-width="1.5"/>
+  <text x="474" y="468" font-size="14" font-weight="700" fill="#047857">✅ 바이패스 — 고객 책임</text>
+  <text x="474" y="488" font-size="12.5" fill="#1f2937">invalid_request 등 요청 형식 오류: provider 원본 type · 메시지 그대로 노출 (고객이 직접 고침)</text>
+
+  <rect x="450" y="508" width="890" height="56" rx="10" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="474" y="534" font-size="14" font-weight="700" fill="#b45309">🟡 추상화 — 상황만 전달</text>
+  <text x="474" y="554" font-size="12.5" fill="#1f2937">rate limit · 5xx · timeout · 고객 인증·권한: OG 표준 메시지로 전달, WARN 로그</text>
+
+  <rect x="450" y="574" width="890" height="56" rx="10" fill="#fef2f2" stroke="#f43f5e" stroke-width="1.5"/>
+  <text x="474" y="600" font-size="14" font-weight="700" fill="#be123c">🔒 은닉 — 원인 가림</text>
+  <text x="474" y="620" font-size="12.5" fill="#1f2937">upstream 인증 · 권한 · billing: internal error 로 가리고 ERROR 로그 · 운영 알림 (provider 계정 식별자 유출 차단)</text>
 </svg>

@@ -31,15 +31,23 @@ tags: [API Gateway, Model Routing, Prompt Cache, Spring, Kotlin, Billing, Multi-
 - 시스템은 통제할 흐름과 동적 의사결정을 분리해, 직접 검토할 영역과 AI 에게 위임할 영역을 명확히 구분했습니다
 - 더 자세한 내용은 [AI를 적극적으로 활용하는 개발에 대한 생각](/portfolio/sionic-ai/05_ai-development-workflow/)에 정리되어 있습니다
 
+<div class="img-row-small">
+
+![BE 서버 릴리즈 기록 1](./assets/opengateway-releases-1.png)
+
+![BE 서버 릴리즈 기록 2](./assets/opengateway-releases-2.png)
+
+</div>
+
 ![OpenGateway 전체 흐름 — 엔진과 백오피스의 분리](./assets/opengateway-architecture.svg)
 
-![핵심 설계 — Facade 와 SmartRouter](./assets/opengateway-facade-router.svg)
+![핵심 설계 — Facade · 라우팅 · 에러 정규화](./assets/opengateway-facade-router.svg)
+
+![파라미터 정규화와 투명성](./assets/opengateway-normalization.svg)
 
 ![핵심 설계 — Provider 확장 구조](./assets/opengateway-mapper-layers.svg)
 
-![리전 라우팅과 Prompt Cache stickiness](./assets/opengateway-routing-cache.svg)
-
-![파라미터·에러 정규화와 투명성](./assets/opengateway-normalization.svg)
+![과금 파이프라인](./assets/opengateway-billing.svg)
 
 ### Front Office
 
