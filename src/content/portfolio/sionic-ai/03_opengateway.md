@@ -61,6 +61,10 @@ tags: [API Gateway, Model Routing, Prompt Cache, Spring, Kotlin, Billing, Multi-
 
 </div>
 
+### Docs
+
+![OpenGateway Documentation — 문서·API 레퍼런스](./assets/opengateway-docs.png)
+
 ## 운영 안정화
 
 - Grafana 기반으로 트래픽, 비용, 응답 시간, Provider 분포를 관측하며 운영 상태를 관리했습니다
