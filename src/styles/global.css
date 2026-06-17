@@ -163,6 +163,25 @@ html.dark {
   }
 }
 
+/* 비대칭 2열 (오른쪽이 더 큼) */
+.img-grid-asym {
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+  gap: 1rem;
+  align-items: start;
+  margin: 1.5rem 0;
+}
+.img-grid-asym img {
+  width: 100%;
+  height: auto;
+  margin: 0 !important;
+}
+@media (max-width: 640px) {
+  .img-grid-asym {
+    grid-template-columns: 1fr !important;
+  }
+}
+
 /* 이미지 모달 */
 .image-modal {
   background: rgba(0, 0, 0, 0.88);
