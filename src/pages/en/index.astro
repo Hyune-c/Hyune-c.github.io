@@ -1,0 +1,219 @@
+---
+import Base from "../../layouts/Base.astro";
+import Section from "../../components/Section.astro";
+import Experience from "../../components/Experience.astro";
+---
+
+<Base printName="Byunghyun_Choi_Resume">
+  <header class="mb-6">
+    <h1 class="text-[26px] md:text-[34px] font-bold leading-[1.25] tracking-tight mb-5">
+      A backend developer who wants to be helpful.
+    </h1>
+    <dl class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-y-1.5 gap-x-4 text-[14px]">
+      <div class="flex items-baseline gap-2.5">
+        <dt class="text-[var(--color-ink-subtle)] text-[12px] font-mono uppercase tracking-wider">Email</dt>
+        <dd>
+          <a href="mailto:choi8608@gmail.com" class="font-medium underline underline-offset-4 decoration-2 decoration-[var(--color-ink-subtle)] hover:decoration-[var(--color-accent)] hover:text-[var(--color-accent)]">
+            choi8608@gmail.com
+          </a>
+        </dd>
+      </div>
+      <div class="flex items-baseline gap-2.5">
+        <dt class="text-[var(--color-ink-subtle)] text-[12px] font-mono uppercase tracking-wider">GitHub</dt>
+        <dd>
+          <a href="https://github.com/Hyune-c" target="_blank" rel="noopener" class="font-medium underline underline-offset-4 decoration-2 decoration-[var(--color-ink-subtle)] hover:decoration-[var(--color-accent)] hover:text-[var(--color-accent)]">
+            github.com/Hyune-c
+          </a>
+        </dd>
+      </div>
+      <div class="flex items-baseline gap-2.5">
+        <dt class="text-[var(--color-ink-subtle)] text-[12px] font-mono uppercase tracking-wider">Study</dt>
+        <dd>
+          <a href="https://github.com/orgs/Hyune-s-lab/repositories" target="_blank" rel="noopener" class="font-medium underline underline-offset-4 decoration-2 decoration-[var(--color-ink-subtle)] hover:decoration-[var(--color-accent)] hover:text-[var(--color-accent)]">
+            github.com/Hyune-s-lab
+          </a>
+        </dd>
+      </div>
+    </dl>
+  </header>
+
+  <div class="mt-10 space-y-4 text-[15px] leading-[1.8] text-[var(--color-ink)]">
+    <p>
+      Rather than abundant technology and structure, I prefer <strong>the minimum
+      technology and structure needed to solve the problem at hand right now</strong>.<br />
+      As the cost of switching technologies has dropped, the trial and error and
+      operational experience gained from <strong>building and improving quickly</strong>
+      become a team's greatest asset.
+    </p>
+    <p>
+      Good design comes less from knowledge and more from <strong>operational
+      experience and incremental improvement</strong>.<br />
+      I treat recording problems, documenting decisions, and sharing experience with
+      colleagues as importantly as writing code.<br />
+      The core skill is <strong>separating the flows that humans must control from the
+      areas we can delegate to AI</strong>, and managing this through documents and harnesses.
+    </p>
+    <p>
+      <strong>Closing the gaps in mutual understanding</strong> is what leads directly
+      to business results.<br />
+      Small notes and tidy summaries save colleagues' time and energy, and let everyone
+      move faster from the same baseline.<br />
+      So I always define problems clearly and refine them into actionable form, striving
+      to be <strong>a developer people want to work with</strong>.
+    </p>
+    <p class="text-[14px] text-[var(--color-ink-muted)]">
+      <a href="/en/portfolio/sionic-ai/05_ai-development-workflow/" class="font-medium text-[var(--color-ink)] underline underline-offset-4 decoration-2 decoration-[var(--color-ink-subtle)] hover:decoration-[var(--color-accent)] hover:text-[var(--color-accent)]">My thoughts on development that actively leverages AI</a>
+    </p>
+  </div>
+
+  <Section title="Work Experience" id="experience">
+    <p slot="aside" class="text-[14.5px] text-[var(--color-ink-muted)]">
+      For details, please see my <a href="/en/portfolio/" class="font-medium text-[var(--color-ink)] underline underline-offset-4 decoration-2 decoration-[var(--color-ink-subtle)] hover:decoration-[var(--color-accent)] hover:text-[var(--color-accent)]">portfolio</a>.
+    </p>
+
+    <Experience
+      company="Sionic AI"
+      role="Backend Developer"
+      period="2024.09 — now"
+      summary="Led OpenGateway and Storm Parse end to end — from planning to operations — working across both backend and frontend. Built the foundation for running public API products: API Key, Authn/Authz, Billing, Logs, and Model/Provider management."
+    >
+      <ul>
+        <li>
+          OpenGateway development and operations
+          <span class="ml-2 text-[13px] text-[var(--color-ink-subtle)]">RPM 180 · Daily 250K · 10+ Providers / 100+ Models · Multi-deployment</span>
+        </li>
+        <li>
+          Storm Parse development and operations
+          <span class="ml-2 text-[13px] text-[var(--color-ink-subtle)]">Multi-deployment support, drove the first external SaaS revenue</span>
+        </li>
+        <li>
+          Built operational tooling and standardized workflows
+          <span class="ml-2 text-[13px] text-[var(--color-ink-subtle)]">API Hub · Test · BO operational tools, etc.</span>
+        </li>
+      </ul>
+    </Experience>
+
+    <Experience
+      company="Wrtn Technologies"
+      role="Backend Developer"
+      period="2024.01 — 2024.07"
+      summary="Extended Spring AI to build an AI model serving service, and migrated an existing Node.js service to the JVM with zero downtime."
+    >
+      <ul>
+        <li>
+          AI model serving service development and operations
+          <span class="ml-2 text-[13px] text-[var(--color-ink-subtle)]">RPM 750 · API response time reduced 20% · improved observability / stability</span>
+        </li>
+        <li>
+          Company-wide common service (CDS) development and operations
+          <span class="ml-2 text-[13px] text-[var(--color-ink-subtle)]">tokenizer, email validation, profanity detection</span>
+        </li>
+      </ul>
+    </Experience>
+
+    <Experience
+      company="Kurly Pay"
+      role="Backend Developer"
+      period="2022.09 — 2023.12"
+      summary="Led Kurly Pay gift cards from planning to operations, and expanded sales channels through B2C / B2B bulk purchases and partner integrations."
+    >
+      <ul>
+        <li>Kurly Pay gift card development and operations; designed and improved the B2C / B2B bulk-send process</li>
+        <li>Supported the migration of simple payment & general payment; designed prepaid charging / points</li>
+      </ul>
+    </Experience>
+
+    <Experience
+      company="Marketboro"
+      role="Backend Developer"
+      period="2021.08 — 2022.08"
+    >
+      <ul>
+        <li>Developed and operated the B2B platform Marketbom Pro; introduced Datadog company-wide</li>
+      </ul>
+    </Experience>
+
+    <Experience
+      company="Oasis Business"
+      role="Backend Developer"
+      period="2021.02 — 2021.08"
+    >
+      <ul>
+        <li>Developed the Trade Area Analysis & It땅 mobile web / admin; integrated 050 Biz Call and SmartCon</li>
+      </ul>
+    </Experience>
+
+    <Experience
+      company="AlbaCheck (now HIGHERX)"
+      role="Backend Developer"
+      period="2020.08 — 2021.02"
+    >
+      <ul>
+        <li>Developed the AlbaCheck app / admin; led the 1st National G-Coder Contest (with GS25)</li>
+      </ul>
+    </Experience>
+
+    <Experience
+      company="SI Development & Infrastructure"
+      role="SI Development, IT Operations, Technical Support"
+    >
+      <ul class="si-list space-y-2 !list-none !pl-0">
+        <li class="grid grid-cols-1 sm:grid-cols-[1fr_auto] sm:items-baseline gap-x-5">
+          <span>
+            <strong class="font-semibold text-[var(--color-ink)]">Kakao Pay</strong>
+            <span class="text-[var(--color-ink-muted)] ml-2">Supported merchant & reseller screening / settlement / reconciliation integrations</span>
+          </span>
+          <time class="text-[13px] font-mono text-[var(--color-ink-subtle)] tabular-nums whitespace-nowrap">2019.04 — 2019.07</time>
+        </li>
+        <li class="grid grid-cols-1 sm:grid-cols-[1fr_auto] sm:items-baseline gap-x-5">
+          <span>
+            <strong class="font-semibold text-[var(--color-ink)]">FirstData Korea (now Korea Payment Networks)</strong>
+            <span class="text-[var(--color-ink-muted)] ml-2">Operated a VAN authorization system supporting all card companies</span>
+          </span>
+          <time class="text-[13px] font-mono text-[var(--color-ink-subtle)] tabular-nums whitespace-nowrap">2016.09 — 2019.04</time>
+        </li>
+        <li class="grid grid-cols-1 sm:grid-cols-[1fr_auto] sm:items-baseline gap-x-5">
+          <span>
+            <strong class="font-semibold text-[var(--color-ink)]">Hana INS (now Hana Financial TI)</strong>
+            <span class="text-[var(--color-ink-muted)] ml-2">Developed the Hana Bank open banking project; operated Hana Life servers and middleware</span>
+          </span>
+          <time class="text-[13px] font-mono text-[var(--color-ink-subtle)] tabular-nums whitespace-nowrap">2012.01 — 2016.08</time>
+        </li>
+      </ul>
+    </Experience>
+  </Section>
+
+  <Section title="Education" id="education">
+    <ul class="space-y-1.5 text-[14.5px]">
+      <li class="grid grid-cols-1 sm:grid-cols-[1fr_auto] sm:items-baseline gap-x-6">
+        <span>
+          <strong class="font-semibold">CodeSquad</strong>
+          <span class="text-[var(--color-ink-muted)] ml-2">Developer Bootcamp</span>
+        </span>
+        <time class="text-[13px] font-mono text-[var(--color-ink-subtle)] tabular-nums">
+          2020.01 — 2020.06
+        </time>
+      </li>
+      <li class="grid grid-cols-1 sm:grid-cols-[1fr_auto] sm:items-baseline gap-x-6">
+        <span>
+          <strong class="font-semibold">Kwangwoon University</strong>
+          <span class="text-[var(--color-ink-muted)] ml-2">B.S. in Computer Software, GPA 3.29 / 4.5</span>
+        </span>
+        <time class="text-[13px] font-mono text-[var(--color-ink-subtle)] tabular-nums">
+          2006.03 — 2012.02
+        </time>
+      </li>
+    </ul>
+  </Section>
+
+  <Section title="Certifications" id="certifications">
+    <p class="text-[14.5px]">
+      <span class="font-medium">Engineer Information Processing</span>
+      <span class="text-[var(--color-ink-subtle)] font-mono ml-2">2012.11</span>
+      <span class="mx-3 text-[var(--color-ink-subtle)]">·</span>
+      <span class="font-medium">SQLD</span>
+      <span class="text-[var(--color-ink-subtle)] font-mono ml-2">2017.12</span>
+    </p>
+  </Section>
+
+</Base>

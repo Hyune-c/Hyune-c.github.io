@@ -1,0 +1,136 @@
+---
+import Base from "../../../layouts/Base.astro";
+import Section from "../../../components/Section.astro";
+import { getCollection } from "astro:content";
+
+const all = await getCollection("portfolioEn");
+
+const routeId = (id: string) => id.replace(/\.en$/, "");
+
+interface CompanyMeta {
+  slug: string;
+  name: string;
+  period: string;
+  order: number;
+}
+
+const companyMeta: Record<string, CompanyMeta> = {
+  "sionic-ai": { slug: "sionic-ai", name: "Sionic AI", period: "2024.09 — now", order: 1 },
+  wrtn: { slug: "wrtn", name: "Wrtn Technologies", period: "2024.01 — 2024.07", order: 2 },
+  kurlypay: { slug: "kurlypay", name: "Kurly Pay", period: "2022.09 — 2023.12", order: 3 },
+  marketboro: { slug: "marketboro", name: "Marketboro", period: "2021.08 — 2022.08", order: 4 },
+  essays: { slug: "essays", name: "Essays", period: "", order: 99 },
+};
+
+const grouped = all.reduce<Record<string, typeof all>>((acc, entry) => {
+  const slug = entry.data.companySlug;
+  (acc[slug] ??= []).push(entry);
+  return acc;
+}, {});
+
+const companies = Object.keys(grouped)
+  .map((slug) => {
+    const meta = companyMeta[slug] ?? { slug, name: slug, period: "", order: 100 };
+    const sorted = grouped[slug].sort((a, b) => a.data.order - b.data.order);
+    const main = sorted.filter((e) => (e.data.group ?? "main") === "main");
+    const troubleshooting = sorted.filter((e) => e.data.group === "troubleshooting");
+    return { ...meta, main, troubleshooting };
+  })
+  .sort((a, b) => a.order - b.order);
+---
+
+<Base printName="Byunghyun_Choi_Portfolio">
+  <header class="mb-4 flex items-baseline justify-between gap-4 flex-wrap">
+    <h1 class="text-[28px] md:text-[34px] font-bold leading-[1.25] tracking-tight">
+      Portfolio
+    </h1>
+    <p class="print-only text-[11px] text-[var(--color-ink-muted)] leading-[1.4] whitespace-nowrap">
+      Some architecture diagrams and code snippets are abbreviated for clarity; you can view the full version with better readability at <a href="https://hyune-c.github.io/en/portfolio/" class="text-[var(--color-accent)] underline">link</a>.
+    </p>
+  </header>
+
+  {
+    companies.map((company) => (
+      <Section title={company.name}>
+        {company.period && (
+          <span slot="aside" class="text-[13px] font-mono text-[var(--color-ink-subtle)] tabular-nums">
+            {company.period}
+          </span>
+        )}
+        <ul class="space-y-0">
+          {company.main.map((entry) => {
+            const sentences = entry.data.summary
+              ? entry.data.summary
+                  .split(/(?<=\.)\s+/)
+                  .map((s) => s.replace(/\.$/, "").trim())
+                  .filter((s) => s.length > 0)
+              : [];
+            return (
+              <li class="py-4 border-t border-[var(--color-line)] first:border-t-0">
+                <a
+                  href={`/en/portfolio/${routeId(entry.id)}/`}
+                  class="group block"
+                >
+                  <div class="flex items-baseline justify-between gap-4 mb-2">
+                    <div class="flex items-baseline gap-3 flex-wrap min-w-0">
+                      <h3 class="text-[16px] font-semibold tracking-tight group-hover:text-[var(--color-accent)] transition-colors shrink-0">
+                        {entry.data.title}
+                      </h3>
+                      {entry.data.tags.length > 0 && (
+                        <span class="text-[11px] font-mono text-[var(--color-ink-subtle)]">
+                          {entry.data.tags.join(" · ")}
+                        </span>
+                      )}
+                    </div>
+                    <span class="text-[var(--color-ink-subtle)] text-[14px] shrink-0 group-hover:text-[var(--color-accent)] transition-colors">
+                      →
+                    </span>
+                  </div>
+                </a>
+                {sentences.length > 0 && (
+                  <ul class="text-[14px] text-[var(--color-ink-muted)] leading-[1.65] list-disc pl-5 space-y-0.5">
+                    {sentences.map((s) => (
+                      <li>{s}</li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+
+        {company.troubleshooting.length > 0 && (
+          <div class="mt-8">
+            <h4 class="text-[12px] font-mono tracking-[0.16em] uppercase text-[var(--color-ink-subtle)] mb-3">
+              Troubleshooting
+            </h4>
+            <ul class="space-y-0">
+              {company.troubleshooting.map((entry) => (
+                <li>
+                  <a
+                    href={`/en/portfolio/${routeId(entry.id)}/`}
+                    class="block py-3 border-t border-[var(--color-line)] first:border-t-0 group"
+                  >
+                    <div class="flex items-baseline justify-between gap-4">
+                      <h3 class="text-[15px] font-medium tracking-tight group-hover:text-[var(--color-accent)] transition-colors">
+                        {entry.data.title}
+                      </h3>
+                      <span class="text-[var(--color-ink-subtle)] text-[13px] shrink-0 group-hover:text-[var(--color-accent)] transition-colors">
+                        →
+                      </span>
+                    </div>
+                    {entry.data.summary && (
+                      <p class="text-[13.5px] text-[var(--color-ink-muted)] leading-[1.6] mt-1">
+                        {entry.data.summary}
+                      </p>
+                    )}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </Section>
+    ))
+  }
+</Base>

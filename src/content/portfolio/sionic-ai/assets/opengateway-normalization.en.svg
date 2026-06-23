@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 394" font-family="system-ui, -apple-system, 'Apple SD Gothic Neo', 'Pretendard', sans-serif">
+  <defs>
+    <marker id="nm-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1e293b"/>
+    </marker>
+  </defs>
+
+  <rect width="1500" height="394" fill="#fbfcfd"/>
+
+  <!-- Title -->
+  <text x="60" y="50" font-size="26" font-weight="700" fill="#0f172a">Core design — Parameter Normalization and transparency</text>
+  <text x="60" y="76" font-size="14" fill="#64748b">Accept a single OpenAI-compatible spec; OG absorbs provider constraints — and selectively reports back what it changed</text>
+
+  <!-- ===== Section 1: parameter normalization ===== -->
+  <text x="60" y="96" font-size="15" font-weight="700" fill="#334155">Parameter Normalization — adjusted to provider constraints in one place, toProvider()</text>
+
+  <!-- flow: request -> mapper -> provider body -->
+  <rect x="60" y="116" width="400" height="70" rx="11" fill="#eef2ff" stroke="#6366f1" stroke-width="1.5"/>
+  <text x="84" y="144" font-size="15" font-weight="700" fill="#3730a3">User request (OpenAI-compatible)</text>
+  <text x="84" y="168" font-size="12.5" fill="#1f2937">temperature · top_p · max_tokens … (values as sent)</text>
+  <line x1="460" y1="151" x2="538" y2="151" stroke="#475569" stroke-width="1.6" marker-end="url(#nm-ar)"/>
+
+  <rect x="542" y="116" width="416" height="70" rx="11" fill="#ecfeff" stroke="#06b6d4" stroke-width="1.6"/>
+  <text x="566" y="144" font-size="15" font-weight="700" fill="#0e7490">Mapper.toProvider()</text>
+  <text x="566" y="168" font-size="12.5" fill="#1f2937">strip · override · add to fit provider constraints</text>
+  <line x1="958" y1="151" x2="1036" y2="151" stroke="#475569" stroke-width="1.6" marker-end="url(#nm-ar)"/>
+
+  <rect x="1040" y="116" width="400" height="70" rx="11" fill="#f0fdf4" stroke="#10b981" stroke-width="1.6"/>
+  <text x="1064" y="144" font-size="15" font-weight="700" fill="#047857">provider request body</text>
+  <text x="1064" y="168" font-size="12.5" fill="#1f2937">toProviderBody — request going to upstream</text>
+
+  <!-- ===== Section 2: DebugCapture (2-column) ===== -->
+  <text x="60" y="226" font-size="15" font-weight="700" fill="#334155">DebugCapture — captures what changed as a request-body diff, optionally exposed in the response</text>
+
+  <!-- left: capture (orange) -->
+  <rect x="60" y="246" width="680" height="132" rx="11" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="84" y="272" font-size="15" font-weight="700" fill="#b45309">Capture — original request ↔ provider request body diff</text>
+  <text x="84" y="304" font-size="12.5" fill="#1f2937">Same param name, value changed → adjustment (strip · override · add)</text>
+  <text x="84" y="334" font-size="12.5" fill="#1f2937">Param name itself changed → cross-schema transform</text>
+  <text x="84" y="364" font-size="12.5" fill="#64748b">e.g. reasoning_effort → budget_tokens</text>
+
+  <!-- right: response debug JSON (gray) -->
+  <rect x="760" y="246" width="680" height="132" rx="11" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.3"/>
+  <text x="784" y="262" font-size="10.5" font-family="ui-monospace, monospace" fill="#8b5cf6">"debug": {</text>
+  <text x="796" y="277" font-size="10.5" font-family="ui-monospace, monospace" fill="#1e293b">"normalizations": [</text>
+  <text x="808" y="292" font-size="10.5" font-family="ui-monospace, monospace" fill="#1e293b">{ "param":"temperature", "action":"override", "before":1.4, "after":1.0 },</text>
+  <text x="808" y="307" font-size="10.5" font-family="ui-monospace, monospace" fill="#1e293b">{ "param":"max_tokens", "action":"add", "before":null, "after":8192 }</text>
+  <text x="796" y="322" font-size="10.5" font-family="ui-monospace, monospace" fill="#1e293b">],</text>
+  <text x="796" y="337" font-size="10.5" font-family="ui-monospace, monospace" fill="#1e293b">"deprecations": [ { "param":"max_tokens", "reason":"use max_completion_tokens" } ],</text>
+  <text x="796" y="352" font-size="10.5" font-family="ui-monospace, monospace" fill="#1e293b">"routing": [ {"provider":"kimi","status":"failed"}, {"provider":"openai","status":"succeeded"} ]</text>
+  <text x="784" y="367" font-size="10.5" font-family="ui-monospace, monospace" fill="#8b5cf6">}</text>
+</svg>

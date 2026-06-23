@@ -1,7 +1,19 @@
 ---
 import { getCollection } from "astro:content";
 
-const all = await getCollection("portfolio");
+interface Props {
+  lang?: "ko" | "en";
+  altHref?: string;
+}
+
+const { lang = "ko", altHref = "/en/" } = Astro.props;
+const isEn = lang === "en";
+const base = isEn ? "/en" : "";
+
+const all = await getCollection(isEn ? "portfolioEn" : "portfolio");
+
+// en 컬렉션의 id 는 `.en` 접미사를 가지므로 라우트 slug 용으로 제거
+const routeId = (id: string) => id.replace(/\.en$/, "");
 
 interface CompanyMeta {
   slug: string;
@@ -9,12 +21,29 @@ interface CompanyMeta {
   order: number;
 }
 
-const companyMeta: Record<string, CompanyMeta> = {
-  "sionic-ai": { slug: "sionic-ai", name: "사이오닉AI", order: 1 },
-  wrtn: { slug: "wrtn", name: "뤼튼", order: 2 },
-  kurlypay: { slug: "kurlypay", name: "컬리페이", order: 3 },
-  marketboro: { slug: "marketboro", name: "마켓보로", order: 4 },
-  essays: { slug: "essays", name: "Essays", order: 99 },
+const companyNames: Record<"ko" | "en", Record<string, string>> = {
+  ko: {
+    "sionic-ai": "사이오닉AI",
+    wrtn: "뤼튼",
+    kurlypay: "컬리페이",
+    marketboro: "마켓보로",
+    essays: "Essays",
+  },
+  en: {
+    "sionic-ai": "Sionic AI",
+    wrtn: "Wrtn",
+    kurlypay: "Kurly Pay",
+    marketboro: "Marketboro",
+    essays: "Essays",
+  },
+};
+
+const companyOrder: Record<string, number> = {
+  "sionic-ai": 1,
+  wrtn: 2,
+  kurlypay: 3,
+  marketboro: 4,
+  essays: 99,
 };
 
 const grouped = all.reduce<Record<string, typeof all>>((acc, entry) => {
@@ -25,7 +54,11 @@ const grouped = all.reduce<Record<string, typeof all>>((acc, entry) => {
 
 const companies = Object.keys(grouped)
   .map((slug) => {
-    const meta = companyMeta[slug] ?? { slug, name: slug, order: 100 };
+    const meta: CompanyMeta = {
+      slug,
+      name: companyNames[lang][slug] ?? slug,
+      order: companyOrder[slug] ?? 100,
+    };
     const sorted = grouped[slug].sort((a, b) => a.data.order - b.data.order);
     const main = sorted.filter((e) => (e.data.group ?? "main") === "main");
     const troubleshooting = sorted.filter((e) => e.data.group === "troubleshooting");
@@ -34,19 +67,24 @@ const companies = Object.keys(grouped)
   .sort((a, b) => a.order - b.order);
 
 const pathname = Astro.url.pathname;
-const isHome = pathname === "/" || pathname === "";
-const isPortfolio = pathname.startsWith("/portfolio");
+const localPath = isEn ? pathname.replace(/^\/en/, "") || "/" : pathname;
+const isHome = localPath === "/" || localPath === "";
+const isPortfolio = localPath.startsWith("/portfolio");
 const currentEntryId = isPortfolio
-  ? pathname.replace(/^\/portfolio\//, "").replace(/\/$/, "")
+  ? localPath.replace(/^\/portfolio\//, "").replace(/\/$/, "")
   : "";
 const currentCompanySlug = currentEntryId.split("/")[0] ?? "";
+
+const brandName = isEn ? "Byunghyun Choi" : "최병현";
+const altLabel = isEn ? "View in Korean" : "View in English";
+const altText = isEn ? "EN" : "KO";
 ---
 
 <aside
   class="sidebar md:sticky md:top-0 md:h-screen md:overflow-hidden md:py-14 md:pl-8 md:pr-8 px-6 py-5 border-b md:border-b-0 md:border-r border-[var(--color-line)] flex md:flex-col md:gap-0 items-center md:items-stretch justify-between md:justify-start gap-4 bg-[var(--color-bg)] z-10"
 >
-  <a href="/" class="brand block">
-    <h2 class="text-[22px] font-bold tracking-tight">최병현</h2>
+  <a href={base + "/"} class="brand block">
+    <h2 class="text-[22px] font-bold tracking-tight">{brandName}</h2>
     <p class="text-[14.5px] font-mono text-[var(--color-ink-subtle)] mt-0.5 whitespace-nowrap">
       backend developer
     </p>
@@ -56,7 +94,7 @@ const currentCompanySlug = currentEntryId.split("/")[0] ?? "";
     <ul class="space-y-0.5 text-[16px]">
       <li>
         <a
-          href="/"
+          href={base + "/"}
           class={`nav-link ${isHome ? "is-active" : ""}`}
         >
           <span class="nav-marker" aria-hidden="true">›</span>
@@ -66,8 +104,8 @@ const currentCompanySlug = currentEntryId.split("/")[0] ?? "";
       <li>
         <details open={isPortfolio} class="nav-tree">
           <summary class={`nav-link nav-summary ${isPortfolio && !currentEntryId.includes("/") ? "is-active" : ""}`}>
-            <span class="nav-marker" aria-hidden="true">›</span>
-            <a href="/portfolio/" class="nav-summary-link">Portfolio</a>
+            <span class="nav-marker nav-marker-toggle" aria-hidden="true">›</span>
+            <span class="nav-summary-link">Portfolio</span>
           </summary>
 
           <ul class="nav-tree-list">
@@ -84,8 +122,8 @@ const currentCompanySlug = currentEntryId.split("/")[0] ?? "";
                       {company.main.map((entry) => (
                         <li>
                           <a
-                            href={`/portfolio/${entry.id}/`}
-                            class={`nav-tree-item ${currentEntryId === entry.id ? "is-active" : ""}`}
+                            href={`${base}/portfolio/${routeId(entry.id)}/`}
+                            class={`nav-tree-item ${currentEntryId === routeId(entry.id) ? "is-active" : ""}`}
                           >
                             {entry.data.title}
                           </a>
@@ -98,8 +136,8 @@ const currentCompanySlug = currentEntryId.split("/")[0] ?? "";
                             {company.troubleshooting.map((entry) => (
                               <li>
                                 <a
-                                  href={`/portfolio/${entry.id}/`}
-                                  class={`nav-tree-item ${currentEntryId === entry.id ? "is-active" : ""}`}
+                                  href={`${base}/portfolio/${routeId(entry.id)}/`}
+                                  class={`nav-tree-item ${currentEntryId === routeId(entry.id) ? "is-active" : ""}`}
                                 >
                                   {entry.data.title}
                                 </a>
@@ -156,6 +194,15 @@ const currentCompanySlug = currentEntryId.split("/")[0] ?? "";
       <svg class="hidden dark:block" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
       <svg class="block dark:hidden" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
     </button>
+    <a
+      id="lang-toggle"
+      href={altHref}
+      aria-label={altLabel}
+      title={altLabel}
+      class="icon-btn inline-flex items-center justify-center h-8 px-2 rounded border border-[var(--color-line)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] transition-colors text-[var(--color-ink-muted)] text-[11px] font-mono font-semibold tracking-wider"
+    >
+      {altText}
+    </a>
     <button
       id="print-btn"
       type="button"
@@ -167,8 +214,8 @@ const currentCompanySlug = currentEntryId.split("/")[0] ?? "";
     </button>
 
     <nav class="md:hidden flex gap-3 text-[13px]">
-      <a href="/" class={isHome ? "text-[var(--color-accent)]" : ""}>Resume</a>
-      <a href="/portfolio/" class={isPortfolio ? "text-[var(--color-accent)]" : ""}>Portfolio</a>
+      <a href={base + "/"} class={isHome ? "text-[var(--color-accent)]" : ""}>Resume</a>
+      <a href={base + "/portfolio/"} class={isPortfolio ? "text-[var(--color-accent)]" : ""}>Portfolio</a>
     </nav>
   </div>
 </aside>
@@ -201,6 +248,15 @@ const currentCompanySlug = currentEntryId.split("/")[0] ?? "";
   }
   .nav-link.is-active .nav-marker {
     color: var(--color-accent);
+  }
+
+  /* Portfolio 토글 마커: 열림 상태에서 회전, 접힘/펼침 시각화 */
+  .nav-link .nav-marker-toggle {
+    color: var(--color-ink-subtle);
+    transition: transform 0.15s ease, color 0.15s ease;
+  }
+  .nav-tree[open] > .nav-summary .nav-marker-toggle {
+    transform: translateY(-1px) rotate(90deg);
   }
 
   .nav-icon {

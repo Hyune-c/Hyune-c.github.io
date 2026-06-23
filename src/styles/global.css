@@ -316,3 +316,16 @@ html.dark {
   }
 }
 
+/* 이미지 캡션: 이미지 바로 뒤의 단독 em 단락을 캡션으로 처리 (영어판 스크린샷 설명)
+   주의: :has() 안에 :has() 를 중첩하면 규칙 전체가 무효가 되므로,
+   이미지의 my-6 하단 여백(1.5rem)을 캡션의 음수 margin-top 으로 끌어올려 간격을 좁힌다. */
+.prose p:has(> img) + p:has(> em:only-child) {
+  margin-top: -1.1rem;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--color-ink-muted);
+}
+.prose p:has(> img) + p:has(> em:only-child) > em {
+  font-style: normal;
+}
+

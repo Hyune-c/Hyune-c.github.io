@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 650" font-family="system-ui, -apple-system, 'Apple SD Gothic Neo', 'Pretendard', sans-serif">
+  <defs>
+    <marker id="fr-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect width="1400" height="650" fill="#fbfcfd"/>
+
+  <!-- Title -->
+  <text x="60" y="56"><tspan font-size="26" font-weight="700" fill="#0f172a">Core design — Facade · routing · error normalization</tspan><tspan font-size="14" fill="#64748b" dx="16">Facade controls the flow; SmartRouter picks targets via a Factor chain</tspan></text>
+
+  <!-- ===== Column 1: Facade ===== -->
+  <text x="60" y="108" font-size="15" font-weight="700" fill="#334155">Facade — controlled area (procedural)</text>
+
+  <rect x="60" y="124" width="360" height="64" rx="10" fill="#ecfeff" stroke="#06b6d4" stroke-width="1.4"/>
+  <text x="80" y="150" font-size="15" font-weight="700" fill="#0e7490">Overall flow control</text>
+  <text x="80" y="172" font-size="12.5" fill="#1f2937">normalize → delegate routing → execute → serialize</text>
+
+  <rect x="60" y="204" width="360" height="64" rx="10" fill="#ecfeff" stroke="#06b6d4" stroke-width="1.4"/>
+  <text x="80" y="230" font-size="15" font-weight="700" fill="#0e7490">Model fallback</text>
+  <text x="80" y="252" font-size="12.5" fill="#1f2937">Tries SmartRouter-selected targets in order</text>
+
+  <rect x="60" y="284" width="360" height="64" rx="10" fill="#ecfeff" stroke="#06b6d4" stroke-width="1.4"/>
+  <text x="80" y="310" font-size="15" font-weight="700" fill="#0e7490">Async call-history dispatch</text>
+  <text x="80" y="332" font-size="12.5" fill="#1f2937">Sends call history to Control Plane after response</text>
+
+  <!-- ===== Column 2: SmartRouter — RoutingFactor chain ===== -->
+  <text x="450" y="108" font-size="15" font-weight="700" fill="#334155">SmartRouter — RoutingFactor chain (dynamic decision)</text>
+
+  <rect x="450" y="124" width="360" height="48" rx="9" fill="#eef2ff" stroke="#6366f1" stroke-width="1.3"/>
+  <text x="470" y="146" font-size="13" font-weight="700" fill="#3730a3">1 · requestEntries</text>
+  <text x="470" y="163" font-size="11.5" fill="#1f2937">Initial targets selected from ModelCatalog</text>
+
+  <rect x="450" y="182" width="360" height="48" rx="9" fill="#f0fdf4" stroke="#10b981" stroke-width="1.3"/>
+  <text x="470" y="204" font-size="13" font-weight="700" fill="#047857">2 · AvailabilityFactor</text>
+  <text x="470" y="221" font-size="11.5" fill="#1f2937">Keeps only live providers · regions</text>
+
+  <rect x="450" y="240" width="360" height="48" rx="9" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.3"/>
+  <text x="470" y="262" font-size="13" font-weight="700" fill="#b45309">3 · CacheStickyFactor</text>
+  <text x="470" y="279" font-size="11.5" fill="#1f2937">Prefers cache-holding location (not hard-pinned)</text>
+
+  <rect x="450" y="298" width="360" height="48" rx="9" fill="#ecfeff" stroke="#06b6d4" stroke-width="1.3"/>
+  <text x="470" y="320" font-size="13" font-weight="700" fill="#0e7490">4 · ExplicitFallbackFactor</text>
+  <text x="470" y="337" font-size="11.5" fill="#1f2937">Merges user-specified fallback</text>
+
+  <rect x="450" y="356" width="360" height="48" rx="9" fill="#faf5ff" stroke="#a855f7" stroke-width="1.3"/>
+  <text x="470" y="378" font-size="13" font-weight="700" fill="#6b21a8">5 · modelEntries</text>
+  <text x="470" y="395" font-size="11.5" fill="#1f2937">Final targets selected by SmartRouter</text>
+
+
+  <!-- ===== Column 3: why this order ===== -->
+
+  <rect x="840" y="124" width="500" height="64" rx="10" fill="#ffffff" stroke="#10b981" stroke-width="1.5"/>
+  <text x="860" y="150"><tspan font-size="13.5" font-weight="700" fill="#047857">Availability first</tspan><tspan font-size="12.5" fill="#1f2937" dx="12">availability &gt; entry stickiness &gt; region-priority</tspan></text>
+  <text x="860" y="172" font-size="11.5" fill="#1f2937">If prior location is down, accept cache loss and move to a live one</text>
+
+  <rect x="840" y="200" width="500" height="84" rx="10" fill="#ffffff" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="860" y="224" font-size="13.5" font-weight="700" fill="#b45309">Multi-turn — accumulated prefix means Prompt Cache hits</text>
+  <text x="860" y="245" font-size="11.5" fill="#1f2937">Conversation prefix (system + first user) → fingerprint → pin to same location</text>
+  <text x="860" y="265" font-size="11.5" fill="#1f2937">Full-messages hash changes each turn → unusable, so prefix keeps accumulating hits</text>
+
+  <rect x="840" y="296" width="500" height="64" rx="10" fill="#ffffff" stroke="#6366f1" stroke-width="1.5"/>
+  <text x="860" y="322"><tspan font-size="13.5" font-weight="700" fill="#3730a3">ModelEntryKey</tspan><tspan font-size="12" font-family="ui-monospace, monospace" fill="#1f2937" dx="10">( provider · modelOwner · modelName · region )</tspan></text>
+  <text x="860" y="344" font-size="11.5" fill="#1f2937">Serving-location id · fingerprint sticky mapping · shared candidate dedup</text>
+
+  <!-- ===== Provider error normalization ===== -->
+  <rect x="60" y="442" width="360" height="188" rx="11" fill="#f1f5f9" stroke="#64748b" stroke-width="1.5"/>
+  <text x="84" y="470" font-size="15" font-weight="700" fill="#334155">Provider error normalization</text>
+  <text x="84" y="490" font-size="12.5" fill="#64748b">Classify by type · code</text>
+  <text x="84" y="513" font-size="12" fill="#1f2937">Exposes only customer-fixable errors;</text>
+  <text x="84" y="531" font-size="12" fill="#1f2937">abstracts or hides the rest</text>
+  <rect x="84" y="548" width="312" height="40" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.1"/>
+  <text x="240" y="573" font-size="13" font-weight="700" fill="#334155" text-anchor="middle">→ ErrorCategory</text>
+
+  <line x1="420" y1="470" x2="446" y2="470" stroke="#475569" stroke-width="1.6" marker-end="url(#fr-ar)"/>
+  <line x1="420" y1="536" x2="446" y2="536" stroke="#475569" stroke-width="1.6" marker-end="url(#fr-ar)"/>
+  <line x1="420" y1="602" x2="446" y2="602" stroke="#475569" stroke-width="1.6" marker-end="url(#fr-ar)"/>
+
+  <rect x="450" y="442" width="890" height="56" rx="10" fill="#f0fdf4" stroke="#10b981" stroke-width="1.5"/>
+  <text x="474" y="468" font-size="14" font-weight="700" fill="#047857">✅ Bypass — customer responsibility</text>
+  <text x="474" y="488" font-size="12.5" fill="#1f2937">Request-format errors (e.g. invalid_request): expose provider's original type · message as-is (customer fixes it)</text>
+
+  <rect x="450" y="508" width="890" height="56" rx="10" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="474" y="534" font-size="14" font-weight="700" fill="#b45309">🟡 Abstract — convey situation only</text>
+  <text x="474" y="554" font-size="12.5" fill="#1f2937">rate limit · 5xx · timeout · customer auth/permission: relay as OG standard message, WARN log</text>
+
+  <rect x="450" y="574" width="890" height="56" rx="10" fill="#fef2f2" stroke="#f43f5e" stroke-width="1.5"/>
+  <text x="474" y="600" font-size="14" font-weight="700" fill="#be123c">🔒 Hide — mask the cause</text>
+  <text x="474" y="620" font-size="12.5" fill="#1f2937">upstream auth · permission · billing: mask as internal error, ERROR log · ops alert (blocks provider account-id leaks)</text>
+</svg>

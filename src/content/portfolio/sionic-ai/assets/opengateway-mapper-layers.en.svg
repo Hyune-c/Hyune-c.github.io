@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 484" font-family="system-ui, -apple-system, 'Apple SD Gothic Neo', 'Pretendard', sans-serif">
+  <defs>
+    <marker id="uml-tri" viewBox="0 0 16 14" refX="15" refY="7" markerWidth="16" markerHeight="14" orient="auto-start-reverse">
+      <path d="M1,1 L15,7 L1,13 z" fill="#fbfcfd" stroke="#475569" stroke-width="1.3"/>
+    </marker>
+    <marker id="uml-open" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="11" markerHeight="11" orient="auto-start-reverse">
+      <path d="M1,1 L10,6 L1,11" fill="none" stroke="#475569" stroke-width="1.3"/>
+    </marker>
+  </defs>
+
+  <rect width="1500" height="484" fill="#fbfcfd"/>
+
+  <!-- Title -->
+  <text x="60" y="50" font-size="26" font-weight="700" fill="#0f172a">Core design — Provider extension and Mapper delegation</text>
+  <text x="60" y="76" font-size="14" fill="#64748b">OpenAI · Anthropic specs each delegate to a shared Mapper, Gemini has its own — all unified under RequestMapper</text>
+
+  <!-- ModelService -->
+  <rect x="60" y="92" width="240" height="64" rx="6" fill="#f8fafc" stroke="#64748b" stroke-width="1.6"/>
+  <text x="180" y="118" font-size="11.5" font-style="italic" fill="#64748b" text-anchor="middle">«service»</text>
+  <text x="180" y="142" font-size="15.5" font-weight="700" fill="#334155" text-anchor="middle">ModelService</text>
+
+  <!-- Root interface (compact, centered) -->
+  <rect x="600" y="92" width="300" height="64" rx="6" fill="#eef2ff" stroke="#6366f1" stroke-width="1.8"/>
+  <text x="750" y="118" font-size="11.5" font-style="italic" fill="#64748b" text-anchor="middle">«interface»</text>
+  <text x="750" y="142" font-size="15.5" font-weight="700" fill="#3730a3" text-anchor="middle">RequestMapper</text>
+
+  <!-- use: ModelService ..> RequestMapper -->
+  <line x1="300" y1="124" x2="598" y2="124" stroke="#475569" stroke-width="1.4" stroke-dasharray="5,4" marker-end="url(#uml-open)"/>
+  <text x="449" y="116" font-size="11" font-style="italic" fill="#64748b" text-anchor="middle">«use»</text>
+
+  <!-- extends: shared bus from three groups ..|> RequestMapper -->
+  <line x1="280" y1="230" x2="280" y2="196" stroke="#475569" stroke-width="1.4" stroke-dasharray="5,4"/>
+  <line x1="750" y1="230" x2="750" y2="196" stroke="#475569" stroke-width="1.4" stroke-dasharray="5,4"/>
+  <line x1="1220" y1="230" x2="1220" y2="196" stroke="#475569" stroke-width="1.4" stroke-dasharray="5,4"/>
+  <line x1="280" y1="196" x2="1220" y2="196" stroke="#475569" stroke-width="1.4" stroke-dasharray="5,4"/>
+  <line x1="750" y1="196" x2="750" y2="158" stroke="#475569" stroke-width="1.4" stroke-dasharray="5,4" marker-end="url(#uml-tri)"/>
+  <text x="762" y="182" font-size="11" font-style="italic" fill="#64748b">«extends»</text>
+
+  <!-- ============ Group 1: OpenAI spec ============ -->
+  <rect x="60" y="230" width="440" height="232" rx="10" fill="#f7fbff" stroke="#bae6fd" stroke-width="1.4"/>
+  <text x="80" y="256"><tspan font-size="13" font-weight="700" fill="#0369a1">OpenAI spec</tspan><tspan font-size="10" font-style="italic" fill="#64748b" dx="12">«interface» ChatCompletionsApiRequestMapper</tspan></text>
+
+  <rect x="80" y="272" width="400" height="86" rx="6" fill="#ecfeff" stroke="#06b6d4" stroke-width="1.8"/>
+  <text x="280" y="306" font-size="13.5" font-weight="700" fill="#0e7490" text-anchor="middle">OpenAiCompatibleMapper</text>
+  <line x1="96" y1="320" x2="464" y2="320" stroke="#a5f3fc" stroke-width="1"/>
+  <text x="280" y="344" font-size="11" fill="#1f2937" text-anchor="middle">strip · override · add</text>
+
+  <line x1="287" y1="386" x2="287" y2="360" stroke="#475569" stroke-width="1.4" stroke-dasharray="5,4" marker-end="url(#uml-open)"/>
+  <line x1="119" y1="386" x2="455" y2="386" stroke="#475569" stroke-width="1.4" stroke-dasharray="5,4"/>
+  <line x1="119" y1="386" x2="119" y2="406" stroke="#475569" stroke-width="1.4" stroke-dasharray="5,4"/>
+  <line x1="203" y1="386" x2="203" y2="406" stroke="#475569" stroke-width="1.4" stroke-dasharray="5,4"/>
+  <line x1="287" y1="386" x2="287" y2="406" stroke="#475569" stroke-width="1.4" stroke-dasharray="5,4"/>
+  <line x1="371" y1="386" x2="371" y2="406" stroke="#475569" stroke-width="1.4" stroke-dasharray="5,4"/>
+  <line x1="455" y1="386" x2="455" y2="406" stroke="#475569" stroke-width="1.4" stroke-dasharray="5,4"/>
+
+  <rect x="80" y="406" width="78" height="36" rx="6" fill="#f0f9ff" stroke="#7dd3fc" stroke-width="1.3"/>
+  <text x="119" y="429" font-size="11" font-weight="600" fill="#0369a1" text-anchor="middle">OpenAi</text>
+  <rect x="164" y="406" width="78" height="36" rx="6" fill="#f0f9ff" stroke="#7dd3fc" stroke-width="1.3"/>
+  <text x="203" y="429" font-size="11" font-weight="600" fill="#0369a1" text-anchor="middle">Kimi</text>
+  <rect x="248" y="406" width="78" height="36" rx="6" fill="#f0f9ff" stroke="#7dd3fc" stroke-width="1.3"/>
+  <text x="287" y="429" font-size="10.5" font-weight="600" fill="#0369a1" text-anchor="middle">DeepSeek</text>
+  <rect x="332" y="406" width="78" height="36" rx="6" fill="#f0f9ff" stroke="#7dd3fc" stroke-width="1.3"/>
+  <text x="371" y="429" font-size="11" font-weight="600" fill="#0369a1" text-anchor="middle">vLLM</text>
+  <rect x="416" y="406" width="78" height="36" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.3" stroke-dasharray="5,4"/>
+  <text x="455" y="430" font-size="14" font-weight="700" fill="#94a3b8" text-anchor="middle">…</text>
+
+  <!-- ============ Group 2: Anthropic spec ============ -->
+  <rect x="530" y="230" width="440" height="232" rx="10" fill="#fdf7ff" stroke="#e9d5ff" stroke-width="1.4"/>
+  <text x="550" y="256"><tspan font-size="13" font-weight="700" fill="#7c3aed">Anthropic spec</tspan><tspan font-size="10" font-style="italic" fill="#64748b" dx="12">«interface» ChatCompletionsApiRequestMapper</tspan></text>
+
+  <rect x="550" y="272" width="400" height="86" rx="6" fill="#faf5ff" stroke="#a855f7" stroke-width="1.8"/>
+  <text x="750" y="306" font-size="13.5" font-weight="700" fill="#6b21a8" text-anchor="middle">AnthropicCompatibleMapper</text>
+  <line x1="566" y1="320" x2="934" y2="320" stroke="#e9d5ff" stroke-width="1"/>
+  <text x="750" y="344" font-size="11" fill="#1f2937" text-anchor="middle">auto-injects cache_control on system · tool</text>
+
+  <line x1="750" y1="386" x2="750" y2="360" stroke="#475569" stroke-width="1.4" stroke-dasharray="5,4" marker-end="url(#uml-open)"/>
+  <line x1="612" y1="386" x2="888" y2="386" stroke="#475569" stroke-width="1.4" stroke-dasharray="5,4"/>
+  <line x1="612" y1="386" x2="612" y2="406" stroke="#475569" stroke-width="1.4" stroke-dasharray="5,4"/>
+  <line x1="750" y1="386" x2="750" y2="406" stroke="#475569" stroke-width="1.4" stroke-dasharray="5,4"/>
+  <line x1="888" y1="386" x2="888" y2="406" stroke="#475569" stroke-width="1.4" stroke-dasharray="5,4"/>
+
+  <rect x="552" y="406" width="120" height="36" rx="6" fill="#f5edff" stroke="#d8b4fe" stroke-width="1.3"/>
+  <text x="612" y="429" font-size="10.5" font-weight="600" fill="#6b21a8" text-anchor="middle">Anthropic direct</text>
+  <rect x="690" y="406" width="120" height="36" rx="6" fill="#f5edff" stroke="#d8b4fe" stroke-width="1.3"/>
+  <text x="750" y="429" font-size="10.5" font-weight="600" fill="#6b21a8" text-anchor="middle">Vertex AI Claude</text>
+  <rect x="828" y="406" width="120" height="36" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.3" stroke-dasharray="5,4"/>
+  <text x="888" y="430" font-size="14" font-weight="700" fill="#94a3b8" text-anchor="middle">…</text>
+
+  <!-- ============ Group 3: Gemini spec ============ -->
+  <rect x="1000" y="230" width="440" height="232" rx="10" fill="#f3fdf6" stroke="#bbf7d0" stroke-width="1.4"/>
+  <text x="1020" y="256"><tspan font-size="13" font-weight="700" fill="#047857">Gemini spec</tspan><tspan font-size="10" font-style="italic" fill="#64748b" dx="12">«interface» ChatCompletionsApiRequestMapper</tspan></text>
+
+  <rect x="1020" y="272" width="400" height="86" rx="6" fill="#f0fdf4" stroke="#10b981" stroke-width="1.8"/>
+  <text x="1220" y="306" font-size="11.5" font-weight="700" fill="#047857" text-anchor="middle">VertexAiGeminiChatCompletionsApiMapper</text>
+  <line x1="1036" y1="320" x2="1404" y2="320" stroke="#bbf7d0" stroke-width="1"/>
+  <text x="1220" y="344" font-size="11" fill="#1f2937" text-anchor="middle">swaps in explicit cachedContent pointer</text>
+
+  <line x1="1220" y1="386" x2="1220" y2="360" stroke="#475569" stroke-width="1.4" stroke-dasharray="5,4" marker-end="url(#uml-open)"/>
+  <line x1="1220" y1="386" x2="1220" y2="406" stroke="#475569" stroke-width="1.4" stroke-dasharray="5,4"/>
+
+  <rect x="1100" y="406" width="240" height="36" rx="6" fill="#ecfdf3" stroke="#86efac" stroke-width="1.3"/>
+  <text x="1220" y="429" font-size="11" font-weight="600" fill="#047857" text-anchor="middle">Vertex AI Gemini</text>
+</svg>

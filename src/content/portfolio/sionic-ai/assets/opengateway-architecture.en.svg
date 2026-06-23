@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1360 464" font-family="system-ui, -apple-system, 'Apple SD Gothic Neo', 'Pretendard', sans-serif">
+  <rect width="1360" height="464" fill="#fbfcfd"/>
+
+  <!-- Title -->
+  <text x="60" y="56"><tspan font-size="26" font-weight="700" fill="#0f172a">OpenGateway — Engine and Back Office separation</tspan><tspan font-size="14" fill="#64748b" dx="16">Data Plane focuses on model calls; Control Plane on policy, billing, management</tspan></text>
+
+  <!-- Entry: Client (left) -->
+  <rect x="60" y="88" width="600" height="64" rx="12" fill="#eef2ff" stroke="#6366f1" stroke-width="1.8"/>
+  <text x="84" y="116" font-size="16" font-weight="700" fill="#3730a3">Client</text>
+  <text x="84" y="138" font-size="12.5" fill="#475569">Calls 10+ Providers · 100+ models via OpenAI-compatible spec, no code changes</text>
+
+  <!-- Entry: Admin Frontend (right) -->
+  <rect x="700" y="88" width="600" height="64" rx="12" fill="#fdf2f8" stroke="#9d174d" stroke-width="1.8"/>
+  <text x="724" y="116" font-size="16" font-weight="700" fill="#9d174d">Admin · Frontend</text>
+  <text x="724" y="138" font-size="12.5" fill="#1f2937">API Key · Logs · Usage · Payment(Stripe · PayPal) · Auth0 · Vercel</text>
+
+  <!-- Data Plane -->
+  <rect x="60" y="172" width="600" height="272" rx="14" fill="#ffffff" stroke="#0e7490" stroke-width="1.8"/>
+  <text x="84" y="210"><tspan font-size="24" font-weight="700" fill="#0e7490">Data Plane</tspan><tspan font-size="13" fill="#155e75" dx="14">Receives requests · routes · normalizes · records calls</tspan></text>
+
+  <g>
+    <rect x="84" y="228" width="552" height="56" rx="10" fill="#ecfeff" stroke="#06b6d4" stroke-width="1.3"/>
+    <text x="104" y="254" font-size="17" font-weight="700" fill="#0e7490">Facade</text>
+    <text x="104" y="274" font-size="13" fill="#1f2937">Controls overall flow · model fallback · batched call-history dispatch</text>
+  </g>
+  <g>
+    <rect x="84" y="298" width="552" height="56" rx="10" fill="#f0fdf4" stroke="#10b981" stroke-width="1.3"/>
+    <text x="104" y="324" font-size="17" font-weight="700" fill="#047857">SmartRouter</text>
+    <text x="104" y="344" font-size="13" fill="#1f2937">Dynamic target selection · Factor chain distillation · extensible interface</text>
+  </g>
+  <g>
+    <rect x="84" y="368" width="552" height="56" rx="10" fill="#faf5ff" stroke="#a855f7" stroke-width="1.2"/>
+    <text x="104" y="394" font-size="16" font-weight="700" fill="#6b21a8">ModelService — Provider adapters</text>
+    <text x="104" y="414" font-size="12" fill="#1f2937">OpenAI · Anthropic · Vertex AI · Azure · Kimi · DeepSeek · Airgap(vLLM) · …</text>
+  </g>
+
+  <!-- Control Plane -->
+  <rect x="700" y="172" width="600" height="272" rx="14" fill="#ffffff" stroke="#7c2d12" stroke-width="1.8"/>
+  <text x="724" y="210"><tspan font-size="24" font-weight="700" fill="#7c2d12">Control Plane</tspan><tspan font-size="13" fill="#9a3412" dx="14">Policy · billing · management</tspan></text>
+
+  <g>
+    <rect x="724" y="228" width="552" height="56" rx="10" fill="#fff7ed" stroke="#f97316" stroke-width="1.1"/>
+    <text x="744" y="254" font-size="16" font-weight="700" fill="#7c2d12">Account · API Key · Authn</text>
+    <text x="744" y="274" font-size="12.5" fill="#1f2937">Users · teams · API Key issue · revoke · permission management</text>
+  </g>
+  <g>
+    <rect x="724" y="298" width="552" height="56" rx="10" fill="#fff7ed" stroke="#f97316" stroke-width="1.1"/>
+    <text x="744" y="324" font-size="16" font-weight="700" fill="#7c2d12">Billing · Pricing · Redeem</text>
+    <text x="744" y="344" font-size="12.5" fill="#1f2937">Model pricing · Stripe · PayPal · Redeem · call history → billing conversion</text>
+  </g>
+  <g>
+    <rect x="724" y="368" width="552" height="56" rx="10" fill="#fff7ed" stroke="#f97316" stroke-width="1.1"/>
+    <text x="744" y="394" font-size="16" font-weight="700" fill="#7c2d12">Logs · Usage · Observability</text>
+    <text x="744" y="414" font-size="12.5" fill="#1f2937">Call history single source · Grafana traffic · cost · Provider distribution</text>
+  </g>
+</svg>

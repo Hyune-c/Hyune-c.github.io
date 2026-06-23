@@ -7,12 +7,26 @@ interface Props {
   printName?: string;
 }
 
-const SITE_TITLE = "최병현 — 도움이 되고 싶은 개발자";
-const { description = "도움이 되고 싶은 개발자, 최병현입니다.", printName } = Astro.props;
+const pathname = Astro.url.pathname;
+const isEn = pathname === "/en" || pathname.startsWith("/en/");
+const lang = isEn ? "en" : "ko";
+
+const SITE_TITLE = isEn
+  ? "Byunghyun Choi — Backend Developer"
+  : "최병현 — 도움이 되고 싶은 개발자";
+const defaultDescription = isEn
+  ? "Byunghyun Choi, a backend developer who wants to be helpful."
+  : "도움이 되고 싶은 개발자, 최병현입니다.";
+const { description = defaultDescription, printName } = Astro.props;
+
+// 반대 언어로의 동일 페이지 경로 계산
+const altHref = isEn
+  ? pathname.replace(/^\/en/, "") || "/"
+  : "/en" + (pathname === "/" ? "/" : pathname);
 ---
 
 <!doctype html>
-<html lang="ko">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -33,16 +47,42 @@ const { description = "도움이 되고 싶은 개발자, 최병현입니다.", 
         } catch (_) {}
       })();
     </script>
+    <script is:inline define:vars={{ lang, altHref }}>
+      // 브라우저 언어 기반 기본 언어 선택 (한글 페이지에서만 동작, 깜빡임 방지를 위해 렌더 전 실행)
+      (function () {
+        try {
+          if (lang !== "ko") return;
+          var pref = localStorage.getItem("lang");
+          if (pref === "ko") return; // 사용자가 한국어를 명시적으로 선택함
+          var goEn = pref === "en";
+          if (!pref) {
+            var nav = (navigator.language || navigator.userLanguage || "").toLowerCase();
+            goEn = !nav.startsWith("ko"); // 브라우저 우선 언어가 한국어가 아니면 영어로
+          }
+          if (goEn) location.replace(altHref);
+        } catch (_) {}
+      })();
+    </script>
   </head>
   <body data-print-name={printName}>
     <div class="md:grid md:grid-cols-[260px_1fr] md:max-w-[1360px] md:mx-auto min-h-screen">
-      <Sidebar />
+      <Sidebar lang={lang} altHref={altHref} />
       <main class="px-6 py-10 md:py-16 md:pl-14 md:pr-12 max-w-[980px]">
         <slot />
       </main>
     </div>
     <script is:inline>
       (function () {
+        var langToggle = document.getElementById("lang-toggle");
+        if (langToggle) {
+          langToggle.addEventListener("click", function () {
+            try {
+              // 현재 언어의 반대로 명시적 선택을 저장 → 자동 전환이 이를 존중
+              var cur = document.documentElement.lang;
+              localStorage.setItem("lang", cur === "ko" ? "en" : "ko");
+            } catch (_) {}
+          });
+        }
         var btn = document.getElementById("theme-toggle");
         if (btn) {
           btn.addEventListener("click", function () {
