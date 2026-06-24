@@ -19,17 +19,29 @@ Through blogging, RSS, side projects, code review, and mentoring, I recorded and
 
 <div class="img-grid-3">
 
+<figure class="grid-cap">
+
 ![RSS subscriptions and learning notes](./assets/essay-self-development-image-01.png)
 
 *RSS subscriptions used to steadily organize work-relevant topics.*
+
+</figure>
+
+<figure class="grid-cap">
 
 ![Blogging record](./assets/essay-self-development-image-02.png)
 
 *Blog posts capturing recurring topics like Kotlin, Spring, and testing.*
 
+</figure>
+
+<figure class="grid-cap">
+
 ![Organized learning material](./assets/essay-self-development-image-03.png)
 
 *Learning organized as examples and templates ready to reuse.*
+
+</figure>
 
 </div>
 
@@ -40,13 +52,21 @@ Through blogging, RSS, side projects, code review, and mentoring, I recorded and
 
 <div class="img-grid-2">
 
+<figure class="grid-cap">
+
 ![Code review work](./assets/essay-self-development-image-04.png)
 
 *Reading others' code against explainable criteria and giving feedback.*
 
+</figure>
+
+<figure class="grid-cap">
+
 ![Mentoring work](./assets/essay-self-development-image-05.png)
 
 *Mentoring that turned recurring review issues into learning topics.*
+
+</figure>
 
 </div>
 
@@ -61,17 +81,29 @@ I first validated the API usage and message structure in a small side project, t
 
 <div class="img-grid-3">
 
+<figure class="grid-cap">
+
 ![Slack integration experiment](./assets/essay-self-development-image-06.png)
 
 *Slack integration first validated in a birthday-celebration bot side project.*
+
+</figure>
+
+<figure class="grid-cap">
 
 ![Slack integration applied 1](./assets/essay-self-development-image-07.png)
 
 *The same pattern reused for alerting in the company environment.*
 
+</figure>
+
+<figure class="grid-cap">
+
 ![Slack integration applied 2](./assets/essay-self-development-image-08.png)
 
 *Slack integration applied to operational automation at work.*
+
+</figure>
 
 </div>
 
@@ -82,17 +114,29 @@ This was more than just documentation—I designed it so that the exception-hand
 
 <div class="img-grid-3">
 
+<figure class="grid-cap">
+
 ![Standard Error DTO design 1](./assets/essay-self-development-image-09.png)
 
 *A standard Error DTO keeping the response format consistent across services.*
+
+</figure>
+
+<figure class="grid-cap">
 
 ![Standard Error DTO design 2](./assets/essay-self-development-image-10.png)
 
 *Exception-handling flow lined up with the API response spec.*
 
+</figure>
+
+<figure class="grid-cap">
+
 ![Standard Error DTO design 3](./assets/essay-self-development-image-11.png)
 
 *Design that cuts the cost of debugging and client integration.*
+
+</figure>
 
 </div>
 

@@ -12,10 +12,10 @@ const isEn = pathname === "/en" || pathname.startsWith("/en/");
 const lang = isEn ? "en" : "ko";
 
 const SITE_TITLE = isEn
-  ? "Byunghyun Choi — Backend Developer"
+  ? "Byung Hyeon Choi — Backend Developer"
   : "최병현 — 도움이 되고 싶은 개발자";
 const defaultDescription = isEn
-  ? "Byunghyun Choi, a backend developer who wants to be helpful."
+  ? "Byung Hyeon Choi, a backend developer who wants to be helpful."
   : "도움이 되고 싶은 개발자, 최병현입니다.";
 const { description = defaultDescription, printName } = Astro.props;
 

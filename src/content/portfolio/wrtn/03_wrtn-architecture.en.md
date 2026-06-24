@@ -13,4 +13,4 @@ Beyond the model serving, tokenizer, and gateway-type servers I operated directl
 
 ![Wrtn Core Part architecture](./assets/wrtn-architecture-image-01.png)
 
-*Architecture diagram of Core Part servers and their call flow to partner systems.*
+*Core Part architecture: william/hamlet serving, event-gateway publishing to Kafka, and CDS, calling the AI provider.*

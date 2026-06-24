@@ -33,13 +33,21 @@ To plan and develop 2 backends and 1 frontend simultaneously with one junior dev
 
 <div class="img-row-small">
 
+<figure class="grid-cap">
+
 ![BE server release log 1](./assets/opengateway-releases-1.png)
 
 *Backend release history showing frequent, versioned deployments.*
 
+</figure>
+
+<figure class="grid-cap">
+
 ![BE server release log 2](./assets/opengateway-releases-2.png)
 
 *Continued backend release log entries with change summaries per version.*
+
+</figure>
 
 </div>
 
@@ -61,13 +69,21 @@ To plan and develop 2 backends and 1 frontend simultaneously with one junior dev
 
 <div class="img-grid-2">
 
+<figure class="grid-cap">
+
 ![OpenGateway Logs](./assets/opengateway-image-04.png)
 
 *Request logs list with per-call status, model, and timing.*
 
+</figure>
+
+<figure class="grid-cap">
+
 ![OpenGateway Log Detail](./assets/opengateway-image-05.png)
 
 *Single log detail view showing request, routing, and response data.*
+
+</figure>
 
 </div>
 

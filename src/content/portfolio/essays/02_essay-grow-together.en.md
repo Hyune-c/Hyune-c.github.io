@@ -18,17 +18,29 @@ Through an internal wiki, tech sharing, and training sessions, I tried to turn w
 
 <div class="img-grid-3">
 
+<figure class="grid-cap">
+
 ![Running Wrtn's Tech Meetup 1](./assets/essay-grow-together-image-01.png)
 
 *Wrtn's internal Tech Meetup building a company-wide knowledge-sharing culture.*
+
+</figure>
+
+<figure class="grid-cap">
 
 ![Running Wrtn's Tech Meetup 2](./assets/essay-grow-together-image-02.png)
 
 *Talk topics organized into a standardized, reusable format.*
 
+</figure>
+
+<figure class="grid-cap">
+
 ![Running Wrtn's Tech Meetup 3](./assets/essay-grow-together-image-03.png)
 
 *Docs and samples kept referenceable after the talk ended.*
+
+</figure>
 
 </div>
 
@@ -46,24 +58,40 @@ I shared what I'd learned from external training across the company, organized i
 
 <div class="img-grid-2">
 
+<figure class="grid-cap">
+
 ![Sharing training takeaways 1](./assets/essay-grow-together-image-05.png)
 
 *External training takeaways shared company-wide in an applicable form.*
+
+</figure>
+
+<figure class="grid-cap">
 
 ![Sharing training takeaways 2](./assets/essay-grow-together-image-06.png)
 
 *A record left to draw on later when making decisions on the job.*
 
+</figure>
+
 </div>
 
 <div class="img-grid-2">
+
+<figure class="grid-cap">
 
 ![Tech sharing 1](./assets/essay-grow-together-image-07.png)
 
 *A tech-sharing session turning individual knowledge into a team asset.*
 
+</figure>
+
+<figure class="grid-cap">
+
 ![Tech sharing 2](./assets/essay-grow-together-image-08.png)
 
 *Material organized so it can be referenced again in future work.*
+
+</figure>
 
 </div>

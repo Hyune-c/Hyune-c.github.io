@@ -29,13 +29,21 @@ A dashboard that enabled quick checks was needed, and I later considered a stati
 
 <div class="img-grid-2">
 
+<figure class="grid-cap">
+
 ![Gift card basic statistics dashboard](./assets/kurly-redash-image-01.png)
 
 *Redash dashboard of basic gift card statistics for operations.*
 
+</figure>
+
+<figure class="grid-cap">
+
 ![Gift card issuance time-series graph](./assets/kurly-redash-image-03.png)
 
 *Time-series graph tracking gift card issuance over time.*
+
+</figure>
 
 </div>
 
@@ -45,16 +53,28 @@ After operating Redash, I researched a statistics architecture that went beyond 
 
 <div class="img-grid-3">
 
+<figure class="grid-cap">
+
 ![Background (discussion / summary of existing approach)](./assets/kurly-statistics-image-01.png)
 
 *Background discussion summarizing the existing query-sharing approach.*
+
+</figure>
+
+<figure class="grid-cap">
 
 ![Goal (defining the statistics to automate)](./assets/kurly-statistics-image-02.png)
 
 *Goal definition for the statistics to be automated.*
 
+</figure>
+
+<figure class="grid-cap">
+
 ![Plan (ETL/ELT, AWS Pipeline study)](./assets/kurly-statistics-image-03.png)
 
 *Plan studying ETL/ELT and AWS Pipeline for scalable statistics.*
+
+</figure>
 
 </div>

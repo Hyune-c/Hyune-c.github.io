@@ -20,13 +20,21 @@ After receiving the issue report, I checked the OOM error logs and confirmed tha
 
 <div class="img-grid-2">
 
+<figure class="grid-cap">
+
 ![Issue report / OOM error log](./assets/kurly-oom-image-01.png)
 
 *Issue report alongside the OutOfMemoryError log from the batch job.*
 
+</figure>
+
+<figure class="grid-cap">
+
 ![Memory peak confirmed for that time window](./assets/kurly-oom-image-02.png)
 
 *Memory usage chart confirming the peak during that time window.*
+
+</figure>
 
 </div>
 

@@ -11,10 +11,10 @@ tags: [B2B, B2C, Process Design]
 I organized the bulk-send flow from customer-center intake through purchase order creation, partner handoff, and send processing.  
 I reduced the operational confusion caused by the differing B2C / B2B send methods and partner integration approaches, and also provided a development guide that partners could implement against.
 
-![Capture 1](./assets/kurly-b2c-b2b-bulk-send-image-01.png)
+![Bulk-send four-step flow](./assets/kurly-b2c-b2b-bulk-send-image-01.png)
 
-*Bulk-send flow from customer-center intake through partner handoff and send processing.*
+*Bulk-send flow in four steps: application, gift card creation, contract/payment, and bulk send.*
 
-![Capture 2](./assets/kurly-b2c-b2b-bulk-send-image-02.png)
+![B2C bulk-purchase send-API task breakdown](./assets/kurly-b2c-b2b-bulk-send-image-02.png)
 
-*Comparison of B2C and B2B send methods and partner integration approaches.*
+*Issue breakdown for the B2C bulk-purchase send-API work, from design through production deploy.*

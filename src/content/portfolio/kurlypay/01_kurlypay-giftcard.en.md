@@ -27,18 +27,26 @@ I owned the design, development, and operation of gift cards, including planning
 - Designed the separation of gateway and core servers for external partners, and the separation of the B2C Kurly Mall order flow from the B2B purchase flow
 - Designed Kafka-based processing for the gift card lifecycle
 
-![Capture 1](./assets/kurlypay-giftcard-image-01.png)
+![Gift card architecture overview](./assets/kurlypay-giftcard-image-01.png)
 
-*Overview of the gift card design covering the four use cases and flows.*
+*Overall architecture: external-partner gateway/core separation, B2C/B2B flow split, and Kafka.*
 
 <div class="img-grid-2">
 
-![Capture 2](./assets/kurlypay-giftcard-image-02.png)
+<figure class="grid-cap">
 
-*Gateway and core server separation for external-partner gift card flows.*
+![Purchase to issue-and-send sequence](./assets/kurlypay-giftcard-image-02.png)
 
-![Capture 3](./assets/kurlypay-giftcard-image-03.png)
+*Sequence for purchasing, then issuing and sending a gift card (order polling → send → notification).*
 
-*Kafka-based processing diagram for the gift card lifecycle.*
+</figure>
+
+<figure class="grid-cap">
+
+![Kafka publish events per gift card action](./assets/kurlypay-giftcard-image-03.png)
+
+*Kafka events published per gift card action (issue, send, resend, use, terminate).*
+
+</figure>
 
 </div>

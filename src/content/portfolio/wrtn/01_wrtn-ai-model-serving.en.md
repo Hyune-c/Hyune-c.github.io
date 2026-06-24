@@ -45,13 +45,21 @@ Using Gatling-based load testing, I verified the target throughput and infrastru
 
 <div class="img-grid-2">
 
+<figure class="grid-cap">
+
 ![Load test result 1](./assets/wrtn-ai-model-serving-image-03.png)
 
 *Gatling load test results verifying target throughput before launch.*
 
+</figure>
+
+<figure class="grid-cap">
+
 ![Load test result 2](./assets/wrtn-ai-model-serving-image-04.png)
 
 *Additional Gatling load test results confirming required infrastructure specs.*
+
+</figure>
 
 </div>
 
@@ -64,23 +72,35 @@ I configured a new dashboard to surface AI model call failures and infrastructur
 
 <div class="img-grid-3">
 
+<figure class="grid-cap">
+
 ![Infrastructure load level 1](./assets/wrtn-ai-model-serving-image-07.png)
 
 *Dashboard panel monitoring infrastructure load metrics.*
+
+</figure>
+
+<figure class="grid-cap">
 
 ![Infrastructure load level 2](./assets/wrtn-ai-model-serving-image-08.png)
 
 *Additional infrastructure load monitoring panel.*
 
+</figure>
+
+<figure class="grid-cap">
+
 ![Infrastructure load level 3](./assets/wrtn-ai-model-serving-image-09.png)
 
 *Further infrastructure load monitoring panel on the dashboard.*
+
+</figure>
 
 </div>
 
 **Zero-downtime Migration**  
 By splitting the cutover between the existing and new services, I replaced the live service features with zero downtime.
 
-![Zero-downtime migration](./assets/wrtn-ai-model-serving-image-10.png)
+![Zero-downtime migration complete](./assets/wrtn-ai-model-serving-image-10.png)
 
-*Split cutover diagram showing live feature replacement with zero downtime.*
+*Cutover-complete notice with metrics confirming the zero-downtime switch from william to hamlet2.*

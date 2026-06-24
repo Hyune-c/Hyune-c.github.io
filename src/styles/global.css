@@ -329,3 +329,22 @@ html.dark {
   font-style: normal;
 }
 
+/* 그리드 셀 안의 이미지+캡션 묶음 (figure.grid-cap): 셀 내부에서 이미지 아래에 캡션 */
+.prose figure.grid-cap {
+  margin: 0;
+}
+.prose figure.grid-cap > p:has(> img) {
+  margin: 0;
+}
+.prose figure.grid-cap > p:has(> img) > img {
+  margin: 0 !important;
+}
+.prose figure.grid-cap > p:has(> img) + p:has(> em:only-child) {
+  margin-top: 0.4rem;
+  margin-bottom: 0;
+}
+/* img-row-small(작은 위젯 가로배치) 안에서는 캡션이 폭을 늘리지 않도록 제한해 가로 정렬 유지 */
+.prose .img-row-small figure.grid-cap {
+  max-width: 320px;
+}
+

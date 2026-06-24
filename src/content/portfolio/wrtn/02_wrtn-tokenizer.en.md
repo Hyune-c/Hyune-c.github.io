@@ -15,9 +15,9 @@ GPT-4o uses a different encoding scheme from previous models, which introduced e
 - Token counting is directly tied to cost estimation and usage control, so a fast response was required
 - Since OpenAI's official token-counting library was provided in Python, rather than forcing it into the Kotlin/JVM services, I separated it out as a distinct feature within CDS
 
-![Token-counting library dependency](./assets/wrtn-tokenizer-image-01.png)
+![Slack request for a fast token count](./assets/wrtn-tokenizer-image-01.png)
 
-*Diagram showing why the Python token-counting library was isolated within CDS.*
+*Slack note: Hamlet stores cl100k-tokenizer estimates, so a fast, accurate token count was needed.*
 
 ## Outcomes
 
@@ -34,12 +34,20 @@ GPT-4o uses a different encoding scheme from previous models, which introduced e
 
 <div class="img-grid-2">
 
+<figure class="grid-cap">
+
 ![Load test result 1](./assets/wrtn-tokenizer-image-03.png)
 
 *Load test result verifying tokenizer throughput before launch.*
 
+</figure>
+
+<figure class="grid-cap">
+
 ![Load test result 2](./assets/wrtn-tokenizer-image-04.png)
 
 *Additional load test result confirming corresponding infrastructure specs.*
+
+</figure>
 
 </div>

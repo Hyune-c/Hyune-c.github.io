@@ -75,7 +75,7 @@ const currentEntryId = isPortfolio
   : "";
 const currentCompanySlug = currentEntryId.split("/")[0] ?? "";
 
-const brandName = isEn ? "Byunghyun Choi" : "최병현";
+const brandName = isEn ? "Byung Hyeon Choi" : "최병현";
 const altLabel = isEn ? "View in Korean" : "View in English";
 const altText = isEn ? "EN" : "KO";
 ---
@@ -103,7 +103,11 @@ const altText = isEn ? "EN" : "KO";
       </li>
       <li>
         <details open={isPortfolio} class="nav-tree">
-          <summary class={`nav-link nav-summary ${isPortfolio && !currentEntryId.includes("/") ? "is-active" : ""}`}>
+          <summary
+            id="portfolio-summary"
+            data-href={`${base}/portfolio/`}
+            class={`nav-link nav-summary ${isPortfolio && !currentEntryId.includes("/") ? "is-active" : ""}`}
+          >
             <span class="nav-marker nav-marker-toggle" aria-hidden="true">›</span>
             <span class="nav-summary-link">Portfolio</span>
           </summary>
@@ -219,6 +223,21 @@ const altText = isEn ? "EN" : "KO";
     </nav>
   </div>
 </aside>
+
+<script is:inline>
+  (function () {
+    var summary = document.getElementById("portfolio-summary");
+    if (!summary) return;
+    var details = summary.parentElement; // <details>
+    summary.addEventListener("click", function () {
+      // 클릭 시점에 details.open 은 토글 전(현재) 상태
+      // 닫혀 있으면 → 펼치면서 포트폴리오 메인으로 이동, 열려 있으면 → 접기만
+      if (details && !details.open) {
+        window.location.href = summary.dataset.href;
+      }
+    });
+  })();
+</script>
 
 <style>
   .nav-link {

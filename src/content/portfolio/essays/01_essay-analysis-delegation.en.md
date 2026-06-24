@@ -17,13 +17,21 @@ I put what we'd agreed on verbally back into writing, so that whoever picked up 
 
 <div class="img-grid-2">
 
+<figure class="grid-cap">
+
 ![Analyzing the problem and mapping the flow 1](./assets/essay-analysis-delegation-image-01.png)
 
 *A documented map of the problem flow and its decision points.*
 
+</figure>
+
+<figure class="grid-cap">
+
 ![Analyzing the problem and mapping the flow 2](./assets/essay-analysis-delegation-image-02.png)
 
 *Verbal agreements written back down so the next person shares the context.*
+
+</figure>
 
 </div>
 
@@ -34,13 +42,21 @@ Delegation isn't about passing off a task—it's the process of making the probl
 
 <div class="img-grid-2">
 
+<figure class="grid-cap">
+
 ![Splitting up work and delegating 1](./assets/essay-analysis-delegation-image-03.png)
 
 *Parallel work handed off with owner, goal, and verification kept clear.*
 
+</figure>
+
+<figure class="grid-cap">
+
 ![Splitting up work and delegating 2](./assets/essay-analysis-delegation-image-04.png)
 
 *A task broken down small enough to act on, with its context attached.*
+
+</figure>
 
 </div>
 
@@ -50,12 +66,20 @@ Even after the work was finished, I left a record of the decisions made and the 
 
 <div class="img-grid-2">
 
+<figure class="grid-cap">
+
 ![Recording what was done and following up 1](./assets/essay-analysis-delegation-image-05.png)
 
 *A record of the decisions made once the work was finished.*
 
+</figure>
+
+<figure class="grid-cap">
+
 ![Recording what was done and following up 2](./assets/essay-analysis-delegation-image-06.png)
 
 *Follow-up actions noted so the team avoids repeating the analysis.*
+
+</figure>
 
 </div>

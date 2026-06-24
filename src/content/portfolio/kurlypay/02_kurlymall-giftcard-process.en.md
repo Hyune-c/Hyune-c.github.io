@@ -34,13 +34,21 @@ With the legacy Go logic and the new Kotlin/Spring flow coexisting, we needed a 
 
 **TO-BE (Kafka event-based)**
 
+<figure class="grid-cap">
+
 ![Polling-based architecture](./assets/kurlymall-giftcard-process-image-02.png)
 
 *AS-IS polling-based architecture between Kurly and Kurly Pay.*
 
+</figure>
+
+<figure class="grid-cap">
+
 ![Kafka event-based architecture](./assets/kurlymall-giftcard-process-image-03.png)
 
 *TO-BE Kafka event-based architecture enabling eventual consistency.*
+
+</figure>
 
 </div>
 
@@ -48,12 +56,20 @@ With the legacy Go logic and the new Kotlin/Spring flow coexisting, we needed a 
 
 <div class="img-grid-2" style="grid-template-columns: 2fr 1fr;">
 
+<figure class="grid-cap">
+
 ![Abuse scenarios](./assets/kurlymall-giftcard-process-image-04.png)
 
 *Analysis of abuse scenarios considered during the redesign.*
 
+</figure>
+
+<figure class="grid-cap">
+
 ![3P Partner Office integration wiki structure](./assets/kurlymall-giftcard-process-image-05.png)
 
 *Wiki structure documenting the 3P Partner Office integration.*
+
+</figure>
 
 </div>

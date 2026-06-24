@@ -37,4 +37,4 @@ I resolved it by separating the responsibilities of startup-time and runtime sta
 
 ![Brief summary (cause and resolution)](./assets/kurly-startup-probe-image-01.png)
 
-*Summary of the root cause and the startupProbe/livenessProbe resolution.*
+*Brief summary: a slow, heavy startup exceeding the 1-minute health check caused repeated pod restarts.*

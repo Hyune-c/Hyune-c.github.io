@@ -31,13 +31,21 @@ To support airgap environments, I moved documentation and testing that had been 
 
 <div class="img-grid-2">
 
+<figure class="grid-cap">
+
 ![Apidog-based initial API Hub](./assets/operational-productivity-standardization-image-03.png)
 
 *The early API Hub built on the external Apidog SaaS for documentation and testing.*
 
+</figure>
+
+<figure class="grid-cap">
+
 ![OpenAPI-based in-house API Hub](./assets/operational-productivity-standardization-image-04.png)
 
 *The in-house OpenAPI-based Hub that replaced Apidog for airgap environments.*
+
+</figure>
 
 </div>
 
@@ -54,13 +62,21 @@ By automating and aggregating tests and logs, I shifted problem detection from a
 
 <div class="img-grid-2">
 
+<figure class="grid-cap">
+
 ![WARN daily report — AI aggregation by type (cause · action · source · trace)](./assets/operational-productivity-warn-summary.png)
 
 *Daily AI report grouping WARN logs by type with cause, action, and trace.*
 
-![Report-based triage — assignee and difficulty assignment](./assets/operational-productivity-warn-triage.png)
+</figure>
 
-*Triage view assigning each reported issue an owner and difficulty level.*
+<figure class="grid-cap">
+
+![Report-based triage with difficulty and priority](./assets/operational-productivity-warn-triage.png)
+
+*Triage of each reported WARN type with difficulty and priority notes.*
+
+</figure>
 
 </div>
 
@@ -72,13 +88,21 @@ By automating and aggregating tests and logs, I shifted problem detection from a
 
 <div class="img-grid-asym">
 
+<figure class="grid-cap">
+
 ![Payment link generation](./assets/operational-productivity-standardization-image-01.png)
 
 *onepage-payment screen where operators generate and send payment links to customers.*
 
+</figure>
+
+<figure class="grid-cap">
+
 ![Storm APIs Parse Differ](./assets/operational-productivity-standardization-image-02.png)
 
 *storm-differ comparing Storm Parse results across parsers and models.*
+
+</figure>
 
 </div>
 

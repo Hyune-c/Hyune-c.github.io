@@ -44,13 +44,21 @@ Even while planning and developing 2 backends and 1 frontend simultaneously with
 
 <div class="img-grid-2" style="grid-template-columns: 1fr 2fr;">
 
+<figure class="grid-cap">
+
 ![OpenGateway research document management structure](./assets/ai-development-workflow-image-01.png)
 
 *Folder structure organizing OpenGateway research documents as a single source of truth.*
 
+</figure>
+
+<figure class="grid-cap">
+
 ![OpenGateway research document example (Prompt Cache routing design)](./assets/ai-development-workflow-image-02.png)
 
 *A sample research document detailing the Prompt Cache routing design.*
+
+</figure>
 
 </div>
 
