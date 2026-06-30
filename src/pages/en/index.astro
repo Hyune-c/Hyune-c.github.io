@@ -5,14 +5,14 @@ import Experience from "../../components/Experience.astro";
 ---
 
 <Base printName="Byung_Hyeon_Choi_Resume">
-  <header class="mb-8">
+  <header class="mb-8 print:mb-3">
     <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-      <h1 class="text-[30px] md:text-[38px] font-bold leading-[1.15] tracking-tight">
+      <h1 class="text-[30px] md:text-[38px] print:text-[26px] font-bold leading-[1.15] tracking-tight">
         Byung Hyeon Choi
       </h1>
       <span class="text-[16px] font-medium text-[var(--color-ink-muted)]">Backend Developer</span>
     </div>
-    <div class="flex flex-wrap items-center gap-x-2 gap-y-2 text-[13.5px] mt-4">
+    <div class="flex flex-wrap items-center gap-x-2 gap-y-2 text-[13.5px] mt-4 print:mt-2">
       <a href="https://github.com/Hyune-c" target="_blank" rel="noopener" title="GitHub (@Hyune-c)"
          class="inline-flex items-center justify-center w-[26px] h-[26px] rounded border border-[var(--color-line)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] transition-colors text-[var(--color-ink-muted)]">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.37.5 0 5.78 0 12.29c0 5.21 3.44 9.63 8.21 11.19.6.11.82-.25.82-.58 0-.29-.01-1.04-.02-2.05-3.34.71-4.04-1.58-4.04-1.58-.55-1.37-1.34-1.74-1.34-1.74-1.09-.73.08-.72.08-.72 1.21.08 1.84 1.22 1.84 1.22 1.07 1.8 2.81 1.28 3.5.98.11-.76.42-1.28.76-1.58-2.67-.3-5.47-1.31-5.47-5.83 0-1.29.47-2.34 1.24-3.17-.12-.3-.54-1.51.12-3.15 0 0 1.01-.32 3.3 1.21a11.6 11.6 0 0 1 3-.4c1.02 0 2.05.13 3 .4 2.29-1.53 3.3-1.21 3.3-1.21.66 1.64.24 2.85.12 3.15.77.83 1.24 1.88 1.24 3.17 0 4.53-2.81 5.53-5.49 5.82.43.37.81 1.1.81 2.22 0 1.6-.01 2.89-.01 3.29 0 .33.22.7.83.58A12.01 12.01 0 0 0 24 12.29C24 5.78 18.63.5 12 .5z"/></svg>
@@ -33,7 +33,7 @@ import Experience from "../../components/Experience.astro";
   </header>
 
   <Section title="Summary" id="summary">
-    <ul class="space-y-2 text-[15px] leading-[1.6] text-[var(--color-ink)] list-disc pl-5 marker:text-[var(--color-ink-subtle)]">
+    <ul class="space-y-2 print:space-y-1 text-[15px] leading-[1.6] print:leading-[1.45] text-[var(--color-ink)] list-disc pl-5 marker:text-[var(--color-ink-subtle)]">
       <li>
         Backend developer specializing in high-throughput API platforms and AI
         model-serving services, owning products end to end — from design through

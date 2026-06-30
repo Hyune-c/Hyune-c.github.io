@@ -12,8 +12,8 @@ const summaryParagraphs = summary
   : [];
 ---
 
-<article class="pb-7 first:pt-0 last:pb-0">
-  <header class="grid grid-cols-1 sm:grid-cols-[1fr_auto] sm:items-baseline gap-1 sm:gap-6 mb-3">
+<article class="pb-7 print:pb-3 first:pt-0 last:pb-0">
+  <header class="grid grid-cols-1 sm:grid-cols-[1fr_auto] sm:items-baseline gap-1 sm:gap-6 mb-3 print:mb-1.5">
     <div class="flex flex-col sm:flex-row sm:items-baseline sm:gap-3">
       <h3 class="text-[17px] font-semibold tracking-tight text-[var(--color-ink)]">
         {company}
@@ -28,14 +28,14 @@ const summaryParagraphs = summary
   </header>
   {
     summaryParagraphs.length > 0 && (
-      <blockquote class="summary mb-4 pl-4 border-l-[3px] border-[var(--color-accent)] text-[14.5px] leading-[1.7] text-[var(--color-ink-muted)] space-y-1.5">
+      <blockquote class="summary mb-4 print:mb-2 pl-4 border-l-[3px] border-[var(--color-accent)] text-[14.5px] leading-[1.7] print:leading-[1.45] text-[var(--color-ink-muted)] space-y-1.5 print:space-y-1">
         {summaryParagraphs.map((p) => (
           <p>{p}</p>
         ))}
       </blockquote>
     )
   }
-  <div class="text-[14.5px] leading-[1.75] text-[var(--color-ink)] [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1.5 [&_a]:font-medium [&_a]:underline [&_a]:underline-offset-4 [&_a]:decoration-2 [&_a]:decoration-[var(--color-ink-subtle)] hover:[&_a]:decoration-[var(--color-accent)] hover:[&_a]:text-[var(--color-accent)]">
+  <div class="text-[14.5px] leading-[1.75] print:leading-[1.45] text-[var(--color-ink)] [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1.5 print:[&_ul]:space-y-0.5 [&_a]:font-medium [&_a]:underline [&_a]:underline-offset-4 [&_a]:decoration-2 [&_a]:decoration-[var(--color-ink-subtle)] hover:[&_a]:decoration-[var(--color-accent)] hover:[&_a]:text-[var(--color-accent)]">
     <slot />
   </div>
 </article>

@@ -40,7 +40,7 @@ const companies = Object.keys(grouped)
 ---
 
 <Base printName="Byung_Hyeon_Choi_Portfolio">
-  <header class="mb-4 flex items-baseline justify-between gap-4 flex-wrap">
+  <header class="mb-4 print:mb-2 flex items-baseline justify-between gap-4 flex-wrap">
     <h1 class="text-[28px] md:text-[34px] font-bold leading-[1.25] tracking-tight">
       Portfolio
     </h1>
@@ -66,12 +66,12 @@ const companies = Object.keys(grouped)
                   .filter((s) => s.length > 0)
               : [];
             return (
-              <li class="py-4 border-t border-[var(--color-line)] first:border-t-0">
+              <li class="py-4 print:py-2 print:break-inside-avoid border-t border-[var(--color-line)] first:border-t-0">
                 <a
                   href={`/en/portfolio/${routeId(entry.id)}/`}
                   class="group block"
                 >
-                  <div class="flex items-baseline justify-between gap-4 mb-2">
+                  <div class="flex items-baseline justify-between gap-4 mb-2 print:mb-1">
                     <div class="flex items-baseline gap-3 flex-wrap min-w-0">
                       <h3 class="text-[16px] font-semibold tracking-tight group-hover:text-[var(--color-accent)] transition-colors shrink-0">
                         {entry.data.title}
@@ -88,7 +88,7 @@ const companies = Object.keys(grouped)
                   </div>
                 </a>
                 {sentences.length > 0 && (
-                  <ul class="text-[14px] text-[var(--color-ink-muted)] leading-[1.65] list-disc pl-5 space-y-0.5">
+                  <ul class="text-[14px] text-[var(--color-ink-muted)] leading-[1.65] print:leading-[1.4] list-disc pl-5 space-y-0.5">
                     {sentences.map((s) => (
                       <li>{s}</li>
                     ))}
@@ -100,16 +100,16 @@ const companies = Object.keys(grouped)
         </ul>
 
         {company.troubleshooting.length > 0 && (
-          <div class="mt-8">
-            <h4 class="text-[12px] font-mono tracking-[0.16em] uppercase text-[var(--color-ink-subtle)] mb-3">
+          <div class="mt-8 print:mt-3">
+            <h4 class="text-[12px] font-mono tracking-[0.16em] uppercase text-[var(--color-ink-subtle)] mb-3 print:mb-1.5">
               Troubleshooting
             </h4>
             <ul class="space-y-0">
               {company.troubleshooting.map((entry) => (
-                <li>
+                <li class="print:break-inside-avoid">
                   <a
                     href={`/en/portfolio/${routeId(entry.id)}/`}
-                    class="block py-3 border-t border-[var(--color-line)] first:border-t-0 group"
+                    class="block py-3 print:py-1.5 border-t border-[var(--color-line)] first:border-t-0 group"
                   >
                     <div class="flex items-baseline justify-between gap-4">
                       <h3 class="text-[15px] font-medium tracking-tight group-hover:text-[var(--color-accent)] transition-colors">
@@ -120,7 +120,7 @@ const companies = Object.keys(grouped)
                       </span>
                     </div>
                     {entry.data.summary && (
-                      <p class="text-[13.5px] text-[var(--color-ink-muted)] leading-[1.6] mt-1">
+                      <p class="text-[13.5px] text-[var(--color-ink-muted)] leading-[1.6] print:leading-[1.4] mt-1">
                         {entry.data.summary}
                       </p>
                     )}

@@ -64,7 +64,7 @@ const companies = Object.keys(grouped)
                   .filter((s) => s.length > 0)
               : [];
             return (
-              <li class="py-4 border-t border-[var(--color-line)] first:border-t-0">
+              <li class="py-4 print:break-inside-avoid border-t border-[var(--color-line)] first:border-t-0">
                 <a
                   href={`/portfolio/${entry.id}/`}
                   class="group block"
@@ -104,7 +104,7 @@ const companies = Object.keys(grouped)
             </h4>
             <ul class="space-y-0">
               {company.troubleshooting.map((entry) => (
-                <li>
+                <li class="print:break-inside-avoid">
                   <a
                     href={`/portfolio/${entry.id}/`}
                     class="block py-3 border-t border-[var(--color-line)] first:border-t-0 group"
