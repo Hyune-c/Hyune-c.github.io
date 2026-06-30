@@ -18,7 +18,7 @@ It was initially developed as a feature used only by internal services, but as e
 
 ## Outcomes
 
-- **[opengateway.ai](https://opengateway.ai/)** — live service
+- [opengateway.ai](https://opengateway.ai/) — live service
 - Extended the existing internal model serving feature into an OpenAI-compatible public API Gateway product, building out every flow including API Key, Authn/Authz, Billing, Logs, and the frontend UI
 - Designed availability-first routing, Prompt Cache stickiness, parameter/error normalization, and a shared compatibility Mapper delegation structure, enabling consistent expansion to 10+ Providers under a single OpenAI spec
 - Stably serving traffic at the level of RPM 180 and Daily 250K, with 10+ Providers and 100+ models
