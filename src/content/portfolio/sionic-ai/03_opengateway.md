@@ -18,6 +18,7 @@ tags: [API Gateway, Model Routing, Prompt Cache, Spring, Kotlin, Billing, Multi-
 
 ## 성과
 
+- **[opengateway.ai](https://opengateway.ai/)** — 현재 운영 중인 서비스
 - 기존 내부 모델 서빙 기능을 OpenAI 호환 public API Gateway 상품으로 확장하고, API Key, Authn/Authz, Billing, Logs, 프론트 화면까지 모든 흐름을 구축했습니다
 - 가용성 우선 라우팅·Prompt Cache stickiness, 파라미터·에러 정규화, 공통 호환 Mapper 위임 구조를 설계해 단일 OpenAI 스펙으로 10+ Provider 를 일관되게 확장할 수 있게 했습니다
 - RPM 180, Daily 250K 수준의 트래픽, 10+ Provider, 100+ 모델을 안정적으로 서빙하고 있습니다
