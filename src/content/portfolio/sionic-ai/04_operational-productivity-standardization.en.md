@@ -10,7 +10,7 @@ tags: [OpenAPI, Apidog, BO, Python, Node.js]
 
 ## Background
 
-Leveraging AI accelerated product development, but conversely, work in the gray areas where responsibility across services was unclear became easier to overlook.
+AI-accelerated development sped up shipping, but work in gray areas with unclear cross-service ownership became easier to overlook.
 
 - API documentation, test scenarios, test methodologies, and error response formats were managed differently across each service
 - Documentation and testing that relied on external SaaS tools had to be moved to in-house tools deployed alongside the code so they could be used even in airgap environments
@@ -51,7 +51,7 @@ To support airgap environments, I moved documentation and testing that had been 
 
 ### Strengthened Monitoring
 
-By automating and aggregating tests and logs, I shifted problem detection from after the fact to ahead of time.
+Automated test aggregation and log analysis shifted problem detection from reactive to proactive.
 
 - **Regression tests**: Replaced manual scenarios that relied on external tools with Python scripts and a scheduler, and verified that existing behavior did not break through scheduled runs and post-deployment runs, increasing service reliability
 - **WARN log AI report**: Each day, AI groups easily-buried WARN logs by type and compiles a report covering cause, action, and trace, which is sent to Slack and triaged for proactive response before issues become failures

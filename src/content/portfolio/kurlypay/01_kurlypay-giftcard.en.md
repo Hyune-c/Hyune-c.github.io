@@ -21,7 +21,7 @@ Use cases were diverse — B2C orders, B2B purchases, corporate card and individ
 
 ## Details
 
-I owned the design, development, and operation of gift cards, including planning research and communication with partners, Kurly, and outsourced partner companies.
+Owned the design, development, and operation of gift cards end-to-end — including planning research and communication with partners, Kurly, and outsourced companies.
 
 - Developed the contract/product relationships and the gift card issuance flow
 - Designed the separation of gateway and core servers for external partners, and the separation of the B2C Kurly Mall order flow from the B2B purchase flow

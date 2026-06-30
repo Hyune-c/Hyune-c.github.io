@@ -30,7 +30,7 @@ It was originally built for internal use, but as external customers who wanted o
 
 To support SaaS multi-region (kr · jp) and N airgap environments simultaneously from the same codebase, I applied profile-based component assembly and Facade-centric job lifecycle control.
 
-- Kept the API spec stable while allowing Auth · Model Provider · Storage · Prompt to be assembled differently per environment
+- Kept the API spec stable while assembling Auth, Model Provider, Storage, and Prompt differently per environment
 - The Facade owns the parse job lifecycle (prepare → preInfer → infer → afterInfer) and, depending on the result, handles Credit confirm / cancel all in one place — simplifying billing consistency and fault-point identification
 - Implemented the end-to-end flow from API Key through Account · Credit · Usage aggregation
 

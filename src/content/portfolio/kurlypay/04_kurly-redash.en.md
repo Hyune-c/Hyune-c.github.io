@@ -11,12 +11,12 @@ tags: [Redash, Monitoring, Statistics]
 ## Background
 
 For non-developers (operations/planning) to check key metrics, they had to request them from developers every time.  
-A dashboard that enabled quick checks was needed, and I later considered a statistics structure that went beyond simple query sharing.
+Quick metric checks required a self-service dashboard, and over time this expanded into researching a statistics architecture that went beyond simple query sharing.
 
 ## Outcomes
 
 - Enabled non-developers to check key metrics directly through Redash-based dashboards
-- Organized the queries and lookup flows frequently used by operations/planning
+- Consolidated frequently-used queries and lookup patterns for operations/planning teams
 - Researched a scalable statistics architecture considering the data model, aggregation methods, query performance, and operational convenience
 
 ## Details
@@ -49,7 +49,7 @@ A dashboard that enabled quick checks was needed, and I later considered a stati
 
 **Research into scalable data statistics**
 
-After operating Redash, I researched a statistics architecture that went beyond simple query sharing to jointly consider the data model, aggregation methods, query performance, and operational convenience.
+Building on hands-on Redash operations, researched a scalable statistics architecture covering the data model, aggregation methods, query performance, and operational convenience.
 
 <div class="img-grid-3">
 

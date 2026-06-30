@@ -1,85 +1,91 @@
 ---
-title: Explicit Analysis, Documentation, and Delegation
+title: How I Work
 company: Essays
 companySlug: essays
 order: 1
-summary: How I reduce omissions and delays when several things run at once—mapping the flow, splitting up work, and recording what was done.
+summary: Three practices I rely on to stay effective — making problems explicit before delegating, turning individual knowledge into team assets, and closing the loop between learning and production.
 tags: []
 ---
 
-To speed up a team's work, I believe you first have to lay out the problem explicitly.  
-By mapping the flow and writing down the direction and deadline for any work that needs to be split off, you can cut down on omissions and delays.
+Writing good code is only part of the job. What makes a team consistently fast is clear communication, shared knowledge, and habits that compound over time.
 
-## Analyzing the Problem and Mapping the Flow
+## Making Problems Explicit
 
-When several things are in progress at once, I started by documenting the flow of the problem and its decision points.  
-I put what we'd agreed on verbally back into writing, so that whoever picked up the work next could move with the same context.
+When multiple workstreams are in flight, I document the flow before dividing the work. Writing down decision points, owners, and acceptance criteria means whoever picks up a task can act immediately — no synchronization meeting needed.
 
-<div class="img-grid-2">
-
-<figure class="grid-cap">
-
-![Analyzing the problem and mapping the flow 1](./assets/essay-analysis-delegation-image-01.png)
-
-*A documented map of the problem flow and its decision points.*
-
-</figure>
-
-<figure class="grid-cap">
-
-![Analyzing the problem and mapping the flow 2](./assets/essay-analysis-delegation-image-02.png)
-
-*Verbal agreements written back down so the next person shares the context.*
-
-</figure>
-
-</div>
-
-## Splitting Up Work and Delegating
-
-For work that could run in parallel, I handed it off with the owner, the goal, and the way to verify it kept separate and clear.  
-Delegation isn't about passing off a task—it's the process of making the problem small enough that the other person can act on it right away, and handing over the context along with it.
+Even verbal agreements go back into writing so the context travels with the work.
 
 <div class="img-grid-2">
 
 <figure class="grid-cap">
 
-![Splitting up work and delegating 1](./assets/essay-analysis-delegation-image-03.png)
+![Problem flow map](./assets/essay-analysis-delegation-image-01.png)
 
-*Parallel work handed off with owner, goal, and verification kept clear.*
+*Mapping the problem flow and decision points before splitting work.*
 
 </figure>
 
 <figure class="grid-cap">
 
-![Splitting up work and delegating 2](./assets/essay-analysis-delegation-image-04.png)
+![Delegating with context](./assets/essay-analysis-delegation-image-03.png)
 
-*A task broken down small enough to act on, with its context attached.*
+*Each delegated task includes owner, goal, and verification criteria — so the recipient can act immediately.*
 
 </figure>
 
 </div>
 
-## Recording What Was Done and Following Up
+After the work is done, I record what was decided and why — so the team doesn't re-derive the same analysis next time.
 
-Even after the work was finished, I left a record of the decisions made and the follow-up actions, so the team wouldn't have to repeat the same analysis the next time a similar problem came up.
+## Sharing Knowledge Across the Team
+
+Individual expertise that stays in one person's head is a liability. I've built internal wikis, run tech talks, and structured knowledge-sharing sessions so what one person knows becomes something the whole team can draw on — especially during onboarding and incidents.
 
 <div class="img-grid-2">
 
 <figure class="grid-cap">
 
-![Recording what was done and following up 1](./assets/essay-analysis-delegation-image-05.png)
+![Internal wiki](./assets/essay-grow-together-image-04.png)
 
-*A record of the decisions made once the work was finished.*
+*An internal wiki covering recurring topics: gift cards, settlement, and incident response.*
 
 </figure>
 
 <figure class="grid-cap">
 
-![Recording what was done and following up 2](./assets/essay-analysis-delegation-image-06.png)
+![Tech sharing session](./assets/essay-grow-together-image-07.png)
 
-*Follow-up actions noted so the team avoids repeating the analysis.*
+*Tech talks structured to leave reusable reference material, not just the talk itself.*
 
 </figure>
 
 </div>
+
+## Closing the Loop Between Learning and Code
+
+I treat learning as a pipeline: study a topic → validate it in a side project → apply it to production. Recurring topics — Kotlin, Spring, testing, external integrations — get organized into personal templates ready to pull from directly.
+
+Code review and mentoring extend this further: I surface recurring issues as learning topics, then close the loop in onboarding and future reviews.
+
+One concrete example: I defined a standard Error DTO to prevent response format drift across services. Rather than just documenting the format, I aligned the exception-handling flow with the API response spec — reducing debugging cost and client integration friction.
+
+<div class="img-grid-2">
+
+<figure class="grid-cap">
+
+![Code review](./assets/essay-self-development-image-04.png)
+
+*Code review against explainable criteria, with recurring issues turned into learning topics.*
+
+</figure>
+
+<figure class="grid-cap">
+
+![Standard Error DTO](./assets/essay-self-development-image-09.png)
+
+*A standard Error DTO aligning exception handling with the API response spec.*
+
+</figure>
+
+</div>
+

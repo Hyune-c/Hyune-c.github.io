@@ -81,9 +81,3 @@ tags: []
 - OpenFeign 의 retryer, errorDecoder, WireMock 테스트 패턴을 정리해 외부 연동 안정성을 높였습니다
 - 코루틴 기반 동시성 테스트 편의 메서드를 만들어 반복 검증 비용을 줄였습니다
 
-## 사이드 프로젝트
-
-- [Hyune-s-lab](https://github.com/orgs/Hyune-s-lab/repositories) 각종 공부 자료와 실험 프로젝트를 모아둔 organization
-- [kotlin-workshop](https://github.com/Hyune-s-lab/kopring-workshop) 공통으로 사용되는 기능을 템플릿화한 프로젝트
-- [url-shortener](https://github.com/Hyune-s-lab/url-shortener) 요구사항 변화에 따라 구현체를 교체할 수 있도록 구성한 hexagonal architecture 기반 프로젝트
-- [우리반 은행](https://github.com/Our-Class-Bank/core-backend) 용돈 관리, 신용점수 관리 프로그램. 1명의 교사와 26명의 초등학생이 실제 사용

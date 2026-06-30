@@ -27,7 +27,7 @@ A zero-downtime replacement was a hard requirement, and a design for long-term e
 ## Details
 
 **Service Rollout Plan**  
-From development through production rollout, I aligned target features, architecture, and migration schedule with stakeholder teams, proceeding phase by phase.
+Aligned target features, architecture, and migration schedule with stakeholder teams, proceeding phase by phase from development through production.
 
 ![Service rollout plan architecture](./assets/wrtn-ai-model-serving-image-02.png)
 

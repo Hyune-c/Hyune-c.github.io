@@ -4,7 +4,7 @@ company: Sionic AI
 companySlug: sionic-ai
 period: 2024.09 — now
 order: 1
-summary: Extended an internal model routing engine into an OpenAI-compatible public API Gateway product. Designed availability-first routing, cache stickiness, and parameter/error normalization. Serving RPM 180, Daily 250K, 10+ Providers, 100+ Models.
+summary: Extended an internal model routing engine into an OpenAI-compatible public API Gateway product. Serving RPM 180, Daily 250K, 10+ Providers, 100+ Models.
 tags: [API Gateway, Model Routing, Prompt Cache, Spring, Kotlin, Billing, Multi-deployment]
 ---
 

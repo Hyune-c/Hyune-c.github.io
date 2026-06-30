@@ -12,7 +12,7 @@ tags: [Troubleshooting, Memory, Batch]
 ## Issue
 
 - An OutOfMemoryError occurred during a batch job while the responsible owner had already left the company
-- I analyzed the segments where memory usage increased, proposed a short-term mitigation, and then carried it forward into a company-wide memory optimization
+- Analyzed memory growth segments, implemented a short-term mitigation, then expanded it into company-wide optimization
 
 ## Analysis
 
@@ -38,7 +38,7 @@ After receiving the issue report, I checked the OOM error logs and confirmed tha
 
 </div>
 
-Rather than treating it as a simple OOM issue, I went one step further and discovered that the JVM memory settings themselves were misconfigured.
+Beyond the immediate OOM, discovered the root cause: JVM default max heap size was misconfigured.
 
 ![JVM default max heap size analysis](./assets/kurly-oom-image-03.png)
 
