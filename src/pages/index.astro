@@ -5,8 +5,8 @@ import Experience from "../components/Experience.astro";
 ---
 
 <Base printName="최병현_이력서">
-  <header class="mb-6">
-    <h1 class="text-[26px] md:text-[34px] font-bold leading-[1.25] tracking-tight mb-5">
+  <header class="mb-6 print:mb-3">
+    <h1 class="text-[26px] md:text-[34px] print:text-[22px] font-bold leading-[1.25] tracking-tight mb-5 print:mb-2">
       도움이 되고 싶은 개발자, 최병현입니다.
     </h1>
     <div class="flex items-center gap-2 text-[14px]">
@@ -34,7 +34,7 @@ import Experience from "../components/Experience.astro";
     </div>
   </header>
 
-  <div class="mt-10 space-y-4 text-[15px] leading-[1.8] text-[var(--color-ink)]">
+  <div class="mt-10 print:mt-4 space-y-4 print:space-y-1.5 text-[15px] leading-[1.8] print:leading-[1.45] text-[var(--color-ink)]">
     <p>
       저는 풍부한 기술과 구조보다 <strong>지금 문제를 해결하는 데 필요한 최소한의
       기술과 구조</strong>를 선호합니다.<br />
@@ -153,7 +153,7 @@ import Experience from "../components/Experience.astro";
       company="SI 개발, 인프라"
       role="SI 개발, IT 운영, 기술지원"
     >
-      <ul class="si-list space-y-2 !list-none !pl-0">
+      <ul class="si-list space-y-2 print:space-y-1 !list-none !pl-0">
         <li class="grid grid-cols-1 sm:grid-cols-[1fr_auto] sm:items-baseline gap-x-5">
           <span>
             <strong class="font-semibold text-[var(--color-ink)]">카카오페이</strong>
