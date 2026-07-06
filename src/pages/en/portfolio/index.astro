@@ -3,6 +3,7 @@ import Base from "../../../layouts/Base.astro";
 import Section from "../../../components/Section.astro";
 import { getCollection } from "astro:content";
 
+const SITE = "https://hyune-c.github.io";
 const all = await getCollection("portfolioEn");
 
 const routeId = (id: string) => id.replace(/\.en$/, "");
@@ -68,7 +69,7 @@ const companies = Object.keys(grouped)
             return (
               <li class="py-4 print:py-2 print:break-inside-avoid border-t border-[var(--color-line)] first:border-t-0">
                 <a
-                  href={`/en/portfolio/${routeId(entry.id)}/`}
+                  href={`${SITE}/en/portfolio/${routeId(entry.id)}/`}
                   class="group block"
                 >
                   <div class="flex items-baseline justify-between gap-4 mb-2 print:mb-1">
@@ -108,7 +109,7 @@ const companies = Object.keys(grouped)
               {company.troubleshooting.map((entry) => (
                 <li class="print:break-inside-avoid">
                   <a
-                    href={`/en/portfolio/${routeId(entry.id)}/`}
+                    href={`${SITE}/en/portfolio/${routeId(entry.id)}/`}
                     class="block py-3 print:py-1.5 border-t border-[var(--color-line)] first:border-t-0 group"
                   >
                     <div class="flex items-baseline justify-between gap-4">

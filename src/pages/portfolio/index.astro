@@ -3,6 +3,7 @@ import Base from "../../layouts/Base.astro";
 import Section from "../../components/Section.astro";
 import { getCollection } from "astro:content";
 
+const SITE = "https://hyune-c.github.io";
 const all = await getCollection("portfolio");
 
 interface CompanyMeta {
@@ -66,7 +67,7 @@ const companies = Object.keys(grouped)
             return (
               <li class="py-4 print:break-inside-avoid border-t border-[var(--color-line)] first:border-t-0">
                 <a
-                  href={`/portfolio/${entry.id}/`}
+                  href={`${SITE}/portfolio/${entry.id}/`}
                   class="group block"
                 >
                   <div class="flex items-baseline justify-between gap-4 mb-2">
@@ -106,7 +107,7 @@ const companies = Object.keys(grouped)
               {company.troubleshooting.map((entry) => (
                 <li class="print:break-inside-avoid">
                   <a
-                    href={`/portfolio/${entry.id}/`}
+                    href={`${SITE}/portfolio/${entry.id}/`}
                     class="block py-3 border-t border-[var(--color-line)] first:border-t-0 group"
                   >
                     <div class="flex items-baseline justify-between gap-4">
