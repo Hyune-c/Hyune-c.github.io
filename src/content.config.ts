@@ -14,7 +14,8 @@ const schema = z.object({
 
 const portfolio = defineCollection({
   loader: glob({
-    pattern: ["**/*.md", "!**/*.en.md"],
+    // Use one positive pattern: Astro's watch-mode matcher ignores negated array entries.
+    pattern: "**/!(*.en).md",
     base: "./src/content/portfolio",
   }),
   schema,

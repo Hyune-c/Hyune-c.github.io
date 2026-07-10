@@ -60,5 +60,5 @@ AI 를 항상 통제하면서만 쓰지는 않습니다. 양쪽을 모두 알아
 
 - 프론트엔드 · 파이썬 개발과 `코드를 보지 않고 머지합니다` 의 철학으로 만든 사이드 프로젝트 [read4ai](https://github.com/read4ai/read4ai-excel)
 - Claude Code 버전 히스토리에 관심을 가지고 LLM API 를 직접 호출해보며 업무 흐름에 적용 가능한 것들을 학습합니다
-- 사용 도구도 계속 조정합니다. 초기 `cmux + Claude Code + Codex plugin` 조합에서, Opus 4.7 이후 체감 성능 저하로 현재는 Codex 중심으로 전환했습니다
+- 작업의 성격에 따라 Codex, Claude Code, Hermes를 적절히 조합해 사용하며, 각 도구의 강점을 업무 흐름에 맞게 활용합니다
 - LinkedIn · GeekNews · release note 등으로 AI 정보를 습득하고 팀에도 공유합니다

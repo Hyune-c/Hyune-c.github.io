@@ -74,5 +74,5 @@ I do not always use AI under strict control. Because I believe you need to know 
 
 - [read4ai](https://github.com/read4ai/read4ai-excel), a side project built with frontend and Python development and the philosophy of `merging without looking at the code`
 - I take interest in the Claude Code version history and call the LLM API directly to learn what can be applied to workflows
-- I continuously adjust my tooling as well. Starting from a `cmux + Claude Code + Codex plugin` combination, I have currently shifted toward Codex due to the perceived performance drop after Opus 4.7
+- Depending on the work at hand, I combine Codex, Claude Code, and Hermes as appropriate, using each tool's strengths in the workflow where they fit best
 - I gather AI information through LinkedIn, GeekNews, release notes, and more, and share it with the team

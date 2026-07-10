@@ -4,7 +4,7 @@ company: 사이오닉AI
 companySlug: sionic-ai
 period: 2024.09 — now
 order: 1
-summary: 내부용 모델 라우팅 엔진을 OpenAI 호환 public API Gateway 상품으로 확장. 가용성 우선 라우팅·캐시 stickiness, 파라미터·에러 정규화 설계. RPM 180, Daily 250K, 10+ Provider, 100+ Model 서빙.
+summary: 내부용 모델 라우팅 엔진을 OpenAI 호환 public API Gateway 상품으로 확장. 가용성 우선 라우팅·캐시 stickiness, 파라미터·에러 정규화 설계. RPM 200, Daily 280K, 10+ Provider, 100+ Model 서빙.
 tags: [API Gateway, Model Routing, Prompt Cache, Spring, Kotlin, Billing, Multi-deployment]
 ---
 
@@ -21,7 +21,7 @@ tags: [API Gateway, Model Routing, Prompt Cache, Spring, Kotlin, Billing, Multi-
 - [opengateway.ai](https://opengateway.ai/) — 현재 운영 중인 서비스
 - 기존 내부 모델 서빙 기능을 OpenAI 호환 public API Gateway 상품으로 확장하고, API Key, Authn/Authz, Billing, Logs, 프론트 화면까지 모든 흐름을 구축했습니다
 - 가용성 우선 라우팅·Prompt Cache stickiness, 파라미터·에러 정규화, 공통 호환 Mapper 위임 구조를 설계해 단일 OpenAI 스펙으로 10+ Provider 를 일관되게 확장할 수 있게 했습니다
-- RPM 180, Daily 250K 수준의 트래픽, 10+ Provider, 100+ 모델을 안정적으로 서빙하고 있습니다
+- RPM 200, Daily 280K 수준의 트래픽, 10+ Provider, 100+ 모델을 안정적으로 서빙하고 있습니다
 - Redeem Code, Admin 기능, Grafana 관측, 모델 smoke/CI/daily test 를 연결해 운영 관측성과 live 안정성을 함께 개선했습니다
 
 ## 설계 및 구현
@@ -31,14 +31,6 @@ tags: [API Gateway, Model Routing, Prompt Cache, Spring, Kotlin, Billing, Multi-
 - 정책과 작업 기준은 Skill 로 single source of truth 로 두어, 사람과 AI 가 같은 맥락에서 작업할 수 있도록 했습니다
 - 시스템은 통제할 흐름과 동적 의사결정을 분리해, 직접 검토할 영역과 AI 에게 위임할 영역을 명확히 구분했습니다
 - 더 자세한 내용은 [AI를 적극적으로 활용하는 개발에 대한 생각](/portfolio/sionic-ai/05_ai-development-workflow/)에 정리되어 있습니다
-
-<div class="img-row-small">
-
-![BE 서버 릴리즈 기록 1](./assets/opengateway-releases-1.png)
-
-![BE 서버 릴리즈 기록 2](./assets/opengateway-releases-2.png)
-
-</div>
 
 ![OpenGateway 전체 흐름 — 엔진과 백오피스의 분리](./assets/opengateway-architecture.svg)
 
