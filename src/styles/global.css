@@ -86,6 +86,36 @@ html.dark {
   content: "" !important;
 }
 
+/* 표 가독성: zebra striping + 헤더 배경 */
+.prose table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.5em 0;
+  font-size: 14.5px;
+}
+.prose thead {
+  background: var(--color-line-soft);
+}
+.prose thead th {
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--color-ink);
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--color-ink-subtle);
+}
+.prose tbody tr:nth-child(even) {
+  background: var(--color-line-soft);
+}
+.prose tbody td {
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--color-line);
+  color: var(--color-ink);
+  vertical-align: top;
+}
+.prose tbody tr:last-child td {
+  border-bottom: none;
+}
+
 /* 이미지 가로 2열 그리드 (마크다운 내 사용) */
 .img-grid-2 {
   display: grid;

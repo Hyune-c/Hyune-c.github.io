@@ -72,7 +72,6 @@ Even while planning and developing 2 backends and 1 frontend simultaneously with
 
 I do not always use AI under strict control. Because I believe you need to know both sides to derive better methodologies, I actively delegate in side projects or minor development items where the impact scope is limited.
 
-- [read4ai](https://github.com/read4ai/read4ai-excel), a side project built with frontend and Python development and the philosophy of `merging without looking at the code`
 - I take interest in the Claude Code version history and call the LLM API directly to learn what can be applied to workflows
 - Depending on the work at hand, I combine Codex, Claude Code, and Hermes as appropriate, using each tool's strengths in the workflow where they fit best
 - I gather AI information through LinkedIn, GeekNews, release notes, and more, and share it with the team

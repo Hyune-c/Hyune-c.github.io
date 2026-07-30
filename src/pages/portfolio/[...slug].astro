@@ -54,6 +54,7 @@ const summarySentences = entry.data.summary
            prose-headings:tracking-tight prose-headings:font-semibold prose-headings:text-[var(--color-ink)]
            prose-h2:text-[20px] prose-h2:mt-12 prose-h2:mb-4 prose-h2:pb-2 prose-h2:border-b prose-h2:border-[var(--color-line)]
            prose-h3:text-[17px] prose-h3:mt-8 prose-h3:mb-3
+           prose-h4:text-[14px] prose-h4:font-semibold prose-h4:mt-6 prose-h4:mb-2 prose-h4:text-[var(--color-ink-muted)]
            prose-p:text-[15px] prose-p:leading-[1.8] prose-p:text-[var(--color-ink)]
            prose-li:text-[15px] prose-li:leading-[1.75] prose-li:my-1 prose-li:text-[var(--color-ink)]
            marker:text-[var(--color-ink-subtle)]
@@ -115,6 +116,68 @@ const summarySentences = entry.data.summary
       });
 
       dialog.addEventListener("close", () => setZoom(0));
+    })();
+  </script>
+
+  <script is:inline>
+    // Mermaid 클라이언트 사이드 렌더링
+    (function () {
+      // Shiki가 language 클래스를 제거하므로, 코드 내용으로 mermaid 블록 감지
+      var allPre = document.querySelectorAll('article pre');
+      var mermaidPre = [];
+      allPre.forEach(function(pre) {
+        var code = pre.querySelector('code');
+        if (!code) return;
+        var text = code.textContent;
+        if (/^(---[\s\S]*?---\s*)?(flowchart|sequenceDiagram|graph|classDiagram|stateDiagram|erDiagram|gantt|pie|journey)\b/.test(text)) {
+          mermaidPre.push(pre);
+        }
+      });
+      if (mermaidPre.length === 0) return;
+
+      var theme = document.documentElement.classList.contains('dark') ? 'dark' : 'default';
+
+      var script = document.createElement('script');
+      script.type = 'module';
+      script.textContent = `
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+          startOnLoad: false,
+          theme: '${theme}',
+          themeVariables: ${theme === 'default' ? `{
+            background: '#ffffff',
+            primaryColor: '#ffffff',
+            primaryTextColor: '#111827',
+            primaryBorderColor: '#475569',
+            lineColor: '#334155',
+            edgeLabelBackground: '#ffffff'
+          }` : `{
+            background: '#0a0a0a',
+            primaryColor: '#1a1a1a',
+            primaryTextColor: '#ededed',
+            primaryBorderColor: '#3a3a3a',
+            lineColor: '#6f6f6f',
+            edgeLabelBackground: '#0a0a0a'
+          }`}
+        });
+
+        document.querySelectorAll('article pre').forEach(function(pre, i) {
+          var code = pre.querySelector('code');
+          if (!code) return;
+          var raw = code.textContent;
+          if (!/^(---[\\s\\S]*?---\\s*)?(flowchart|sequenceDiagram|graph|classDiagram|stateDiagram|erDiagram|gantt|pie|journey)\\b/.test(raw)) return;
+          // frontmatter --- 제거
+          raw = raw.replace(/^---[\\s\\S]*?---\\s*/, '');
+          var id = 'mermaid-' + i;
+          var div = document.createElement('div');
+          div.id = id;
+          div.className = 'mermaid';
+          div.textContent = raw;
+          pre.replaceWith(div);
+          mermaid.run({ nodes: [div] });
+        });
+      `;
+      document.head.appendChild(script);
     })();
   </script>
 </Base>
