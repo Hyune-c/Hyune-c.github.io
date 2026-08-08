@@ -97,6 +97,14 @@ JFR 프로파일링으로 병목을 분석한 뒤 쿼리를 개선했습니다.
 | status-update-execute | 2,845ms | 99ms |
 | 5,000건 처리 시간 | 11초 | 1.65초 |
 
+<div class="img-grid-2">
+
+![빌링 실행시간 — Before: 5,000건 처리 시 11초](./assets/billing-throughput-before.png)
+
+![빌링 실행시간 — After: 5,000건 처리 시 1.65초](./assets/billing-throughput-after.png)
+
+</div>
+
 ### Phase 3: 페이지네이션 청크 병렬 처리 — 현재 수준에서 불필요하여 의도적 미진행
 
 Phase 2에서 처리하는 청크를 병렬로 전환하면 처리 시간을 더 낮출 수 있습니다.  

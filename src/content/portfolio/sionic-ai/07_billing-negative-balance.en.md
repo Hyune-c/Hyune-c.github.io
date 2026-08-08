@@ -97,6 +97,14 @@ Profiling revealed `status-update-execute` averaging 2,845ms per 5,000 records a
 | status-update-execute | 2,845ms | 99ms |
 | 5,000-record processing time | 11s | 1.65s |
 
+<div class="img-grid-2">
+
+![Billing execution time — Before: 5,000 records taking 11s](./assets/billing-throughput-before.png)
+
+![Billing execution time — After: 5,000 records taking 1.65s](./assets/billing-throughput-after.png)
+
+</div>
+
 ### Phase 3: pagination chunk parallel processing — unnecessary at current level, intentionally not pursued
 
 Switching the chunks processed in Phase 2 to parallel would further reduce processing time.  
