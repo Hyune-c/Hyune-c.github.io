@@ -78,20 +78,24 @@ flowchart LR
 
 하지만 적용 후 테스트 과정에서 청크당 처리 시간이 너무 오래 걸리는 것을 발견했습니다. (5,000건, 11초)
 
-### Phase 2: 과금 배치 쿼리 개선
+### Phase 2: JFR 분석 기반 과금 배치 쿼리 개선
+
+JFR 프로파일링으로 병목을 분석한 뒤 쿼리를 개선했습니다.
+분석 결과 `status-update-execute`가 5,000건당 평균 2,845ms로 핵심 병목이었습니다. 5,000개 복합 키를 거대한 `OR` 조건으로 만든 UPDATE가 원인이었습니다.
+
+<div class="img-grid-2">
+
+![JFR — Before: status-update-execute 2,845ms](./assets/billing-jfr-before.png)
+
+![JFR — After: status-update-execute 99ms](./assets/billing-jfr-after.png)
+
+</div>
 
 | 항목 | Before | After |
 |---|---|---|
 | 쿼리 형태 | row 단위 다중 UPDATE | `UPDATE ... FROM (VALUES ...)` 단일 쿼리 |
+| status-update-execute | 2,845ms | 99ms |
 | 5,000건 처리 시간 | 11초 | 1.65초 |
-
-<div class="img-grid-2">
-
-![빌링 실행시간 — Before: 5,000건 처리 시 11초](./assets/billing-throughput-before.png)
-
-![빌링 실행시간 — After: 5,000건 처리 시 1.65초](./assets/billing-throughput-after.png)
-
-</div>
 
 ### Phase 3: 페이지네이션 청크 병렬 처리 — 현재 수준에서 불필요하여 의도적 미진행
 

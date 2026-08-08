@@ -78,20 +78,24 @@ With minimal additional development and configuration changes, we verified throu
 
 However, post-deployment testing revealed that per-chunk processing time was too slow. (5,000 records, 11s)
 
-### Phase 2: billing batch query improvement
+### Phase 2: JFR-guided billing batch query improvement
+
+Analyzed the bottleneck with JFR profiling, then improved the query.
+Profiling revealed `status-update-execute` averaging 2,845ms per 5,000 records as the core bottleneck. The cause was 5,000 composite keys combined into a massive `OR` condition in a single UPDATE.
+
+<div class="img-grid-2">
+
+![JFR — Before: status-update-execute 2,845ms](./assets/billing-jfr-before.png)
+
+![JFR — After: status-update-execute 99ms](./assets/billing-jfr-after.png)
+
+</div>
 
 | Metric | Before | After |
 |---|---|---|
 | Query pattern | Multiple row-level UPDATEs | `UPDATE ... FROM (VALUES ...)` single query |
+| status-update-execute | 2,845ms | 99ms |
 | 5,000-record processing time | 11s | 1.65s |
-
-<div class="img-grid-2">
-
-![Billing execution time — Before: 5,000 records taking 11s](./assets/billing-throughput-before.png)
-
-![Billing execution time — After: 5,000 records taking 1.65s](./assets/billing-throughput-after.png)
-
-</div>
 
 ### Phase 3: pagination chunk parallel processing — unnecessary at current level, intentionally not pursued
 
