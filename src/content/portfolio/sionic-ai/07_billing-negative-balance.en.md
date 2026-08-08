@@ -53,13 +53,13 @@ flowchart LR
 
 | Approach considered | Effect | Cost |
 |---|---|---|
-| Pre-request budget reservation | Prevents negative balances at the source | (High) CP DB lookup per request → severe throughput drop |
-| Immediate evict on key SUSPENDED | Removes cache gap | (Med) CP→multi-DP fan-out, added complexity |
-| ✅ Rate Limit 1 | Per-request billing cap | (Low) Simple to implement, coarse control |
-| Rate Limit 2 | Token-usage-based billing cap | (High) High implementation complexity, low priority for internal/solo-founder customers |
-| ✅ Allow negative balance | Maintains throughput, structurally simple | (Low) Billing leak occurs, but a commonly adopted trade-off in high-throughput gateways, treated as an acceptable loss |
-| ✅ Batch throughput expansion | Shrinks batch interval | (Med) Increased batch load |
-| ✅ Shorter cache TTL | Shrinks cache gap | (Med) Higher API Key lookup volume, but proportional to distinct active keys per minute — verified proportional to distinct active keys — confirmed manageable |
+| Pre-request budget reservation | Prevents negative balances at the source | CP DB lookup per request → severe throughput drop |
+| Immediate evict on key SUSPENDED | Removes cache gap | CP→multi-DP fan-out, added complexity |
+| ✅ Rate Limit 1 | Per-request billing cap | Simple to implement, coarse control |
+| Rate Limit 2 | Token-usage-based billing cap | High implementation complexity, low priority for internal/solo-founder customers |
+| ✅ Allow negative balance | Maintains throughput, structurally simple | Billing leak occurs, but a commonly adopted trade-off in high-throughput gateways, treated as an acceptable loss |
+| ✅ Batch throughput expansion | Shrinks batch interval | Increased batch load |
+| ✅ Shorter cache TTL | Shrinks cache gap | Higher API Key lookup volume, but proportional to distinct active keys per minute — verified proportional to distinct active keys — confirmed manageable |
 
 Initially, the service had a limited audience, so the cost-control level was low — but as platform stability was proven and needs like self-hosted model serving emerged, the target was raised significantly to 1.5M RPM.  
 Therefore, we addressed this issue with minimal development and monitoring improvements, and quickly moved into the architecture redesign.
@@ -80,8 +80,7 @@ However, post-deployment testing revealed that per-chunk processing time was too
 
 ### Phase 2: JFR-guided billing batch query improvement
 
-Analyzed the bottleneck with JFR profiling, then improved the query.
-Profiling revealed `status-update-execute` averaging 2,845ms per 5,000 records as the core bottleneck. The cause was 5,000 composite keys combined into a massive `OR` condition in a single UPDATE.
+Profiling revealed `status-update-execute` averaging 2,845ms per 5,000 records as the core bottleneck, caused by 5,000 composite keys combined into a massive `OR` condition in a single UPDATE.
 
 <div class="img-grid-2">
 
