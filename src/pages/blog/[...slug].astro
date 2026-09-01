@@ -1,0 +1,80 @@
+---
+import Base from "../../layouts/Base.astro";
+import { getCollection, render } from "astro:content";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("blog");
+  return entries.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<Base
+  description={entry.data.summary}
+  showLanguageToggle={false}
+  disableLanguageAutoRedirect={true}
+>
+  <header class="mb-10">
+    <h1 class="mb-3 text-[30px] md:text-[34px] font-bold leading-[1.25] tracking-tight">
+      {entry.data.title}
+      <span class="inline-block ml-3 align-middle text-[13px] font-mono font-normal text-[var(--color-ink-subtle)]">{entry.data.date}</span>
+    </h1>
+    <p class="text-[15.5px] leading-[1.7] text-[var(--color-ink-muted)]">{entry.data.summary}</p>
+  </header>
+
+  <article
+    class="prose prose-neutral max-w-none text-[var(--color-ink)]
+           prose-headings:tracking-tight prose-headings:font-semibold prose-headings:text-[var(--color-ink)]
+           prose-h2:text-[20px] prose-h2:mt-12 prose-h2:mb-4 prose-h2:pb-2 prose-h2:border-b prose-h2:border-[var(--color-line)]
+           prose-h3:text-[18px] prose-h3:mt-10 prose-h3:mb-3
+           prose-p:text-[15px] prose-p:leading-[1.8] prose-p:text-[var(--color-ink)]
+           prose-li:text-[15px] prose-li:leading-[1.75] prose-li:my-1 prose-li:text-[var(--color-ink)]
+           marker:text-[var(--color-ink-subtle)]
+           prose-a:font-medium prose-a:text-[var(--color-ink)] prose-a:underline prose-a:underline-offset-4 prose-a:decoration-2 prose-a:decoration-[var(--color-ink-subtle)] prose-a:hover:decoration-[var(--color-accent)] prose-a:hover:text-[var(--color-accent)]
+           prose-strong:text-[var(--color-ink)] prose-strong:font-semibold
+           prose-blockquote:border-l-[3px] prose-blockquote:border-[var(--color-line)] prose-blockquote:pl-4 prose-blockquote:text-[var(--color-ink-muted)] prose-blockquote:not-italic prose-blockquote:font-normal
+           prose-code:text-[13.5px] prose-code:text-[var(--color-ink)] prose-code:bg-[var(--color-code-bg)] prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:font-normal prose-code:before:content-none prose-code:after:content-none
+           prose-pre:border-0 prose-th:text-[var(--color-ink)] prose-td:text-[var(--color-ink)] prose-th:border-[var(--color-line)] prose-td:border-[var(--color-line)]"
+  >
+    <Content />
+  </article>
+
+  <script is:inline>
+    // Shiki가 language 클래스를 제거하므로 코드 내용으로 Mermaid 블록을 감지한다.
+    (function () {
+      var allPre = document.querySelectorAll('article pre');
+      var hasMermaid = Array.from(allPre).some(function (pre) {
+        var code = pre.querySelector('code');
+        return code && /^(---[\s\S]*?---\s*)?(flowchart|sequenceDiagram|graph|classDiagram|stateDiagram|erDiagram|gantt|pie|journey)\b/.test(code.textContent);
+      });
+
+      if (!hasMermaid) return;
+
+      var script = document.createElement('script');
+      script.type = 'module';
+      script.textContent = `
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+
+        mermaid.initialize({ startOnLoad: false });
+
+        document.querySelectorAll('article pre').forEach(function (pre, index) {
+          var code = pre.querySelector('code');
+          if (!code) return;
+
+          var source = code.textContent;
+          if (!/^(---[\\s\\S]*?---\\s*)?(flowchart|sequenceDiagram|graph|classDiagram|stateDiagram|erDiagram|gantt|pie|journey)\\b/.test(source)) return;
+
+          var diagram = document.createElement('div');
+          diagram.id = 'mermaid-' + index;
+          diagram.className = 'mermaid';
+          diagram.textContent = source;
+          pre.replaceWith(diagram);
+          mermaid.run({ nodes: [diagram] });
+        });
+      `;
+      document.head.appendChild(script);
+    })();
+  </script>
+</Base>

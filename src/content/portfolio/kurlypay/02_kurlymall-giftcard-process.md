@@ -26,7 +26,7 @@ tags: [Kafka, Eventual Consistency, Migration]
 
 **아키텍처 변경**
 
-<div class="img-grid-2-labeled">
+<div class="img-grid-2-labeled img-grid-2-labeled--to-be">
 
 **AS-IS (Polling 방식)**
 

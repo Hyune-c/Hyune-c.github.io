@@ -4,9 +4,10 @@ import { getCollection } from "astro:content";
 interface Props {
   lang?: "ko" | "en";
   altHref?: string;
+  showLanguageToggle?: boolean;
 }
 
-const { lang = "ko", altHref = "/en/" } = Astro.props;
+const { lang = "ko", altHref = "/en/", showLanguageToggle = true } = Astro.props;
 const isEn = lang === "en";
 const base = isEn ? "/en" : "";
 
@@ -70,6 +71,7 @@ const pathname = Astro.url.pathname;
 const localPath = isEn ? pathname.replace(/^\/en/, "") || "/" : pathname;
 const isHome = localPath === "/" || localPath === "";
 const isPortfolio = localPath.startsWith("/portfolio");
+const isBlog = localPath.startsWith("/blog");
 const currentEntryId = isPortfolio
   ? localPath.replace(/^\/portfolio\//, "").replace(/\/$/, "")
   : "";
@@ -160,6 +162,15 @@ const altText = isEn ? "EN" : "KO";
       </li>
       <li>
         <a
+          href={base + "/blog/"}
+          class={`nav-link ${isBlog ? "is-active" : ""}`}
+        >
+          <span class="nav-marker nav-marker-static" aria-hidden="true">›</span>
+          <span>Blog</span>
+        </a>
+      </li>
+      <li>
+        <a
           href="https://github.com/Hyune-s-lab/my-ai-study"
           target="_blank"
           rel="noopener noreferrer"
@@ -198,15 +209,17 @@ const altText = isEn ? "EN" : "KO";
       <svg class="hidden dark:block" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
       <svg class="block dark:hidden" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
     </button>
-    <a
-      id="lang-toggle"
-      href={altHref}
-      aria-label={altLabel}
-      title={altLabel}
-      class="icon-btn inline-flex items-center justify-center h-8 px-2 rounded border border-[var(--color-line)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] transition-colors text-[var(--color-ink-muted)] text-[11px] font-mono font-semibold tracking-wider"
-    >
-      {altText}
-    </a>
+    {showLanguageToggle && (
+      <a
+        id="lang-toggle"
+        href={altHref}
+        aria-label={altLabel}
+        title={altLabel}
+        class="icon-btn inline-flex items-center justify-center h-8 px-2 rounded border border-[var(--color-line)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] transition-colors text-[var(--color-ink-muted)] text-[11px] font-mono font-semibold tracking-wider"
+      >
+        {altText}
+      </a>
+    )}
     <button
       id="print-btn"
       type="button"
@@ -218,8 +231,12 @@ const altText = isEn ? "EN" : "KO";
     </button>
 
     <nav class="md:hidden flex gap-3 text-[13px]">
-      <a href={base + "/"} class={isHome ? "text-[var(--color-accent)]" : ""}>Resume</a>
-      <a href={base + "/portfolio/"} class={isPortfolio ? "text-[var(--color-accent)]" : ""}>Portfolio</a>
+      <a href={base + "/"} class={`mobile-nav-link ${isHome ? "is-active" : ""}`}>Resume</a>
+      <a href={base + "/portfolio/"} class={`mobile-nav-link ${isPortfolio ? "is-active" : ""}`}>Portfolio</a>
+      <a href={base + "/blog/"} class={`mobile-nav-link ${isBlog ? "is-active" : ""}`}>
+        <span class="mobile-nav-marker" aria-hidden="true">›</span>
+        Blog
+      </a>
     </nav>
   </div>
 </aside>
@@ -266,6 +283,33 @@ const altText = isEn ? "EN" : "KO";
     font-weight: 600;
   }
   .nav-link.is-active .nav-marker {
+    color: var(--color-accent);
+  }
+  .nav-link .nav-marker-static {
+    color: var(--color-ink-subtle);
+  }
+
+  .mobile-nav-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    padding: 0 2px;
+    color: var(--color-ink-muted);
+    transition: color 0.15s ease;
+  }
+  .mobile-nav-link:hover {
+    color: var(--color-ink);
+  }
+  .mobile-nav-link.is-active {
+    color: var(--color-accent);
+    font-weight: 600;
+  }
+  .mobile-nav-marker {
+    margin-right: 3px;
+    color: var(--color-ink-subtle);
+    font-weight: 700;
+  }
+  .mobile-nav-link.is-active .mobile-nav-marker {
     color: var(--color-accent);
   }
 

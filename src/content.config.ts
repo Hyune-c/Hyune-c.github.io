@@ -31,4 +31,16 @@ const portfolioEn = defineCollection({
   schema,
 });
 
-export const collections = { portfolio, portfolioEn };
+const blog = defineCollection({
+  loader: glob({
+    pattern: "**/*.md",
+    base: "./src/content/blog",
+  }),
+  schema: z.object({
+    title: z.string(),
+    date: z.string(),
+    summary: z.string(),
+  }),
+});
+
+export const collections = { portfolio, portfolioEn, blog };

@@ -187,9 +187,15 @@ html.dark {
   width: 100%;
   height: auto;
 }
+.img-grid-2-labeled--to-be {
+  grid-template-columns: 2fr 3fr !important;
+}
 @media (max-width: 640px) {
   .img-grid-2-labeled {
     grid-template-columns: 1fr;
+  }
+  .img-grid-2-labeled--to-be {
+    grid-template-columns: 1fr !important;
   }
 }
 
@@ -382,4 +388,3 @@ html.dark {
 .prose .img-row-small figure.grid-cap {
   max-width: 320px;
 }
-
