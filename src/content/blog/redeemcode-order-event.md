@@ -263,7 +263,8 @@ Spring Cloud Stream의 Kafka Binder가 Consumer 함수와 topic·Consumer Group�
 
 #### 성공은 ack, 실패는 Retry로 명시합니다
 
-`MANUAL_IMMEDIATE`에서는 정상 반환이 아니라 Binder가 message header로 전달한 `Acknowledgment`를 호출해 offset commit을 요청합니다.  
+Kafka client의 주기적인 auto commit은 사용하지 않습니다.  
+`MANUAL_IMMEDIATE`에서는 Binder가 message header로 전달한 `Acknowledgment`를 호출해 offset commit을 요청합니다.  
 Consumer는 DB commit 또는 기존 처리 완료를 확인한 뒤 ack합니다.
 
 `consumeOrder-in-0`는 함수의 첫 번째 입력 Binding입니다.  
@@ -287,6 +288,7 @@ spring:
             consumer:
               ackMode: MANUAL_IMMEDIATE
               configuration:
+                enable.auto.commit: false
                 max.poll.records: 5
                 key.deserializer: org.apache.kafka.common.serialization.StringDeserializer
                 value.deserializer: com.example.messaging.EnvelopeDeserializer
@@ -316,19 +318,20 @@ fun consumeOrder(): Consumer<Message<DecodedEnvelope<OrderEvent>>> = Consumer { 
 처리 실패는 Consumer에서 끝내지 않고 Retry 경로로 전달합니다.  
 → **최초 처리와 Retry 2회가 모두 실패하면 별도 transaction으로 실패를 기록하고 offset을 전진시킵니다.**
 
-DLT를 사용하지 않으면 Binder의 `maxAttempts`로 Retry 횟수를 고정할 수 없습니다. 공통 모듈은 `ListenerContainerCustomizer`로 `DefaultErrorHandler`, 1초 간격의 Retry 2회, 오류 분류를 함께 설정합니다.
+DLT를 사용하지 않으면 Binder의 `maxAttempts`로 Retry 횟수를 고정할 수 없습니다.  
+공통 모듈은 `ListenerContainerCustomizer`로 `DefaultErrorHandler`, Retry 2회, 오류 분류를 함께 설정합니다.
 
 - **업무 오류:** Consumer가 예외를 전달하면 Container가 Retry합니다.
-- **KMS timeout:** 일시적 오류로 분류해 최대 2회 Retry합니다.
 - **Envelope·schema 오류:** 같은 입력으로 해결되지 않으므로 Retry 없이 실패 기록으로 보냅니다.
 - **Retry 소진:** `ConsumerRecordRecoverer`가 별도 transaction으로 실패를 기록한 뒤 recovered offset을 commit합니다.
-- **기록 실패:** Recoverer가 예외를 전달해 offset을 유지하고 운영자에게 알립니다.
 
-실패 기록은 `(Consumer Group, topic, partition, offset)` unique 제약으로 중복을 막고 원본 ciphertext·header·오류 코드를 보관합니다. 기록 후 offset commit 전에 종료되어도 재전달 시 기존 기록을 확인하고 offset을 전진시킬 수 있습니다.
+실패 기록은 `(Consumer Group, topic, partition, offset)` unique 제약으로 중복을 막고 원본 ciphertext·header·오류 코드를 보관합니다.  
+기록 후 offset commit 전에 종료되어도 재전달 시 기존 기록을 확인하고 offset을 전진시킬 수 있습니다.
 
 #### partition 수가 처리 병렬성을 결정합니다
 
-같은 Consumer Group에서 partition 하나는 Consumer 하나가 담당하며, Consumer 하나는 여러 partition을 맡을 수 있습니다. Retry 중에는 같은 partition의 다음 event도 기다립니다.
+같은 Consumer Group에서 partition 하나는 Consumer 하나가 담당하며, Consumer 하나는 여러 partition을 맡을 수 있습니다.  
+현재 event의 Retry가 끝날 때까지 offset은 전진하지 않고, 같은 partition의 다음 event도 Consumer 함수에 전달하지 않습니다.
 
 - 같은 `partner_order_id`는 같은 partition에서 순서대로 처리합니다.
 - Consumer 수가 partition 수보다 많아도 병렬성은 늘어나지 않습니다.
