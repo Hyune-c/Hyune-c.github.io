@@ -1,5 +1,5 @@
 ---
-title: 컬리페이 상품권 발주 이벤트 개선
+title: 컬리페이 상품권 발주 흐름 개선
 date: "2026-09-01"
 summary: Partner Office와 RedeemCode 사이의 상품권 발주·취소 흐름을 Kafka event로 전환하고, value 전체 암호화와 취소·멱등성 계약까지 살펴봅니다.
 ---
