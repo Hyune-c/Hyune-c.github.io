@@ -23,12 +23,12 @@ summary: Partner Office와 RedeemCode 사이의 상품권 발주·취소 흐름�
 
 ## 개선 흐름 — polling 대신 발주 event를 전달합니다
 
-![Partner Office가 상품권 발주·취소 event를 Kafka에 발행하고 상품권 상태 변경을 다시 소비하는 개선 흐름](/images/blog/redeemcode-order-flow.svg)
+![Partner Office가 상품권 발주·취소 event를 Kafka에 발행하고 상품권 상태 변경을 다시 Consume하는 개선 흐름](/images/blog/redeemcode-order-flow.svg)
 
 ### 1. Partner Office에 전자 상품 발주 흐름을 추가합니다
 
 Partner Office가 발주 대기 상태를 관리하고, RedeemCode Scheduler가 Polling 합니다.  
-→ **Partner Office가 상품권 발주·취소 topic을 발행하고, 상태 변경 topic을 소비하는 두 topic의 흐름을 추가합니다.**
+→ **Partner Office가 상품권 발주·취소 topic을 발행하고, 상태 변경 topic을 Consume하는 두 topic의 흐름을 추가합니다.**
 
 | 용도 | Topic | Message type | Producer | Consumer | Kafka key |
 | --- | --- | --- | --- | --- | --- |
@@ -113,91 +113,9 @@ Schema Registry는 Kafka value를 만들기 전 JSON body 계약의 호환성을
 - `mall_order_id`, `order_item_id`, `partner_order_id`, Kafka key는 주문과 취소에서 같습니다.
 - `event_id`, `event_type`, `occurred_at`은 새 취소 요청 event에 맞게 바뀝니다.
 
-### 3. 상태 전이로 취소 가능 여부를 결정합니다
+같은 `partner_order_id`의 event는 같은 partition에 들어가므로 발주와 취소의 순서를 지킬 수 있습니다.
 
-상품권 사용 뒤에도 주문 취소 요청이 들어올 수 있습니다.  
-→ **RedeemCode가 현재 상태 전이로 취소 가능 여부를 판단합니다.**
-
-`ORDER_CANCEL_REQUESTED`는 취소 완료가 아닙니다. RedeemCode가 상품권별 상태 전이를 적용한 뒤에만 취소 가능 여부를 확정합니다.
-
-```mermaid
----
-config:
-  theme: base
-  themeVariables:
-    darkMode: false
-    primaryTextColor: "#111827"
-    lineColor: "#334155"
-    edgeLabelBackground: "#ffffff"
----
-flowchart LR
-  subgraph canvas[" "]
-    direction LR
-
-    orderRequested["ORDER_REQUESTED"]
-    issue["RedeemCode<br/>발급 처리"]
-    issued(["ISSUE_SUCCEEDED"])
-    issueFailed(["ISSUE_FAILED"])
-    use["상품권 사용"]
-    used(["USE_SUCCEEDED"])
-    cancelIssued["ORDER_CANCEL_REQUESTED"]
-    cancelled(["CANCEL_SUCCEEDED"])
-    cancelFailed(["CANCEL_FAILED<br/>ALREADY_USED"])
-
-    orderRequested --> issue
-    issue --> issued
-    issue --> issueFailed
-    issued --> use
-    use --> used
-    issued --> cancelIssued
-    cancelIssued --> cancelled
-    cancelIssued --> cancelFailed
-  end
-
-  classDef action fill:#BFDBFE,stroke:#1D4ED8,stroke-width:2px,color:#172554
-  classDef component fill:#FED7AA,stroke:#C2410C,stroke-width:2px,color:#7C2D12
-  classDef state fill:#BBF7D0,stroke:#15803D,stroke-width:2px,color:#14532D
-
-  class orderRequested,use,cancelIssued action
-  class issue component
-  class issued,issueFailed,used,cancelled,cancelFailed state
-
-  style canvas fill:#ffffff,stroke:#ffffff,stroke-width:0px,color:#111827
-```
-
-Partner Office는 허용된 lifecycle event만 반영해 이미 사용된 상품권의 주문 취소를 빠르게 차단합니다. 취소 완료는 RedeemCode가 `ISSUED → CANCELLED` 전이에 성공한 뒤에만 확정합니다. 이미 `USED`라면 상태를 바꾸지 않고 `CANCEL_FAILED` event와 `ALREADY_USED` 사유를 발행합니다.
-
-### 4. Kafka 설정만으로 업무 멱등성은 완성되지 않습니다
-
-API 조회 결과와 Scheduler 처리 위치에 복구 기준이 나뉘었습니다.  
-→ **Producer 중복 방지 설정과 Consumer의 이벤트 수신 이력을 함께 적용하고, 수신 이력과 발주 상태를 한 transaction으로 기록합니다.**
-
-#### Producer 전송 보장 (idempotence)
-
-Producer의 `enable.idempotence=true`는 전송 재시도로 같은 record가 Kafka에 두 번 기록되지 않게 합니다.  
-`acks=all`, 재시도 허용(`retries>0`), `max.in.flight.requests.per.connection≤5`가 필요합니다.  
-재시도 시간의 상한은 `retries`보다 `delivery.timeout.ms`로 관리합니다.
-
-하지만 이 설정만으로 RedeemCode의 발급 처리를 **exactly-once**로 보장하지는 않습니다.  
-Consumer는 DB 반영 후 offset commit 전에 종료될 수 있으므로, **at-least-once 전달을 전제로** 같은 event를 다시 처리할 수 있어야 합니다.
-
-#### Consumer 업무 멱등성 (at-least-once → 중복 발급 방지)
-
-`event_id` 수신 이력과 발주 상태 변경을 하나의 transaction으로 기록합니다.  
-같은 `event_id`가 다시 오면 새 상태를 만들지 않고, 이전 결과 event를 다시 발행할 수 있습니다. 결과 event 자체는 at-least-once로 중복 전달될 수 있습니다.
-
-`partner_order_id`는 어느 상품권 lifecycle을 바꿀지 찾는 business key입니다.  
-다른 `event_id`가 와도 현재 상태에서 허용되는 전이인지 판단하고, 발급 결과 unique 제약으로 한 번 더 막습니다.
-
-#### DLT와 partition
-
-DLT 재처리도 원래 `event_id`와 `partner_order_id`를 유지하고, 현재 상태에서 유효한 전이인지 다시 확인합니다.  
-늦게 돌아온 `ORDER_REQUESTED`는 이미 반영된 취소를 되살리지 못합니다.
-
-`partner_order_id`는 발주 lifecycle을 같은 partition에 모으고 상태 전이 대상을 찾는 key입니다.  
-Producer 설정은 전송 중복을 줄이고, 실제 업무 멱등성은 Consumer가 완성합니다.
-
-### 5. value 전체를 암호화합니다
+### 3. value 전체를 암호화합니다
 
 Kafka로 전달하는 발주 event에는 개인정보가 들어갑니다.  
 → **발주 event의 value 전체를 DEK로 암호화하고, KMS로 감싼 `wrapped_dek`만 Kafka header에 전달합니다.**
@@ -225,7 +143,8 @@ sequenceDiagram
     participant SR as Schema Registry
     participant KMS as KMS
     participant Kafka as Kafka
-    participant RC as RedeemCode
+    participant DS as 공통 Deserializer
+    participant RC as RedeemCode Consumer
 
     PO->>SR: 논리 JSON 검증·직렬화
     SR-->>PO: 직렬화 byte 배열
@@ -233,13 +152,15 @@ sequenceDiagram
     KMS-->>PO: plaintext DEK, wrapped DEK
     PO->>PO: AEAD 암호화(직렬화 byte 배열, AAD, 고유 nonce)
     PO->>Kafka: header: kek_id, wrapped DEK / value: ciphertext
-    Note over PO,Kafka: AAD: topic, key, event_type, encryption_version, kek_id, compression
-    Kafka->>RC: Kafka record
-    RC->>KMS: Decrypt(kek_id, wrapped DEK, encryption context)
-    KMS-->>RC: plaintext DEK
-    RC->>RC: AEAD 복호화(value, AAD 검증)
-    RC->>SR: byte 배열 역직렬화
-    SR-->>RC: 논리 JSON body
+    Note over PO,Kafka: AAD: topic, event_type, encryption_version, kek_id, compression
+    Kafka->>DS: topic · header · 암호문 value
+    DS->>KMS: Decrypt(kek_id, wrapped DEK, encryption context)
+    KMS-->>DS: plaintext DEK
+    DS->>DS: AEAD 복호화 · AAD 검증
+    DS->>SR: schema 조회 (로컬 캐시 miss)
+    SR-->>DS: schema
+    DS->>DS: 역직렬화 · 계약 검증
+    DS->>RC: 정규화된 event + 복구용 원본
   end
 ```
 
@@ -248,24 +169,193 @@ sequenceDiagram
 | KEK | DEK를 감싸고 푸는 KMS key | KMS 내부 |
 | `kek_id` | 사용할 KEK의 식별자(key ARN) | header |
 | encryption context | KMS가 DEK 복원을 허용할지 확인하는 조건 | KMS 호출 파라미터 |
-| DEK | value를 암·복호화하는 record별 data key | Producer·Consumer 처리 중 |
+| DEK | value를 암·복호화하는 record별 data key | Producer·공통 Deserializer 메모리 |
 | `wrapped_dek` | KEK로 암호화한 DEK | header |
-| AES-256-GCM (AEAD) | body를 암호화하고 변조를 검증하는 방식 | Producer·Consumer 처리 |
-| AAD (Additional Authenticated Data) | 평문으로 두되 변조를 검증하는 metadata | topic, key, header에서 재구성 |
+| AES-256-GCM (AEAD) | body를 암호화하고 변조를 검증하는 방식 | Producer·공통 Deserializer 처리 |
+| AAD (Additional Authenticated Data) | 평문으로 두되 변조를 검증하는 metadata | topic·허용한 암호화 header로 재구성 |
 | nonce | 매 암호화마다 달라야 하며, 복호화에도 필요한 공개 입력값 | 암호화된 binary value의 시작 바이트 |
 | ciphertext | 암호화된 body | value |
 | authentication tag (인증 tag) | ciphertext와 AAD의 변조를 검증하는 값 | 암호화된 binary value의 끝 바이트 |
+
+### 4. 전송 중복과 업무 완료를 분리합니다
+
+Kafka의 전송 중복과 RedeemCode의 업무 중복은 다른 문제입니다.  
+→ **Producer 전송은 Kafka 설정으로 보호하고, 업무 완료는 DB 상태와 `event_id`로 확인합니다.**
+
+#### Producer 멱등성은 전송 중복만 줄입니다
+
+`enable.idempotence=true`는 Producer 내부 Retry로 같은 record가 중복 저장되는 것을 막습니다. 이 설정은 Partner Office의 order event와 RedeemCode의 lifecycle event 발행에 모두 적용합니다.
+
+애플리케이션의 재발행이나 업무 중복까지 막지는 않습니다. 재전송에는 `event_id`를 유지하고, Consumer는 DB에서 완료 여부를 확인합니다.
+
+#### DB 완료와 offset commit을 연결합니다
+
+메시지 수신과 업무 완료는 다릅니다.  
+DB에서 업무 완료를 확인한 뒤 `acknowledge()`로 Kafka offset commit을 요청합니다.
+
+```mermaid
+---
+config:
+  theme: base
+  themeVariables:
+    darkMode: false
+    primaryTextColor: "#111827"
+    lineColor: "#334155"
+    edgeLabelBackground: "#ffffff"
+  flowchart:
+    nodeSpacing: 30
+    rankSpacing: 35
+---
+flowchart LR
+  subgraph canvas[" "]
+    direction LR
+    consume["Consumer<br/>정규화된 event 수신"]
+    result{"event_id<br/>처리 결과"}
+    persist["DB transaction<br/>partner_order_id lock<br/>상태 · 결과 event_id"]
+    outcome{"Service<br/>처리 결과"}
+    publish["lifecycle topic 발행<br/>동일한 결과 event_id"]
+    ack["Consumer · acknowledge()<br/>Kafka offset commit 요청"]
+    retry["Consumer 실패 경로<br/>Retry · 실패 기록"]
+
+    consume --> result
+    result -->|완료 확인| publish
+    result -->|신규 event| persist
+    result -->|조회 오류| retry
+    persist --> outcome
+    outcome -->|정상 반환 · commit| publish
+    outcome -->|예외 · rollback| retry
+    publish -->|발행 성공| ack
+    publish -->|발행 실패| retry
+  end
+
+  classDef app fill:#EFF6FF,stroke:#3B5BA5,stroke-width:1px,color:#16213E
+  classDef db fill:#F0FDF4,stroke:#3F8E55,stroke-width:1px,color:#14532D
+  classDef ctrl fill:#FFF7ED,stroke:#C98A2B,stroke-width:1px,color:#7A4E0A
+  class consume,publish,ack app
+  class persist db
+  class result,outcome,retry ctrl
+  style canvas fill:#ffffff,stroke:#ffffff,stroke-width:0px,color:#111827
+```
+
+`event_id`는 동일 event의 완료 여부를, `partner_order_id`는 동일 발주의 상태 전이를 보호합니다. Service는 업무 상태와 결과 `event_id`를 같은 DB transaction에 저장합니다.  
+DB commit 뒤 재전달되면 저장된 결과 `event_id`로 lifecycle event를 다시 발행하고, 발행 성공 뒤 ack합니다.
+
+#### 취소 가능 여부는 상품권 상태로 결정합니다
+
+`ORDER_CANCEL_REQUESTED`는 취소 완료가 아닙니다. Partner Office가 lifecycle event로 먼저 확인하더라도, 최종 판단은 RedeemCode의 상태 전이가 결정합니다.
+
+| 취소 시 상품권 상태 | 상태 전이 | 결과 event |
+| --- | --- | --- |
+| `ISSUED` | `CANCELLED`로 변경 | `CANCEL_SUCCEEDED` |
+| `USED` | 상태 유지 | `CANCEL_FAILED` · `ALREADY_USED` |
+
+### 5. Spring Cloud Stream으로 Consume 완료를 명시합니다
+
+Spring Cloud Stream의 Kafka Binder가 Consumer 함수와 topic·Consumer Group을 연결합니다. 공통 메시징 모듈은 value 정규화와 Retry를, Service는 DB transaction과 업무 멱등성을 담당합니다.
+
+#### value 처리는 공통 Deserializer로 정규화합니다
+
+**Envelope 검증 → KMS에서 DEK 복원 → 복호화 → 역직렬화·계약 검증**을 공통 `EnvelopeDeserializer`에서 처리함으로써 Consumer는 KMS나 암호화 형식을 알 필요 없이 정규화된 event를 받습니다.
+
+- **공통 처리:** 허용한 KMS key·암호화 버전·schema를 검증하고, body와 header의 event type·발주 식별자가 일치하는지 확인합니다.
+- **반환값:** `DecodedEnvelope<T>`에 업무 event와 원본 암호문·암호화 header를 함께 보관합니다. Consumer는 정규화된 event만 사용합니다.
+- **오류 처리:** `EnvelopeDeserializer`는 `ErrorHandlingDeserializer`를 이용해 Consumer 호출 전에 발생한 복호화·역직렬화 오류와 원본 byte를 Container의 실패 경로로 전달합니다.
+
+#### 성공은 ack, 실패는 Retry로 명시합니다
+
+`MANUAL_IMMEDIATE`에서는 정상 반환이 아니라 Binder가 message header로 전달한 `Acknowledgment`를 호출해 offset commit을 요청합니다.  
+Consumer는 DB commit 또는 기존 처리 완료를 확인한 뒤 ack합니다.
+
+`consumeOrder-in-0`는 함수의 첫 번째 입력 Binding입니다.  
+`stream.bindings`는 topic·Consumer Group 연결을, `stream.kafka.bindings`는 Kafka 전용 설정을 담당합니다.
+
+```yaml
+spring:
+  cloud:
+    function:
+      definition: consumeOrder
+    stream:
+      bindings:
+        consumeOrder-in-0:
+          destination: redeem-code.order.v1
+          group: redeem-code-order
+          consumer:
+            useNativeDecoding: true  # Kafka의 공통 Deserializer에 value 처리 위임
+      kafka:
+        bindings:
+          consumeOrder-in-0:
+            consumer:
+              ackMode: MANUAL_IMMEDIATE
+              configuration:
+                max.poll.records: 5
+                key.deserializer: org.apache.kafka.common.serialization.StringDeserializer
+                value.deserializer: com.example.messaging.EnvelopeDeserializer
+```
+
+```kotlin
+@Bean
+fun consumeOrder(): Consumer<Message<DecodedEnvelope<OrderEvent>>> = Consumer { message ->
+    val ack = requireNotNull(
+        message.headers.get(KafkaHeaders.ACKNOWLEDGMENT, Acknowledgment::class.java)
+    )
+    val event = message.payload.event // KMS·복호화·계약 검증을 마친 event
+
+    // DB 반영 완료 또는 이미 처리한 결과를 반환
+    val result = orderService.handle(event)
+
+    // 재전달에도 DB에 저장한 동일한 결과 event_id를 사용
+    lifecyclePublisher.publish(result)
+
+    // 처리 예외가 발생하면 이 줄에 도달하지 않고 공통 Retry 경로로 전달
+    ack.acknowledge() // 같은 Consumer 스레드에서 offset commit 요청
+}
+```
+
+#### Retry를 소진하면 실패를 기록합니다
+
+처리 실패는 Consumer에서 끝내지 않고 Retry 경로로 전달합니다.  
+→ **최초 처리와 Retry 2회가 모두 실패하면 별도 transaction으로 실패를 기록하고 offset을 전진시킵니다.**
+
+DLT를 사용하지 않으면 Binder의 `maxAttempts`로 Retry 횟수를 고정할 수 없습니다. 공통 모듈은 `ListenerContainerCustomizer`로 `DefaultErrorHandler`, 1초 간격의 Retry 2회, 오류 분류를 함께 설정합니다.
+
+- **업무 오류:** Consumer가 예외를 전달하면 Container가 Retry합니다.
+- **KMS timeout:** 일시적 오류로 분류해 최대 2회 Retry합니다.
+- **Envelope·schema 오류:** 같은 입력으로 해결되지 않으므로 Retry 없이 실패 기록으로 보냅니다.
+- **Retry 소진:** `ConsumerRecordRecoverer`가 별도 transaction으로 실패를 기록한 뒤 recovered offset을 commit합니다.
+- **기록 실패:** Recoverer가 예외를 전달해 offset을 유지하고 운영자에게 알립니다.
+
+실패 기록은 `(Consumer Group, topic, partition, offset)` unique 제약으로 중복을 막고 원본 ciphertext·header·오류 코드를 보관합니다. 기록 후 offset commit 전에 종료되어도 재전달 시 기존 기록을 확인하고 offset을 전진시킬 수 있습니다.
+
+#### partition 수가 처리 병렬성을 결정합니다
+
+같은 Consumer Group에서 partition 하나는 Consumer 하나가 담당하며, Consumer 하나는 여러 partition을 맡을 수 있습니다. Retry 중에는 같은 partition의 다음 event도 기다립니다.
+
+- 같은 `partner_order_id`는 같은 partition에서 순서대로 처리합니다.
+- Consumer 수가 partition 수보다 많아도 병렬성은 늘어나지 않습니다.
+- 느린 event는 같은 partition의 다음 event를 지연시킵니다.
+
+### 6. DLT는 복구 자동화 이후 도입합니다
+
+실패 event가 늘거나 여러 Consumer의 복구를 한곳에서 운영해야 한다면 DLT를 검토합니다.  
+→ **DLT 전송·알림·Replay가 모두 준비된 뒤 복구 인계 수단으로 사용합니다.**
+
+| 조건 | 운영 계약 |
+| --- | --- |
+| DLT 전송 | 저장 성공을 확인한 뒤에만 원본 offset commit |
+| 메시지 | 원본 `event_id`·key·ciphertext·암호화 header 유지 |
+| Replay | 같은 `event_id`·`partner_order_id`로 다시 처리 |
+| DLT 전송 실패 | 원본 offset 유지·partition pause·운영자 호출 |
+
+DLT 전송 성공은 업무 성공이 아닙니다. 현재는 `enableDlq`를 켜지 않고 DB에 실패를 기록하며, 위 운영 계약과 Replay 도구가 준비되면 `redeem-code.order.v1.dlt`로 대체합니다.
 
 ## 참고
 
 - [**컬리몰 상품권 구매 프로세스 개선**](https://hyune-c.github.io/portfolio/kurlypay/02_kurlymall-giftcard-process/) — 기존 polling 흐름과 이번 재설계의 비교 기준.
 - [초당 100만 건, LINE 앱에 Apache Kafka 종단 간 암호화 적용기](https://techblog.lycorp.co.jp/ko/applying-e2ee-to-apache-kafka-in-line-app) — record 단위 payload 암호화와 DEK·KEK envelope, 직렬화 경계.
-- [AsyncAPI Specification 3.0.0](https://www.asyncapi.com/docs/reference/specification/v3.0.0) — event 계약을 topic·message·payload로 표현하는 방식.
-- [AsyncAPI Kafka bindings](https://github.com/asyncapi/bindings/blob/master/kafka/README.md) — Kafka channel과 message binding의 표현 방식.
 - [Confluent Schema Registry wire format](https://docs.confluent.io/platform/current/schema-registry/fundamentals/serdes-develop/overview.html#wire-format) — schema-aware 직렬화·역직렬화가 암·복호화 전후에 놓이는 경계.
-- [Apache Kafka Producer Configs](https://kafka.apache.org/40/configuration/producer-configs/) — `enable.idempotence`, 재시도, in-flight 요청 설정.
+- [Apache Kafka Producer Configs](https://kafka.apache.org/40/configuration/producer-configs/) — `enable.idempotence`, Retry, in-flight 요청 설정.
 - [Apache Kafka Design — Message Delivery Semantics](https://kafka.apache.org/42/design/design/) — at-least-once 전달과 Consumer 멱등 처리의 전제.
-- [Kafka 메시지 전달 보장](https://curiousjinan.tistory.com/entry/kafka-message-delivery-guarantees) — at-most-once·at-least-once·exactly-once 전달 보장 개념 정리.
-- [Apache Kafka Isn’t a Silver Bullet: 4 Things to Check Before You Ship](https://medium.com/greglee-lab/apache-kafka-isnt-a-silver-bullet-4-things-to-check-before-you-ship-28128627a32f) — Kafka 도입 전 운영 위험을 점검하는 관점.
-- [The 8 Core Concepts That Make Up Apache Kafka](https://medium.com/greglee-lab/the-8-core-concepts-that-make-up-apache-kafka-adfe5c57fc0f) — topic·partition·consumer group 개념 정리.
-- [“Kafka 써봤어요”라는 후보자에게 질문할 것들](https://medium.com/greglee-lab/kafka-%EC%8D%A8%EB%B4%A4%EC%96%B4%EC%9A%94-%EB%9D%BC%EB%8A%94-%ED%9B%84%EB%B3%B4%EC%9E%90%EC%97%90%EA%B2%8C-%EC%A7%88%EB%AC%B8%ED%95%A0-%EA%B2%83%EB%93%A4-913d7890eb28) — Producer·Consumer 운영 점검 관점.
+- [Apache Kafka Consumer](https://kafka.apache.org/41/javadoc/org/apache/kafka/clients/consumer/KafkaConsumer.html) — 읽기·commit 위치와 파티션 할당.
+- [Spring Cloud Stream 수동 ack](https://docs.spring.io/spring-cloud-stream/reference/kafka/kafka-binder/manual-ack.html) · [Kafka Binder 설정](https://docs.spring.io/spring-cloud-stream/reference/kafka/kafka-binder/config-options.html) — Consumer·Binding과 명시적 완료 처리.
+- [Kafka Deserializer](https://kafka.apache.org/41/javadoc/org/apache/kafka/common/serialization/Deserializer.html) · [Spring 역직렬화 오류 처리](https://docs.spring.io/spring-kafka/reference/kafka/serdes.html#using-errorhandlingdeserializer) — 공통 value 처리의 입력·실패 경계와 원본 보존.
+- [카카오페이 — Spring Cloud Stream 도입하기](https://tech.kakaopay.com/post/spring-cloud-stream/) · [Kafka Binder Container Customizer](https://docs.spring.io/spring-cloud-stream/reference/kafka/kafka-binder/container-cust-kafka-binder.html) · [Kafka Binder Retry·DLT](https://docs.spring.io/spring-cloud-stream/reference/kafka/kafka-binder/retry-dlq.html) — 메시징 추상화와 Container Retry 확장 지점.
