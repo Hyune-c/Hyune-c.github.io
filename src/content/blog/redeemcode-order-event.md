@@ -18,7 +18,7 @@ summary: Partner Office와 RedeemCode 사이의 상품권 발주·취소 흐름�
 
 기존 흐름에는 크게 두 가지 문제가 있었습니다.
 
-- **상시 부하**: 실물 상품 파트너들은 일 단위로 발주했지만, 상품권은 빠른 전달을 위해 Partner Office API를 2초마다 조회했습니다. 처리할 주문이 없어도 요청은 계속 발생했습니다.
+- **상시 부하**: 실물 상품 파트너들은 일 단위로 발주했지만, 상품권은 그 간극을 줄이기 위해 Partner Office API를 2초마다 조회했습니다. 처리할 주문이 없어도 요청은 계속 발생했습니다.
 - **장애 취약성**: API나 Scheduler가 멈추면 발주·취소 전달이 늦어지고, 이는 고객 레벨의 장애로 이어집니다.
 
 ## 개선 흐름 — polling 대신 발주 event를 전달합니다
@@ -37,7 +37,8 @@ Partner Office가 발주 대기 상태를 관리하고, RedeemCode Scheduler가 
 
 발주와 취소는 같은 상품권의 순서가 중요하므로 하나의 order topic과 같은 key를 사용합니다. 처리 결과와 사용 상태는 흐름의 방향과 목적이 다르므로 lifecycle topic으로 분리합니다.
 
-order event type은 `ORDER_REQUESTED`, `ORDER_CANCEL_REQUESTED`처럼 Partner Office에서 일어난 사실을 나타냅니다. lifecycle event type은 `ISSUE_SUCCEEDED`, `ISSUE_FAILED`처럼 `<행위>_<결과>` 형식으로 통일합니다.
+order event type은 `ORDER_REQUESTED`, `ORDER_CANCEL_REQUESTED`처럼 Partner Office에서 일어난 사실을 나타냅니다.  
+lifecycle event type은 `ISSUE_SUCCEEDED`, `ISSUE_FAILED`처럼 `<행위>_<결과>` 형식으로 통일합니다.
 
 ### 2. 발주 단위와 이벤트 계약을 고정합니다
 
@@ -182,16 +183,7 @@ sequenceDiagram
 Kafka의 전송 중복과 RedeemCode의 업무 중복은 다른 문제입니다.  
 → **Producer 전송은 Kafka 설정으로 보호하고, 업무 완료는 DB 상태와 `event_id`로 확인합니다.**
 
-#### Producer 멱등성은 전송 중복만 줄입니다
-
-`enable.idempotence=true`는 Producer 내부 Retry로 같은 record가 중복 저장되는 것을 막습니다. 이 설정은 Partner Office의 order event와 RedeemCode의 lifecycle event 발행에 모두 적용합니다.
-
-애플리케이션의 재발행이나 업무 중복까지 막지는 않습니다. 재전송에는 `event_id`를 유지하고, Consumer는 DB에서 완료 여부를 확인합니다.
-
-#### DB 완료와 offset commit을 연결합니다
-
-메시지 수신과 업무 완료는 다릅니다.  
-DB에서 업무 완료를 확인한 뒤 `acknowledge()`로 Kafka offset commit을 요청합니다.
+`enable.idempotence=true`는 Producer 내부 Retry로 같은 record가 중복 저장되는 것을 막지만, 애플리케이션 재발행이나 업무 중복은 막지 못합니다.
 
 ```mermaid
 ---
@@ -211,19 +203,21 @@ flowchart LR
     direction LR
     consume["Consumer<br/>정규화된 event 수신"]
     result{"event_id<br/>처리 결과"}
-    persist["DB transaction<br/>partner_order_id lock<br/>상태 · 결과 event_id"]
-    outcome{"Service<br/>처리 결과"}
     publish["lifecycle topic 발행<br/>동일한 결과 event_id"]
     ack["Consumer · acknowledge()<br/>Kafka offset commit 요청"]
     retry["Consumer 실패 경로<br/>Retry · 실패 기록"]
+
+    subgraph tx["Service · DB transaction"]
+      direction TB
+      persist["partner_order_id lock<br/>상태 · 결과 event_id"]
+    end
 
     consume --> result
     result -->|완료 확인| publish
     result -->|신규 event| persist
     result -->|조회 오류| retry
-    persist --> outcome
-    outcome -->|정상 반환 · commit| publish
-    outcome -->|예외 · rollback| retry
+    persist -->|정상 반환 · commit| publish
+    persist -->|예외 · rollback| retry
     publish -->|발행 성공| ack
     publish -->|발행 실패| retry
   end
@@ -233,11 +227,12 @@ flowchart LR
   classDef ctrl fill:#FFF7ED,stroke:#C98A2B,stroke-width:1px,color:#7A4E0A
   class consume,publish,ack app
   class persist db
-  class result,outcome,retry ctrl
+  class result,retry ctrl
+  style tx fill:#F0FDF4,stroke:#3F8E55,stroke-width:1px,color:#14532D
   style canvas fill:#ffffff,stroke:#ffffff,stroke-width:0px,color:#111827
 ```
 
-`event_id`는 동일 event의 완료 여부를, `partner_order_id`는 동일 발주의 상태 전이를 보호합니다. Service는 업무 상태와 결과 `event_id`를 같은 DB transaction에 저장합니다.  
+`event_id`는 동일 event의 완료 여부를, `partner_order_id`는 동일 발주의 상태 전이를 보호하며, Service는 업무 상태와 결과 `event_id`를 같은 DB transaction에 저장합니다.  
 DB commit 뒤 재전달되면 저장된 결과 `event_id`로 lifecycle event를 다시 발행하고, 발행 성공 뒤 ack합니다.
 
 #### 취소 가능 여부는 상품권 상태로 결정합니다
@@ -251,7 +246,9 @@ DB commit 뒤 재전달되면 저장된 결과 `event_id`로 lifecycle event를 
 
 ### 5. Spring Cloud Stream으로 Consume 완료를 명시합니다
 
-Spring Cloud Stream의 Kafka Binder가 Consumer 함수와 topic·Consumer Group을 연결합니다. 공통 메시징 모듈은 value 정규화와 Retry를, Service는 DB transaction과 업무 멱등성을 담당합니다.
+Kafka message 수신 성공만으로 RedeemCode의 업무 완료를 판단할 수 없습니다.  
+→ **Spring Cloud Stream의 manual ack로 DB commit 또는 기존 처리 완료를 확인한 뒤 offset commit을 요청합니다.**  
+**Kafka Binder**가 Consumer 함수와 topic·Consumer Group을 연결하고, **공통 메시징 모듈**은 value 정규화와 Retry를, **Service**는 DB transaction과 업무 멱등성을 담당합니다.
 
 #### value 처리는 공통 Deserializer로 정규화합니다
 
@@ -263,8 +260,7 @@ Spring Cloud Stream의 Kafka Binder가 Consumer 함수와 topic·Consumer Group�
 
 #### 성공은 ack, 실패는 Retry로 명시합니다
 
-Kafka client의 주기적인 auto commit은 사용하지 않습니다.  
-`MANUAL_IMMEDIATE`에서는 Binder가 message header로 전달한 `Acknowledgment`를 호출해 offset commit을 요청합니다.  
+Kafka client의 주기적인 auto commit 대신, `MANUAL_IMMEDIATE`에서 Binder가 message header로 전달한 `Acknowledgment`를 호출해 offset commit을 요청합니다.  
 Consumer는 DB commit 또는 기존 처리 완료를 확인한 뒤 ack합니다.
 
 `consumeOrder-in-0`는 함수의 첫 번째 입력 Binding입니다.  
@@ -318,7 +314,7 @@ fun consumeOrder(): Consumer<Message<DecodedEnvelope<OrderEvent>>> = Consumer { 
 처리 실패는 Consumer에서 끝내지 않고 Retry 경로로 전달합니다.  
 → **최초 처리와 Retry 2회가 모두 실패하면 별도 transaction으로 실패를 기록하고 offset을 전진시킵니다.**
 
-DLT를 사용하지 않으면 Binder의 `maxAttempts`로 Retry 횟수를 고정할 수 없습니다.  
+Binder의 `maxAttempts`만으로는 실패 기록과 복구 운영까지 제공되지 않습니다.  
 공통 모듈은 `ListenerContainerCustomizer`로 `DefaultErrorHandler`, Retry 2회, 오류 분류를 함께 설정합니다.
 
 - **업무 오류:** Consumer가 예외를 전달하면 Container가 Retry합니다.
@@ -342,14 +338,14 @@ DLT를 사용하지 않으면 Binder의 `maxAttempts`로 Retry 횟수를 고정�
 실패 event가 늘거나 여러 Consumer의 복구를 한곳에서 운영해야 한다면 DLT를 검토합니다.  
 → **DLT 전송·알림·Replay가 모두 준비된 뒤 복구 인계 수단으로 사용합니다.**
 
+DLT 전송 성공은 업무 성공이 아닙니다. 현재는 `enableDlq`를 켜지 않고 DB에 실패를 기록하며, 위 운영 계약과 Replay 도구가 준비되면 `redeem-code.order.v1.dlt`로 대체합니다.
+
 | 조건 | 운영 계약 |
 | --- | --- |
 | DLT 전송 | 저장 성공을 확인한 뒤에만 원본 offset commit |
 | 메시지 | 원본 `event_id`·key·ciphertext·암호화 header 유지 |
 | Replay | 같은 `event_id`·`partner_order_id`로 다시 처리 |
 | DLT 전송 실패 | 원본 offset 유지·partition pause·운영자 호출 |
-
-DLT 전송 성공은 업무 성공이 아닙니다. 현재는 `enableDlq`를 켜지 않고 DB에 실패를 기록하며, 위 운영 계약과 Replay 도구가 준비되면 `redeem-code.order.v1.dlt`로 대체합니다.
 
 ## 참고
 
