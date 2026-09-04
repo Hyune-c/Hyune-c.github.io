@@ -193,8 +193,8 @@ Rate Limits가 RPM·TPM을 제한한다면, Budget Control은 허용 가능한 �
 
 ## 참고
 
-- [Redis Cell](https://github.com/brandur/redis-cell) · [Rate Limiting, Cells, and GCRA](https://brandur.org/rate-limiting) — GCRA의 TAT 모델과 Redis 구현.
-- [Redis Lua](https://redis.io/docs/latest/develop/programmability/eval-intro/) — Preflight·postflight의 원자적 갱신.
-- [Redis Cluster](https://redis.io/docs/latest/operate/oss_and_stack/reference/cluster-spec/) — Replica failover와 비동기 복제의 한계.
-- [OpenAI Rate Limits](https://developers.openai.com/api/docs/guides/rate-limits) · [Claude Rate Limits](https://platform.claude.com/docs/en/api/rate-limits) — Provider별 RPM·TPM 범위와 response header.
-- [Claude Prompt Caching](https://platform.claude.com/docs/en/build-with-claude/prompt-caching) — 캐시 격리 범위와 비용·응답 시간 효과.
+- [redis-cell](https://github.com/brandur/redis-cell) · [Rate Limiting, Cells, and GCRA](https://brandur.org/rate-limiting) — GCRA의 TAT 모델과 Redis 구현.
+- [Scripting with Lua](https://redis.io/docs/latest/develop/programmability/eval-intro/) — Preflight·postflight의 원자적 갱신.
+- [Redis cluster specification](https://redis.io/docs/latest/operate/oss_and_stack/reference/cluster-spec/) — Replica failover와 비동기 복제의 한계.
+- OpenAI [Rate limits](https://developers.openai.com/api/docs/guides/rate-limits) · Claude [Rate limits](https://platform.claude.com/docs/en/api/rate-limits) — Provider별 RPM·TPM 범위와 response header.
+- [Prompt caching](https://platform.claude.com/docs/en/build-with-claude/prompt-caching) — 캐시 격리 범위와 비용·응답 시간 효과.

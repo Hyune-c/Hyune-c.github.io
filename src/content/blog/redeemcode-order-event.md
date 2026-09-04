@@ -351,10 +351,10 @@ DLT 전송 성공은 업무 성공이 아닙니다. 현재는 `enableDlq`를 켜
 
 - [**컬리몰 상품권 구매 프로세스 개선**](https://hyune-c.github.io/portfolio/kurlypay/02_kurlymall-giftcard-process/) — 기존 polling 흐름과 이번 재설계의 비교 기준.
 - [초당 100만 건, LINE 앱에 Apache Kafka 종단 간 암호화 적용기](https://techblog.lycorp.co.jp/ko/applying-e2ee-to-apache-kafka-in-line-app) — record 단위 payload 암호화와 DEK·KEK envelope, 직렬화 경계.
-- [Confluent Schema Registry wire format](https://docs.confluent.io/platform/current/schema-registry/fundamentals/serdes-develop/overview.html#wire-format) — schema-aware 직렬화·역직렬화가 암·복호화 전후에 놓이는 경계.
-- [Apache Kafka Producer Configs](https://kafka.apache.org/40/configuration/producer-configs/) — `enable.idempotence`, Retry, in-flight 요청 설정.
-- [Apache Kafka Design — Message Delivery Semantics](https://kafka.apache.org/42/design/design/) — at-least-once 전달과 Consumer 멱등 처리의 전제.
-- [Apache Kafka Consumer](https://kafka.apache.org/41/javadoc/org/apache/kafka/clients/consumer/KafkaConsumer.html) — 읽기·commit 위치와 파티션 할당.
-- [Spring Cloud Stream 수동 ack](https://docs.spring.io/spring-cloud-stream/reference/kafka/kafka-binder/manual-ack.html) · [Kafka Binder 설정](https://docs.spring.io/spring-cloud-stream/reference/kafka/kafka-binder/config-options.html) — Consumer·Binding과 명시적 완료 처리.
-- [Kafka Deserializer](https://kafka.apache.org/41/javadoc/org/apache/kafka/common/serialization/Deserializer.html) · [Spring 역직렬화 오류 처리](https://docs.spring.io/spring-kafka/reference/kafka/serdes.html#using-errorhandlingdeserializer) — 공통 value 처리의 입력·실패 경계와 원본 보존.
-- [카카오페이 — Spring Cloud Stream 도입하기](https://tech.kakaopay.com/post/spring-cloud-stream/) · [Kafka Binder Container Customizer](https://docs.spring.io/spring-cloud-stream/reference/kafka/kafka-binder/container-cust-kafka-binder.html) · [Kafka Binder Retry·DLT](https://docs.spring.io/spring-cloud-stream/reference/kafka/kafka-binder/retry-dlq.html) — 메시징 추상화와 Container Retry 확장 지점.
+- [Schema Formats for Schema Registry on Confluent Platform](https://docs.confluent.io/platform/current/schema-registry/fundamentals/serdes-develop/overview.html#wire-format) — schema-aware 직렬화·역직렬화가 암·복호화 전후에 놓이는 경계.
+- [Producer Configs](https://kafka.apache.org/40/configuration/producer-configs/) — `enable.idempotence`, Retry, in-flight 요청 설정.
+- [Message Delivery Semantics](https://kafka.apache.org/42/design/design/#message-delivery-semantics) — at-least-once 전달과 Consumer 멱등 처리의 전제.
+- [KafkaConsumer (clients 4.1.2 API)](https://kafka.apache.org/41/javadoc/org/apache/kafka/clients/consumer/KafkaConsumer.html) — 읽기·commit 위치와 파티션 할당.
+- [Manual Acknowledgement](https://docs.spring.io/spring-cloud-stream/reference/kafka/kafka-binder/manual-ack.html) · [Configuration Options](https://docs.spring.io/spring-cloud-stream/reference/kafka/kafka-binder/config-options.html) — Consumer·Binding과 명시적 완료 처리.
+- [Deserializer (clients 4.1.2 API)](https://kafka.apache.org/41/javadoc/org/apache/kafka/common/serialization/Deserializer.html) · [Serialization, Deserialization, and Message Conversion](https://docs.spring.io/spring-kafka/reference/kafka/serdes.html#using-errorhandlingdeserializer) — 공통 value 처리의 입력·실패 경계와 원본 보존.
+- [Spring Cloud Stream 도입하기](https://tech.kakaopay.com/post/spring-cloud-stream/) · [Kafka Binder Listener Container Customizers](https://docs.spring.io/spring-cloud-stream/reference/kafka/kafka-binder/container-cust-kafka-binder.html) · [Retry and Dead Letter Processing](https://docs.spring.io/spring-cloud-stream/reference/kafka/kafka-binder/retry-dlq.html) — 메시징 추상화와 Container Retry 확장 지점.
