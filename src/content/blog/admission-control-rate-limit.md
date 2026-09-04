@@ -4,6 +4,12 @@ date: "2026-09-03"
 summary: LLM Gateway가 API Key로 Team을 식별하고, Team Tier와 Redis GCRA로 RPM·TPM을 제어하는 Rate Limits 설계를 정리합니다.
 ---
 
+> **LLM Gateway Admission Control**
+
+1. [Rate Limits](/blog/admission-control-rate-limit/) — current
+2. [Budget Control](/blog/admission-control-balance-control/)
+3. Spend Limits — coming soon
+
 ## TL;DR
 
 ![Preflight에서 RPM·TPM을 판정하고 RPM TAT를 전진시킨 뒤, inference 성공 응답의 usage로 postflight에서 TPM TAT를 전진시키는 경로](/images/blog/admission-control-rate-limit-flow.svg)
@@ -188,8 +194,8 @@ Redis는 각 shard에 replica를 두는 Cluster 구성을 전제로 하며, pref
 
 Rate Limits는 **얼마나 자주 호출할 수 있는가**를 제어합니다. 하지만 호출 제어와 비용 제어는 다른 축입니다.
 
-다음 글에서는 실제 inference usage를 기준으로 Team의 잔액을 빠르게 읽고, Redis projection과 정산을 어떻게 분리하는지 다룹니다.  
-Rate Limits가 RPM·TPM을 제한한다면, Budget Control은 허용 가능한 비용 노출을 제한합니다.
+다음 글에서는 실제 inference usage를 기준으로 Team의 잔액을 빠르게 읽고, Redis Account Balance Cache와 정산을 어떻게 분리하는지 다룹니다.  
+Rate Limits가 RPM·TPM을 제한한다면, Budget Control은 Team이 잔액을 넘어 추가로 사용하는 것을 제한합니다.
 
 ## 참고
 

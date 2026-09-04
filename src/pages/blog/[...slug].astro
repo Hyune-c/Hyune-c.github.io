@@ -59,6 +59,7 @@ const { Content } = await render(entry);
 
         mermaid.initialize({ startOnLoad: false });
 
+        var diagrams = [];
         document.querySelectorAll('article pre').forEach(function (pre, index) {
           var code = pre.querySelector('code');
           if (!code) return;
@@ -70,11 +71,45 @@ const { Content } = await render(entry);
           diagram.id = 'mermaid-' + index;
           diagram.className = 'mermaid';
           diagram.textContent = source;
-          pre.replaceWith(diagram);
-          mermaid.run({ nodes: [diagram] });
+
+          var frame = document.createElement('div');
+          frame.className = 'blog-diagram' + (/\\berDiagram\\b/.test(source) ? ' blog-diagram--erd' : '');
+          frame.setAttribute('role', 'region');
+          frame.setAttribute('aria-label', '다이어그램 ' + (diagrams.length + 1));
+          frame.tabIndex = 0;
+          frame.appendChild(diagram);
+          pre.replaceWith(frame);
+          diagrams.push(diagram);
         });
+
+        // 한 run 안에서 ID를 생성해야 같은 millisecond의 SVG ID 충돌을 피한다.
+        await mermaid.run({ nodes: diagrams });
       `;
       document.head.appendChild(script);
     })();
   </script>
+
+  <style is:global>
+    main:has(article .blog-diagram) {
+      min-width: 0;
+    }
+    article .blog-diagram {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      background: #fff;
+    }
+    article .blog-diagram .mermaid {
+      min-width: 760px;
+    }
+    article .blog-diagram--erd .mermaid {
+      min-width: 1050px;
+    }
+    @media print {
+      article .blog-diagram .mermaid {
+        min-width: 0;
+      }
+    }
+  </style>
 </Base>

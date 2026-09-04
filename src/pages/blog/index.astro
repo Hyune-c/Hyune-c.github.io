@@ -3,7 +3,8 @@ import Base from "../../layouts/Base.astro";
 import { getCollection } from "astro:content";
 
 const entries = (await getCollection("blog")).sort((a, b) =>
-  b.data.date.localeCompare(a.data.date),
+  b.data.date.localeCompare(a.data.date) ||
+  b.data.title.localeCompare(a.data.title, "ko", { numeric: true }),
 );
 ---
 
