@@ -184,23 +184,17 @@ Preflight의 Redis timeout이나 Lua 오류는 제한 초과와 구분합니다.
 
 Redis는 각 shard에 replica를 두는 Cluster 구성을 전제로 하며, preflight 장애 시 fail-open은 허용하지 않습니다. 다만 failover 시 복제되지 않은 TAT 갱신은 유실될 수 있습니다.
 
-## 다음 단계는 Balance Control입니다
+## 다음 단계는 Budget Control입니다
 
 Rate Limits는 **얼마나 자주 호출할 수 있는가**를 제어합니다. 하지만 호출 제어와 비용 제어는 다른 축입니다.
 
 다음 글에서는 실제 inference usage를 기준으로 Team의 잔액을 빠르게 읽고, Redis projection과 정산을 어떻게 분리하는지 다룹니다.  
-Rate Limits가 RPM·TPM을 제한한다면, Balance Control은 허용 가능한 비용 노출을 제한합니다.
+Rate Limits가 RPM·TPM을 제한한다면, Budget Control은 허용 가능한 비용 노출을 제한합니다.
 
 ## 참고
 
-- [Redis Rate Limiting](https://redis.io/docs/latest/develop/use-cases/rate-limiter/) — Redis와 Lua의 원자적 경계.
-- [Redis Cell](https://github.com/brandur/redis-cell) — GCRA rolling window; 이 글은 custom Lua로 적용.
+- [Redis Cell](https://github.com/brandur/redis-cell) · [Rate Limiting, Cells, and GCRA](https://brandur.org/rate-limiting) — GCRA의 TAT 모델과 Redis 구현.
 - [Redis Lua](https://redis.io/docs/latest/develop/programmability/eval-intro/) — Preflight·postflight의 원자적 갱신.
 - [Redis Cluster](https://redis.io/docs/latest/operate/oss_and_stack/reference/cluster-spec/) — Replica failover와 비동기 복제의 한계.
-- [Rate Limiting, Cells, and GCRA](https://brandur.org/rate-limiting) — TAT와 시간원.
-- [여섯 개 Rate Limit 알고리즘 해부](https://upcurvewave.tistory.com/825) — Redis state와 알고리즘 trade-off.
-- [Rate Limiting: Five Algorithms, One Production System](https://levelup.gitconnected.com/rate-limiting-five-algorithms-one-production-system-ced36787d040) — 다섯 알고리즘 비교.
-- [OpenAI Rate Limits](https://developers.openai.com/api/docs/guides/rate-limits) — 복수 제한과 response header.
-- [Claude Rate Limits](https://platform.claude.com/docs/en/api/rate-limits) — RPM·input TPM·output TPM.
+- [OpenAI Rate Limits](https://developers.openai.com/api/docs/guides/rate-limits) · [Claude Rate Limits](https://platform.claude.com/docs/en/api/rate-limits) — Provider별 RPM·TPM 범위와 response header.
 - [Claude Prompt Caching](https://platform.claude.com/docs/en/build-with-claude/prompt-caching) — 캐시 격리 범위와 비용·응답 시간 효과.
-- [Cache-Aside Pattern](https://learn.microsoft.com/en-us/azure/architecture/patterns/cache-aside) — Team → Tier 매핑의 TTL 기반 조회.
