@@ -84,24 +84,24 @@ TAT key는 `quota → Team → 정책 → 상태` 순서로 읽습니다. `{team
 ```text
 quota:{teamId}:rate:request_tat  # RPM · 1788436801000000 → 2026-09-03T12:00:01Z
 quota:{teamId}:rate:token_tat    # TPM
-quota:{teamId}:tier             # tier_1 · TTL 적용
+quota:{teamId}:tier             # tier_1 · TTL 1시간 + jitter
 ```
 
 - Team의 Tier ID는 Redis에서, 해당 Tier의 정책은 부트 타임에 적재한 로컬 캐시에서 읽습니다.
-- Tier ID는 TTL 기반 look-aside로 관리합니다. 캐시가 없으면 DB에서 채우고, Tier 변경도 TTL 만료 후 반영합니다. 기존 TAT는 초기화하지 않습니다.
+- Tier ID는 1시간에 0~3분 jitter를 더한 TTL 기반 look-aside로 관리합니다. 캐시가 없으면 DB에서 채우고, Tier 변경도 TTL 만료 후 반영합니다. 기존 TAT는 초기화하지 않습니다.
 - 진행 중인 호출은 preflight에서 읽은 Tier 정책을 postflight까지 사용합니다.
 
 ### RPM과 TPM은 다른 시점에 반영합니다
-
-**TPM 사용량은 postflight에 반영합니다.**
-
-- 실제 `usage`가 응답에 오기 때문입니다.
-- 사전에 산정하려면 tokenizer로 input을 계산하고 output은 별도로 추정해야 하므로, 이 설계에서는 오버 엔지니어링으로 봅니다.
 
 **RPM 사용량은 preflight에 반영합니다.**
 
 - 호출 전에 이미 1건임을 알 수 있습니다.
 - 채팅처럼 추론 시간이 긴 호출에서 postflight까지 기다리면, 진행 중인 호출이 RPM에 잡히지 않아 추가 request가 계속 통과할 수 있습니다.
+
+**TPM 사용량은 postflight에 반영합니다.**
+
+- 실제 `usage`가 응답에 오기 때문입니다.
+- 사전에 산정하려면 tokenizer로 input을 계산하고 output은 별도로 추정해야 하므로, 이 설계에서는 오버 엔지니어링으로 봅니다.
 
 Preflight는 두 TAT가 모두 현재 시각 이하일 때만 RPM TAT를 전진시키고, postflight는 adapter가 정규화한 전체 input(캐시 포함)·output 사용량으로 TPM TAT를 전진시킵니다.  
 각 단계는 하나의 Lua로 원자적으로 처리하며, 응답 헤더에 사용할 두 TAT를 반환합니다.
@@ -132,11 +132,9 @@ x-ratelimit-reset-tokens: 1.2s
 }
 ```
 
-다른 호출이 없는 Team이 `tier_1`에서 5초간 추론하고 2,000 tokens를 사용한 non-streaming 응답입니다.
+다른 호출이 없는 Team이 `tier_1`에서 5초간 추론하고 2,000 tokens를 사용한 non-streaming 응답입니다. `remaining-requests`는 RPM 기준으로 즉시 허용할 수 있는 request 수입니다. `remaining-tokens`는 TPM에서 미회복 token 사용량을 빼고 0 이상으로 제한한 참고 잔량입니다. 재시도 시점은 `remaining`이 아니라 `reset`·`Retry-After`를 따릅니다.
 
-`remaining-requests`는 RPM 기준으로 즉시 허용할 수 있는 request 수입니다. `remaining-tokens`는 TPM에서 미회복 token 사용량을 빼고 0 이상으로 제한한 참고 잔량입니다. 재시도 시점은 `remaining`이 아니라 `reset`·`Retry-After`를 따릅니다.  
-Streaming에서는 final usage보다 먼저 헤더를 보내므로 preflight 시점의 제한 정보를 사용합니다.
-
+Streaming에서는 final usage보다 먼저 헤더를 보내므로 preflight 시점의 제한 정보를 사용합니다.  
 Non-streaming에서 final usage나 postflight 결과를 받지 못하면 추론 응답은 유지하고 Rate Limits 헤더는 생략합니다.
 
 ```http
@@ -179,12 +177,13 @@ Preflight의 Redis timeout이나 Lua 오류는 제한 초과와 구분합니다.
 
 ## TAT의 TTL·부하·장애를 관리합니다
 
-- **TTL·Eviction** — TAT key에는 TTL을 설정하지 않고, Redis는 `noeviction`으로 운영합니다.
+- **TTL** — TAT에는 1시간에 0~3분 jitter를 더한 TTL을 둡니다. read는 TTL을 연장하지 않으므로, 유휴 Team의 TAT는 자연스럽게 사라집니다.
 - **Hot key** — Cluster는 Team 간 부하를 분산할 뿐, 같은 shard에 모인 한 Team의 처리량을 늘리지는 못합니다. 전체 OPS와 단일 Team OPS를 별도로 측정합니다.
+- **Cardinality** — Team당 TAT 두 개가 최대 TTL 동안만 남으므로, 최대 활성 Team 수를 기준으로 메모리를 잡고 경보를 둡니다.
 
 최초 요청처럼 TAT key가 없는 경우와 Redis 장애는 구분합니다.
 
-- **key 없음** — 누적 사용이 없는 것으로 판단합니다. RPM TAT는 request 허용 시, TPM TAT는 성공 postflight에서 생성합니다.
+- **key 없음** — TAT는 look-aside 대상이 아니라 단기 debt state입니다. key가 없으면 누적 debt가 없는 것으로 판단하고, RPM TAT는 request 허용 시, TPM TAT는 성공 postflight에서 생성합니다.
 - **Redis timeout·연산 오류** — Preflight에서 제한 상태를 확인하거나 갱신할 수 없으므로 `503`을 반환합니다.
 - **Postflight 갱신 실패** — 완료된 추론을 실패로 바꾸지는 않습니다. 반영 여부가 불명확하므로 자동 재시도하지 않고 오류를 기록·알립니다.
 

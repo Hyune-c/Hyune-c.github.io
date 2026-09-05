@@ -121,7 +121,8 @@ Schema Registry는 Kafka value를 만들기 전 JSON body 계약의 호환성을
 Kafka로 전달하는 발주 event에는 개인정보가 들어갑니다.  
 → **발주 event의 value 전체를 DEK로 암호화하고, KMS로 감싼 `wrapped_dek`만 Kafka header에 전달합니다.**
 
-발주 event는 충분히 작고 RedeemCode가 body 전체를 처리하므로, field별 처리보다 value 전체를 한 번에 암·복호화하는 편이 효율적입니다.
+발주 event는 충분히 작고 RedeemCode가 body 전체를 처리하므로, field별 처리보다 value 전체를 한 번에 암·복호화하는 편이 효율적입니다. 복호화 뒤에는 Kafka key와 body의 `partner_order_id`가 같은지 확인합니다.  
+AEAD는 record 변조를, `event_id` 멱등성은 같은 암호문 record의 replay를 막습니다.
 
 ```mermaid
 ---
@@ -233,7 +234,7 @@ flowchart LR
 ```
 
 `event_id`는 동일 event의 완료 여부를, `partner_order_id`는 동일 발주의 상태 전이를 보호하며, Service는 업무 상태와 결과 `event_id`를 같은 DB transaction에 저장합니다.  
-DB commit 뒤 재전달되면 저장된 결과 `event_id`로 lifecycle event를 다시 발행하고, 발행 성공 뒤 ack합니다.
+DB commit 뒤 재전달되면 저장된 결과 `event_id`로 lifecycle event를 다시 발행하고, broker ack 뒤 Consumer offset을 ack합니다. Partner Office도 결과 `event_id`로 lifecycle event를 멱등 처리합니다.
 
 #### 취소 가능 여부는 상품권 상태로 결정합니다
 
@@ -252,11 +253,12 @@ Kafka message 수신 성공만으로 RedeemCode의 업무 완료를 판단할 �
 
 #### value 처리는 공통 Deserializer로 정규화합니다
 
-**Envelope 검증 → KMS에서 DEK 복원 → 복호화 → 역직렬화·계약 검증**을 공통 `EnvelopeDeserializer`에서 처리함으로써 Consumer는 KMS나 암호화 형식을 알 필요 없이 정규화된 event를 받습니다.
+`ErrorHandlingDeserializer`가 공통 `EnvelopeDeserializer`를 감쌉니다.  
+**Envelope 검증 → KMS에서 DEK 복원 → 복호화 → 역직렬화·계약 검증**을 delegate에서 처리하므로 Consumer는 KMS나 암호화 형식을 알 필요 없이 정규화된 event를 받습니다.
 
 - **공통 처리:** 허용한 KMS key·암호화 버전·schema를 검증하고, body와 header의 event type·발주 식별자가 일치하는지 확인합니다.
 - **반환값:** `DecodedEnvelope<T>`에 업무 event와 원본 암호문·암호화 header를 함께 보관합니다. Consumer는 정규화된 event만 사용합니다.
-- **오류 처리:** `EnvelopeDeserializer`는 `ErrorHandlingDeserializer`를 이용해 Consumer 호출 전에 발생한 복호화·역직렬화 오류와 원본 byte를 Container의 실패 경로로 전달합니다.
+- **오류 처리:** wrapper는 Consumer 호출 전에 발생한 복호화·역직렬화 오류와 원본 byte를 Container의 실패 경로로 전달합니다.
 
 #### 성공은 ack, 실패는 Retry로 명시합니다
 
@@ -287,7 +289,8 @@ spring:
                 enable.auto.commit: false
                 max.poll.records: 5
                 key.deserializer: org.apache.kafka.common.serialization.StringDeserializer
-                value.deserializer: com.example.messaging.EnvelopeDeserializer
+                value.deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+                spring.deserializer.value.delegate.class: com.example.messaging.EnvelopeDeserializer
 ```
 
 ```kotlin
@@ -314,15 +317,14 @@ fun consumeOrder(): Consumer<Message<DecodedEnvelope<OrderEvent>>> = Consumer { 
 처리 실패는 Consumer에서 끝내지 않고 Retry 경로로 전달합니다.  
 → **최초 처리와 Retry 2회가 모두 실패하면 별도 transaction으로 실패를 기록하고 offset을 전진시킵니다.**
 
-Binder의 `maxAttempts`만으로는 실패 기록과 복구 운영까지 제공되지 않습니다.  
-공통 모듈은 `ListenerContainerCustomizer`로 `DefaultErrorHandler`, Retry 2회, 오류 분류를 함께 설정합니다.
+Binder의 `maxAttempts`만으로는 실패 기록과 복구 운영까지 제공되지 않습니다. 공통 모듈은 `ListenerContainerCustomizer`로 `DefaultErrorHandler`, Retry 2회, 오류 분류와 `commitRecovered=true`를 함께 설정합니다. `MANUAL_IMMEDIATE`에서 recovered offset을 전진시키려면 이 설정이 필요합니다.
 
 - **업무 오류:** Consumer가 예외를 전달하면 Container가 Retry합니다.
 - **Envelope·schema 오류:** 같은 입력으로 해결되지 않으므로 Retry 없이 실패 기록으로 보냅니다.
 - **Retry 소진:** `ConsumerRecordRecoverer`가 별도 transaction으로 실패를 기록한 뒤 recovered offset을 commit합니다.
+- **결과 발행 실패:** 이미 DB에 확정된 결과는 다시 발급하지 않습니다. failure record의 결과 `event_id`를 기준으로 lifecycle event만 재발행합니다.
 
-실패 기록은 `(Consumer Group, topic, partition, offset)` unique 제약으로 중복을 막고 원본 ciphertext·header·오류 코드를 보관합니다.  
-기록 후 offset commit 전에 종료되어도 재전달 시 기존 기록을 확인하고 offset을 전진시킬 수 있습니다.
+실패 기록은 `(Consumer Group, topic, partition, offset)` unique 제약으로 중복을 막고 원본 ciphertext·header·오류 코드와, 결과가 이미 확정됐다면 결과 `event_id`를 보관합니다. 기록 후 offset commit 전에 종료되어도 재전달 시 기존 기록을 확인하고 offset을 전진시킬 수 있습니다.
 
 #### partition 수가 처리 병렬성을 결정합니다
 

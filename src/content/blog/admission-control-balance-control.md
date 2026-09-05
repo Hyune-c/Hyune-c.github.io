@@ -12,7 +12,7 @@ summary: 정산된 Account Balance와 미정산 rough debit으로 Redis에 Accou
 
 ## TL;DR
 
-![Preflight에서 Account Balance Cache를 확인하고 성공한 inference를 rough debit한 뒤, 별도 worker가 Ledger를 정산하고 Account Balance Cache를 갱신하는 흐름](/images/blog/admission-control-budget-control-flow.svg)
+![Preflight의 Account Balance Cache 조회와 정상 miss의 DB look-aside, Postflight의 rough debit과 Record 전달, Consumer의 Record 저장 및 별도 Scheduler Worker의 정산·Cache 갱신 흐름](/images/blog/admission-control-budget-control-flow.svg)
 
 ### 정책
 
@@ -37,7 +37,7 @@ Rate Limits가 Team Tier의 RPM·TPM을 제어했다면, Budget Control은 Team�
 | --- | --- | --- |
 | Account Balance | 마지막 정산까지 확정된 Team의 USD 잔액 | Team당 하나이며 credit·debit이 같은 row lock을 공유 |
 | Account Balance Cache | inference path가 읽는 Redis 잔액 | 정산된 잔액에 rough debit을 반영한 값 |
-| Inference Record | Gateway가 관찰한 Provider 실행 1건의 모델·usage·metadata | 자체 row ID와 `(inference_id, attempt_no)` unique |
+| Inference Record | Gateway가 관찰한 Provider 실행 1건의 모델·usage·`provider_request_id` | 자체 row ID와 `(inference_id, attempt_no)` unique |
 | Usage Charge | usage와 가격표로 만든 정확한 사용료 | `inference_record_id` FK는 unique |
 | Account Ledger Entry | Account credit·debit의 append-only 이력 | Account가 mutation의 부수 효과로 생성 |
 
@@ -65,7 +65,7 @@ Gateway retry·fallback은 같은 `inference_id`를 유지하고, Provider dispa
 ### Postflight에서 rough debit합니다
 
 Provider가 성공하면 Gateway는 Account Balance Cache를 rough debit한 뒤 Inference Record를 Kafka stream으로 전달합니다.  
-Kafka는 정산을 끝내는 곳이 아니라, Worker가 이후 정산할 inference 사실을 안전하게 넘기는 경계입니다.
+Kafka broker ack가 정산 사실의 durable handoff이며, Gateway는 ack를 받은 뒤에만 inference 성공을 반환합니다.
 
 - **Record 전달 재시도** — Inference Record만 멱등하게 재발행합니다. Kafka 재전달이나 Worker 재시도가 rough debit을 다시 실행하지는 않습니다.
 - **Redis 결과 불명확** — 같은 debit을 독립적으로 재시도하지 않습니다. 다음 정산이 Cache를 정산된 Account Balance로 갱신합니다.
@@ -91,9 +91,10 @@ Worker는 Ledger Entry를 직접 만들지 않습니다. Account debit이 Balanc
 DB commit 뒤 Worker는 정산된 Account Balance 값으로 Account Balance Cache를 갱신합니다. rough debit을 다시 합산하거나 정산 금액과의 차이만 보정하지 않습니다.
 
 DB와 Redis는 하나의 transaction이 아닙니다. Redis 갱신 실패로 DB 정산을 되돌리지 않으며, 다음 정산이나 정상 Cache miss가 Account Balance를 기준으로 Cache를 다시 만듭니다.  
-즉, Cache는 원장과 같은 정확도를 보장하는 값이 아니라 admission을 위한 빠른 판단값입니다.
+같은 Account의 정산 batch는 row lock 순서로 직렬화해, 늦은 Worker가 더 최신 정산 Cache를 덮지 않게 합니다.  
+다만 Cache `SET`과 새 rough debit이 겹치면 그 rough debit은 다음 정산까지 Cache에서 보이지 않을 수 있습니다. 이는 재시도 대상이 아니라 이 설계가 허용하는 admission gap입니다.
 
-## 4. Cache 장애와 음수 잔액을 함께 관리합니다
+## 4. 운영 시 고려할 점
 
 ### Cache 수명과 key miss를 관리합니다
 
@@ -104,12 +105,13 @@ quota:{teamId}:account-balance
 Cache는 정수 scaled USD로 저장합니다. rough debit에는 올림을 적용하고, postflight rough debit과 Worker의 Cache 갱신은 TTL을 연장합니다.
 
 - **TTL** — 1시간에 0~3분 jitter를 더합니다. preflight read는 TTL을 연장하지 않습니다.
-- **정상 key miss** — Redis가 응답하면 DB의 Account Balance를 읽어 `SET NX`로 Cache를 채운 뒤 판단합니다. Cache는 정산 기준값으로 다시 시작하고, 아직 정산되지 않은 사용량은 다음 Worker 정산에서 확정됩니다.
+- **정상 key miss** — DB의 Account Balance를 읽어 `SET NX`로 Cache를 채운 뒤 허용 여부를 판단합니다.
 - **DB 보호** — Gateway DB connection pool이 동시에 허용할 Cache fill 조회 수를 제한합니다.
+- **Credit·관리자 조정** — DB 반영 후 기존 Cache에도 변경 금액을 즉시 반영합니다.
 
-### Redis 장애는 신규 사용을 열지 않습니다
+### Redis 장애 시 신규 요청을 차단합니다
 
-Rate Limits와 달리, Budget Control은 Cache 상태를 모르는 request를 통과시키지 않습니다.  
+Rate Limits와 마찬가지로, Budget Control은 Cache 상태를 모르는 request를 통과시키지 않습니다.  
 Redis Cluster mode를 전제로 하므로, Redis가 응답하지 않으면 fail-open하지 않고 `503`으로 끝냅니다.
 
 | 장애 패턴 | 처리 |
@@ -122,13 +124,14 @@ Redis Cluster mode를 전제로 하므로, Redis가 응답하지 않으면 fail-
 
 ### 음수 Account Balance는 허용하되, gap은 줄입니다
 
-LLM inference의 실제 Usage Charge는 응답 뒤에 확정됩니다. 호출 전에 최대 금액을 reservation하고 Team별 mutation을 직렬화하면 음수 Account Balance를 막을 수 있지만, 모든 inference가 공유 잔액을 선점해 throughput과 복구 복잡도를 희생합니다. 이 설계는 rough debit으로 정산 gap을 줄이고, Cache가 음수가 된 뒤부터 새 request를 거절합니다.
+잔액을 미리 선점하면 음수를 막을 수 있지만 throughput이 낮아지고 구현이 복잡해집니다. 이 설계는 일시적인 음수 잔액을 허용하되, rough debit으로 gap을 최소화합니다.
 
 ```text
 negative balance gap
 ≈ in-flight request 수 × 최대 Usage Charge
   + postflight 지연 동안의 Usage Charge
   + 추정값과 Usage Charge의 차이
+  + Cache 교체·key miss와 겹친 rough debit
 ```
 
 음수 잔액의 규모는 Rate Limits, Team별 concurrency, 허용 모델, `max_output_tokens`로 줄일 수 있습니다. 이 값은 엄밀한 상한이 아니라 함께 관측할 지표를 보여주는 근사식입니다.
@@ -141,7 +144,7 @@ Content-Type: application/json
   "error": {
     "type": "insufficient_quota",
     "code": "credit_balance_exhausted",
-    "message": "Team balance is negative. Add credits and retry."
+    "message": "Team balance is negative. Retry after the balance is refreshed."
   }
 }
 ```
